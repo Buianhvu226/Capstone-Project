@@ -1,0 +1,4 @@
+# ... existing patterns ...
+
+# Ignore Python virtual environments
+venv/
