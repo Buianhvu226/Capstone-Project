@@ -1,209 +1,200 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-6">
-    <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
-      {{ error }}
-    </div>
-    
+  <form @submit.prevent="submitForm" class="space-y-6">
+    <!-- Form fields -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Họ và tên người thất lạc</label>
-        <input 
-          id="fullName" 
-          v-model="form.fullName" 
-          type="text" 
-          class="input" 
-          required
-        />
+      <!-- Tiêu đề -->
+      <div class="col-span-1 md:col-span-2">
+        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">
+          Tiêu đề hồ sơ <span class="text-red-500">*</span>
+        </label>
+        <input id="title" v-model="formData.title" type="text" required
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Ví dụ: Nguyễn Văn A tìm con gái thất lạc năm 1975" />
       </div>
-      
+
+      <!-- Họ và tên -->
       <div>
-        <label for="age" class="block text-sm font-medium text-gray-700 mb-1">Tuổi (ước tính)</label>
-        <input 
-          id="age" 
-          v-model="form.age" 
-          type="number" 
-          class="input"
-        />
+        <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">
+          Họ và tên <span class="text-red-500">*</span>
+        </label>
+        <input id="fullName" v-model="formData.full_name" type="text" required
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Họ và tên người cần tìm" />
       </div>
-      
+
+      <!-- Năm sinh -->
       <div>
-        <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Giới tính</label>
-        <select 
-          id="gender" 
-          v-model="form.gender" 
-          class="input"
-        >
-          <option value="">-- Chọn giới tính --</option>
-          <option value="male">Nam</option>
-          <option value="female">Nữ</option>
-          <option value="other">Khác</option>
+        <label for="bornYear" class="block text-sm font-medium text-gray-700 mb-1">
+          Năm sinh
+        </label>
+        <input id="bornYear" v-model="formData.born_year" type="text"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Năm sinh (nếu biết)" />
+      </div>
+
+      <!-- Năm thất lạc -->
+      <div>
+        <label for="losingYear" class="block text-sm font-medium text-gray-700 mb-1">
+          Năm thất lạc
+        </label>
+        <input id="losingYear" v-model="formData.losing_year" type="text"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Năm thất lạc (nếu biết)" />
+      </div>
+
+      <!-- Tên cha -->
+      <div>
+        <label for="fatherName" class="block text-sm font-medium text-gray-700 mb-1">
+          Tên cha
+        </label>
+        <input id="fatherName" v-model="formData.name_of_father" type="text"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Tên cha (nếu biết)" />
+      </div>
+
+      <!-- Tên mẹ -->
+      <div>
+        <label for="motherName" class="block text-sm font-medium text-gray-700 mb-1">
+          Tên mẹ
+        </label>
+        <input id="motherName" v-model="formData.name_of_mother" type="text"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Tên mẹ (nếu biết)" />
+      </div>
+
+      <!-- Anh chị em -->
+      <div>
+        <label for="siblings" class="block text-sm font-medium text-gray-700 mb-1">
+          Anh chị em
+        </label>
+        <input id="siblings" v-model="formData.siblings" type="text"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Tên anh chị em (nếu có)" />
+      </div>
+
+      <!-- Trạng thái -->
+      <div>
+        <label for="status" class="block text-sm font-medium text-gray-700 mb-1">
+          Trạng thái
+        </label>
+        <select id="status" v-model="formData.status"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+          <option value="active">Đang tìm kiếm</option>
+          <option value="found">Đã tìm thấy</option>
+          <option value="closed">Đã đóng</option>
         </select>
       </div>
-      
-      <div>
-        <label for="lastSeenLocation" class="block text-sm font-medium text-gray-700 mb-1">Địa điểm cuối cùng gặp</label>
-        <input 
-          id="lastSeenLocation" 
-          v-model="form.lastSeenLocation" 
-          type="text" 
-          class="input"
-        />
-      </div>
-      
-      <div>
-        <label for="lastSeenDate" class="block text-sm font-medium text-gray-700 mb-1">Ngày cuối cùng gặp</label>
-        <input 
-          id="lastSeenDate" 
-          v-model="form.lastSeenDate" 
-          type="date" 
-          class="input"
-        />
-      </div>
-      
-      <div>
-        <label for="contactInfo" class="block text-sm font-medium text-gray-700 mb-1">Thông tin liên hệ</label>
-        <input 
-          id="contactInfo" 
-          v-model="form.contactInfo" 
-          type="text" 
-          class="input"
-        />
-      </div>
     </div>
-    
+
+    <!-- Phần upload hình ảnh đã được loại bỏ -->
+
+    <!-- Mô tả chi tiết -->
     <div>
-      <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Mô tả chi tiết</label>
-      <textarea 
-        id="description" 
-        v-model="form.description" 
-        rows="5" 
-        class="input" 
-        required
-      ></textarea>
-      <p class="mt-1 text-sm text-gray-500">
-        Mô tả chi tiết về người thân, đặc điểm nhận dạng, hoàn cảnh thất lạc...
-      </p>
+      <label for="description" class="block text-sm font-medium text-gray-700 mb-1">
+        Chi tiết <span class="text-red-500">*</span>
+      </label>
+      <textarea id="description" v-model="formData.description" rows="5" required
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Mô tả chi tiết về hoàn cảnh thất lạc, đặc điểm nhận dạng, và các thông tin liên quan khác"></textarea>
     </div>
-    
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Hình ảnh</label>
-      <div class="border border-dashed border-gray-300 rounded-md p-6 text-center">
-        <input 
-          type="file" 
-          @change="handleFileChange" 
-          multiple 
-          accept="image/*" 
-          class="hidden" 
-          ref="fileInput"
-        />
-        <button 
-          type="button" 
-          @click="$refs.fileInput.click()" 
-          class="btn btn-secondary"
-        >
-          Chọn hình ảnh
-        </button>
-        <p class="mt-2 text-sm text-gray-500">
-          Có thể chọn nhiều hình ảnh
-        </p>
-      </div>
-      
-      <div v-if="previewImages.length" class="mt-4 grid grid-cols-3 gap-4">
-        <div v-for="(image, index) in previewImages" :key="index" class="relative">
-          <img :src="image" class="w-full h-32 object-cover rounded-md" />
-          <button 
-            type="button" 
-            @click="removeImage(index)" 
-            class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-          >
-            &times;
-          </button>
+
+    <!-- Thông báo lỗi -->
+    <div v-if="error" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <i class="fas fa-exclamation-circle text-red-500"></i>
+        </div>
+        <div class="ml-3">
+          <p class="text-sm text-red-700">{{ error }}</p>
         </div>
       </div>
     </div>
-    
-    <div class="flex justify-end">
-      <button 
-        type="submit" 
-        class="btn btn-primary" 
-        :disabled="loading"
-      >
-        <span v-if="loading">Đang xử lý...</span>
-        <span v-else>Đăng ký hồ sơ</span>
+
+    <!-- Nút gửi form -->
+    <div class="flex justify-end space-x-4">
+      <button v-if="isEditing" type="button" @click="cancelEdit"
+        class="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center">
+        <i class="fas fa-times mr-2"></i> Hủy
+      </button>
+      <button type="submit" :disabled="loading"
+        class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all transform hover:scale-105 hover:shadow-lg flex items-center">
+        <i class="fas fa-save mr-2"></i>
+        <span v-if="loading">
+          <svg class="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+          </svg>
+          Đang lưu...
+        </span>
+        <span v-else>{{ submitButtonText || (isEditing ? 'Cập nhật hồ sơ' : 'Tạo hồ sơ') }}</span>
       </button>
     </div>
   </form>
 </template>
 
 <script>
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue';
 
 export default {
   name: 'ProfileForm',
   props: {
+    initialData: {
+      type: Object,
+      default: () => ({
+        title: '',
+        full_name: '',
+        born_year: '',
+        losing_year: '',
+        name_of_father: '',
+        name_of_mother: '',
+        siblings: '',
+        description: '',
+        status: 'active'
+      })
+    },
     loading: {
       type: Boolean,
       default: false
     },
     error: {
       type: String,
-      default: null
+      default: ''
     },
-    initialData: {
-      type: Object,
-      default: () => ({})
+    isEditing: {
+      type: Boolean,
+      default: false
+    },
+    submitButtonText: {
+      type: String,
+      default: ''
     }
   },
-  emits: ['submit'],
+  emits: ['submit', 'cancel'],
   setup(props, { emit }) {
-    const fileInput = ref(null)
-    const files = ref([])
-    const previewImages = ref([])
-    
-    const form = reactive({
-      fullName: props.initialData.fullName || '',
-      age: props.initialData.age || '',
-      gender: props.initialData.gender || '',
-      lastSeenLocation: props.initialData.lastSeenLocation || '',
-      lastSeenDate: props.initialData.lastSeenDate || '',
-      contactInfo: props.initialData.contactInfo || '',
-      description: props.initialData.description || ''
-    })
-    
-    const handleFileChange = (event) => {
-      const selectedFiles = Array.from(event.target.files)
-      files.value = [...files.value, ...selectedFiles]
-      
-      selectedFiles.forEach(file => {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          previewImages.value.push(e.target.result)
-        }
-        reader.readAsDataURL(file)
-      })
-    }
-    
-    const removeImage = (index) => {
-      previewImages.value.splice(index, 1)
-      files.value.splice(index, 1)
-    }
-    
-    const handleSubmit = () => {
-      const formData = {
-        ...form,
-        images: files.value
-      }
-      emit('submit', formData)
-    }
-    
+    const formData = reactive({ ...props.initialData });
+
+    // Watch for changes in initialData
+    watch(() => props.initialData, (newValue) => {
+      Object.assign(formData, newValue);
+    }, { deep: true });
+
+    // Submit form
+    const submitForm = () => {
+      emit('submit', { ...formData });
+    };
+
+    // Cancel editing
+    const cancelEdit = () => {
+      emit('cancel');
+    };
+
     return {
-      form,
-      fileInput,
-      previewImages,
-      handleFileChange,
-      removeImage,
-      handleSubmit
-    }
+      formData,
+      submitForm,
+      cancelEdit
+    };
   }
 }
 </script>

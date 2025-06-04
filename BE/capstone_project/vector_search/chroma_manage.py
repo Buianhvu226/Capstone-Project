@@ -2,7 +2,8 @@ import chromadb
 from chromadb.utils import embedding_functions
 
 # --- Config (copy từ gem_vectorDB.py) ---
-CHROMA_PERSIST_PATH = "F:\\missing_people(NCHCCCL)\\test_gemini_emb_new\\chroma_db_store"
+# F:\Capstone-Project\BE\capstone_project\chroma_db_store
+CHROMA_PERSIST_PATH = "F:\\Capstone-Project\\BE\\capstone_project\\chroma_db_store"
 CHROMA_COLLECTION_NAME = "missing_people_profiles"
 EMBEDDING_MODEL_NAME = "models/text-embedding-004"
 PRIMARY_GOOGLE_API_KEY = "AIzaSyCN_flhR6pXNOvQWjZSMAwe_t1DnI_O8IM"
@@ -77,3 +78,45 @@ if __name__ == "__main__":
             break
         else:
             print("Lựa chọn không hợp lệ.")
+
+
+# import chromadb
+# from chromadb.config import Settings
+
+# # Cấu hình
+# CHROMA_PERSIST_PATH = "F:\\Capstone-Project\\BE\\capstone_project\\chroma_db_store"
+# CHROMA_COLLECTION_NAME = "missing_people_profiles"
+# BATCH_SIZE = 100  # Số lượng item mỗi batch
+
+# # Khởi tạo Chroma client
+# client = chromadb.Client(Settings(
+#     persist_directory=CHROMA_PERSIST_PATH,
+#     anonymized_telemetry=False
+# ))
+
+# # Lấy collection
+# collection = client.get_collection(name=CHROMA_COLLECTION_NAME)
+
+# # Lấy tổng số lượng item
+# count = collection.count()
+# print(f"Tổng số item trong collection: {count}")
+
+# # Duyệt từng batch và hiển thị đầy đủ thông tin
+# for start in range(0, count, BATCH_SIZE):
+#     print(f"\n--- Batch {start // BATCH_SIZE + 1} ---\n")
+
+#     # Truy vấn theo batch, dùng limit + offset
+#     results = collection.get(
+#         include=["embeddings", "documents", "metadatas"],
+#         offset=start,
+#         limit=BATCH_SIZE
+#     )
+
+#     # Hiển thị từng item
+#     for idx, item_id in enumerate(results["ids"]):
+#         print(f"Item {start + idx + 1}:")
+#         print(f"  ID: {item_id}")
+#         print(f"  Document: {results['documents'][idx]}")
+#         print(f"  Metadata: {results['metadatas'][idx]}")
+#         print(f"  Embedding (first 10 dims): {results['embeddings'][idx][:10]}")  # In gọn phần đầu embedding
+#         print("-" * 50)

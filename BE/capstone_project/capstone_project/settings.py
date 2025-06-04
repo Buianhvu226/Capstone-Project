@@ -29,10 +29,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# Supabase settings
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://kbtzkglpwdzzymbetvjw.supabase.co")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtidHprZ2xwd2R6enlwYmV0dmp3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY5NzQ5NzgsImV4cCI6MjAzMjU1MDk3OH0.Gg_0H9nJjVKUjSLmV9I5XNBJbaP5iIUkCdJ9fERgCQA")
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
     # Third-party apps
     'rest_framework',
     'rest_framework_simplejwt',
@@ -54,6 +51,7 @@ INSTALLED_APPS = [
     'notifications',
     'chats',
     'vector_search',
+    'recently_missing',
 ]
 
 MIDDLEWARE = [
@@ -90,7 +88,14 @@ TEMPLATES = [
 WSGI_APPLICATION = 'capstone_project.wsgi.application'
 
 DATABASES = {
-# Database settings
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres.kbtzkglpwdzzymbetvjw',
+        'PASSWORD': 'alibaba1235@',
+        'HOST': 'aws-0-ap-southeast-1.pooler.supabase.com',
+        'PORT': 6543,
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -129,6 +134,7 @@ SIMPLE_JWT = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # Có thể thêm SessionAuthentication nếu bạn muốn debug trong browser
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [

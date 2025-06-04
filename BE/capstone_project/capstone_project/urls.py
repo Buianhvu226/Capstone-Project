@@ -7,18 +7,18 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from accounts.views import UserRegistrationView, CustomTokenObtainPairView, UserLogoutView, UserProfileView, UserViewSet
 from profiles.views import ProfileViewSet, ProfileMatchSuggestionViewSet
 from notifications.views import NotificationViewSet
-from chats.views import ChatSessionViewSet
 
 # Create a router for our viewsets
 router = DefaultRouter()
 router.register(r'profiles', ProfileViewSet, basename='profile')
 router.register(r'match-suggestions', ProfileMatchSuggestionViewSet, basename='match-suggestion')
 router.register(r'notifications', NotificationViewSet, basename='notification')
-router.register(r'chats', ChatSessionViewSet, basename='chat')
+# router.register(r'chats', ChatSessionViewSet, basename='chat')
 router.register(r'users', UserViewSet, basename='user')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include('profiles.urls')), # Or whatever prefix you want for your profiles app
     path('api/', include(router.urls)),
     path('api/', include('vector_search.urls')),  # <-- Make sure this line exists
     path('api/auth/register/', UserRegistrationView.as_view(), name='register'),
@@ -29,6 +29,9 @@ urlpatterns = [
     # JWT Token endpoints
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/notifications/', include('notifications.urls')),
+    path('api/chats/', include('chats.urls')),
+    path('api/recently-missing/', include('recently_missing.urls')),
 ]
 
 # Serve media files in development

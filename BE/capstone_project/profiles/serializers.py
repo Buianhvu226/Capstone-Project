@@ -1,28 +1,43 @@
 from rest_framework import serializers
-from .models import Profile, ProfileImage, ProfileMatchSuggestion
-
-class ProfileImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProfileImage
-        fields = ['id', 'image', 'description']
-        read_only_fields = ['id']
+from .models import Profile, ProfileMatchSuggestion, ProfileImage
 
 class ProfileSerializer(serializers.ModelSerializer):
-    images = ProfileImageSerializer(many=True, read_only=True)
+    # Thêm các kiểm tra an toàn cho các trường liên quan đến user
+    username = serializers.SerializerMethodField()
+    user_id = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField()  # Vẫn giữ tên là images để tương thích với code hiện tại
     is_owner = serializers.SerializerMethodField()
-    siblings = serializers.JSONField(required=False) 
-
+    
     class Meta:
         model = Profile
-        fields = [
-            'id', 'user', 'title', 'full_name', 'siblings',  # Add 'siblings' here
-            'name_of_father', 'name_of_mother', 'born_year', 'losing_year',
-            'description', 'status', 'created_at', 'updated_at',
-            'images', 'is_owner'
-        ]
-        read_only_fields = ['id', 'user', 'created_at', 'updated_at', 'is_owner']
+        fields = ['id', 
+                  'user_id',        
+                  'username',       
+                  'title', 'full_name', 'born_year', 'losing_year', 
+                  'name_of_father', 'name_of_mother', 'siblings', 'description', 
+                  'status', 'created_at', 'is_owner', 'images']
+    
+    def get_username(self, obj):
+        """Lấy username an toàn"""
+        if hasattr(obj, 'user') and obj.user:
+            return obj.user.username
+        return None
+    
+    def get_user_id(self, obj):
+        """Lấy user_id an toàn"""
+        if hasattr(obj, 'user') and obj.user:
+            return obj.user.id
+        return None
+    
+    def get_images(self, obj):
+        """Lấy URL hình ảnh từ bảng ProfileImage"""
+        profile_image = ProfileImage.objects.filter(profile=obj).first()
+        if profile_image:
+            return profile_image.image
+        return None
     
     def get_is_owner(self, obj):
+        """Xác định người dùng hiện tại có phải là chủ sở hữu của hồ sơ hay không"""
         request = self.context.get('request')
         if request and hasattr(request, 'user'):
             return obj.user == request.user

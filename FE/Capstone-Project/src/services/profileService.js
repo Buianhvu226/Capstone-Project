@@ -1,54 +1,61 @@
-import api from './api'
+import api from "./api";
 
-export default {
-  async getProfiles(filters = {}) {
-    // filters can include page, name, losing_year, born_year, etc.
-    return api.get('/profiles/', { params: filters })
+const profileService = {
+  // Các phương thức hiện có
+  getProfiles(params = {}) {
+    return api.get("/profiles/", { params });
   },
 
-  async getProfileById(id) {
-    return api.get(`/profiles/${id}`)
+  createProfile(profileData) {
+    return api.post("/profiles/", profileData);
   },
 
-  async createProfile(profileData) {
-    const formData = new FormData()
-    Object.keys(profileData).forEach(key => {
-      if (key !== 'images' && profileData[key] !== undefined) {
-        formData.append(key, profileData[key])
-      }
-    })
-    if (profileData.images && profileData.images.length) {
-      profileData.images.forEach(image => {
-        formData.append('images', image)
-      })
-    }
-    return api.post('/profiles/', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+  getProfileById(id) {
+    return api.get(`/profiles/${id}/`);
   },
 
-  async updateProfile(id, profileData) {
-    const formData = new FormData()
-    Object.keys(profileData).forEach(key => {
-      if (key !== 'images' && profileData[key] !== undefined) {
-        formData.append(key, profileData[key])
-      }
-    })
-    if (profileData.images && profileData.images.length) {
-      profileData.images.forEach(image => {
-        formData.append('images', image)
-      })
-    }
-    return api.put(`/profiles/${id}/`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+  updateProfile(id, profileData) {
+    const { id: _, ...dataToSend } = profileData;
+    return api.put(`/profiles/${id}/`, dataToSend);
   },
 
-  async getSuggestedProfiles(profileId) {
-    return api.get(`/profiles/${profileId}/suggestions`)
-  }
-}
+  // Thêm các phương thức mới
+
+  // Lấy tất cả hồ sơ của người dùng hiện tại
+  getMyProfiles(page = 1) {
+    return api.get(`/profiles/my_all_profiles/`, {
+      params: { page },
+    });
+  },
+
+  // Xóa hồ sơ
+  deleteProfile(id) {
+    return api.delete(`/profiles/${id}/`);
+  },
+
+  // Lấy tất cả hồ sơ được gợi ý
+  getAllSuggestedProfiles(page = 1) {
+    return api.get(`/profiles/all_suggested_profiles/`, {
+      params: { page },
+    });
+  },
+
+  // Lấy tất cả hồ sơ tham chiếu
+  getAllReferencedProfiles(page = 1) {
+    return api.get(`/profiles/all_referenced_profiles/`, {
+      params: { page },
+    });
+  },
+
+  // Lấy hồ sơ được gợi ý cho một hồ sơ cụ thể
+  getSuggestedProfiles(profileId) {
+    return api.get(`/profiles/${profileId}/suggested_profiles/`);
+  },
+
+  // Cập nhật trạng thái hồ sơ
+  updateProfileStatus(profileId, status) {
+    return api.patch(`/profiles/${profileId}/`, { status });
+  },
+};
+
+export default profileService;

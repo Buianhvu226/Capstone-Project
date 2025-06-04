@@ -28,7 +28,7 @@ class ProfileSearchAPIView(APIView):
         try:
             # search_combined_chroma returns a list of IDs (as strings)
             id_list = search_combined_chroma(
-                df, collection, user_query, top_n_final=20, return_json=True
+                df, collection, user_query, top_n_final=22, return_json=True, user=self.request.user
             )
             if not id_list:
                 return Response({"results": []})
@@ -53,6 +53,8 @@ class ProfileSearchAPIView(APIView):
                     "siblings": profile.get('Anh chị em', ''),
                     "detail": str(profile.get('Chi tiet_merged', '')),
                 })
+
+            print("Tìm theo truy vấn detailed_results:", detailed_results)
 
             return Response({"results": detailed_results})
         except Exception as e:

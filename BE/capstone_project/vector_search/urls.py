@@ -4,5 +4,4 @@ from django.http import JsonResponse
 
 urlpatterns = [
     path('search-profiles/', ProfileSearchAPIView.as_view(), name='search-profiles'),
-    path('health/', lambda request: JsonResponse({"status": "ok"}), name='api-health'),
 ]

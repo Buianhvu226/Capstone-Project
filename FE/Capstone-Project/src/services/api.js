@@ -1,39 +1,25 @@
-import axios from 'axios'
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api', // <-- Set your backend API base URL here
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
+  baseURL: "http://127.0.0.1:8000/api",
+});
 
 // Request interceptor
 api.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem('token')
+  (config) => {
+    // Get token from localStorage
+    const token = localStorage.getItem("token");
+
+    // If token exists, add to headers
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
-    return config
-  },
-  error => {
-    return Promise.reject(error)
-  }
-)
 
-// Response interceptor
-api.interceptors.response.use(
-  response => {
-    return response.data
+    return config;
   },
-  error => {
-    if (error.response && error.response.status === 401) {
-      // Handle unauthorized access
-      localStorage.removeItem('token')
-      window.location.href = '/auth'
-    }
-    return Promise.reject(error.response ? error.response.data : error)
+  (error) => {
+    return Promise.reject(error);
   }
-)
+);
 
-export default api
+export default api;

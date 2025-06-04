@@ -17,7 +17,7 @@ def embed_and_upsert_profiles(df, collection, batch_size_chroma=100):
 
     for index, row in df.iterrows():
         # Use row['id'] instead of index
-        profile_id = str(row['id'])
+        profile_id = int(row['id'])
         text_to_embed = row.get(DETAIL_COLUMN_NAME)
         if pd.isna(text_to_embed) or not isinstance(text_to_embed, str) or not text_to_embed.strip():
             progress_bar.update(1)

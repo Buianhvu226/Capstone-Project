@@ -1,51 +1,84 @@
 from django.db import models
 from django.conf import settings
-from django.utils.translation import gettext_lazy as _
 from profiles.models import Profile
+from recently_missing.models import RecentlyMissingReport
 
 class ChatSession(models.Model):
     """Chat sessions between users"""
-    STATUS_CHOICES = (
-        ('active', _('Active')),
-        ('closed', _('Closed')),
-    )
-    
-    # Thay thế suggestion bằng trường liên kết đến Profile (tùy chọn)
+    id = models.IntegerField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     related_profile = models.ForeignKey(
         Profile, 
         on_delete=models.SET_NULL, 
-        related_name='related_chat_sessions',
-        null=True, blank=True,
-        help_text=_("Profile that initiated the chat")
+        null=True, 
+        blank=True,
+        help_text="Profile that initiated the chat"
     )
-    status = models.CharField(_("Status"), max_length=20, choices=STATUS_CHOICES, default='active')
-    created_at = models.DateTimeField(auto_now_add=True)
-
+    related_report = models.ForeignKey(
+        RecentlyMissingReport,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="Missing person report that initiated the chat"
+    )
+    
     def __str__(self):
-        return f"Chat session {self.id} created at {self.created_at}"
+        if self.related_profile:
+            return f"Chat Session {self.id} (Profile: {self.related_profile.id})"
+        elif self.related_report:
+            return f"Chat Session {self.id} (Report: {self.related_report.id})"
+        return f"Chat Session {self.id}"
+    
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            last = ChatSession.objects.order_by('-id').first()
+            self.id = 1 if last is None else last.id + 1
+        super().save(*args, **kwargs)
 
 class ChatParticipant(models.Model):
     """Participants in a chat session"""
+    id = models.IntegerField(primary_key=True)
     session = models.ForeignKey(ChatSession, on_delete=models.CASCADE, related_name='participants')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='chat_participations')
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # Thay thế User bằng settings.AUTH_USER_MODEL
+        on_delete=models.CASCADE
+    )
     joined_at = models.DateTimeField(auto_now_add=True)
-
+    
     class Meta:
-        unique_together = ('session', 'user')
-
+        unique_together = ['session', 'user']
+    
     def __str__(self):
         return f"{self.user.username} in session {self.session.id}"
+    
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            last = ChatParticipant.objects.order_by('-id').first()
+            self.id = 1 if last is None else last.id + 1
+        super().save(*args, **kwargs)
 
 class Message(models.Model):
     """Messages in a chat session"""
+    id = models.IntegerField(primary_key=True)
     session = models.ForeignKey(ChatSession, on_delete=models.CASCADE, related_name='messages')
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_messages')
-    content = models.TextField(_("Content"))
-    sent_at = models.DateTimeField(auto_now_add=True)
-    is_read = models.BooleanField(_("Is read"), default=False)
-
+    sender = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # Thay thế User bằng settings.AUTH_USER_MODEL
+        on_delete=models.CASCADE
+    )
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+    
     class Meta:
-        ordering = ['sent_at']
-
+        ordering = ['created_at']
+    
     def __str__(self):
-        return f"Message from {self.sender.username} in session {self.session.id}"
+        return f"Message from {self.sender.username} at {self.created_at}"
+    
+    def save(self, *args, **kwargs):
+        if self.id is None:
+            last = Message.objects.order_by('-id').first()
+            self.id = 1 if last is None else last.id + 1
+        super().save(*args, **kwargs)
+

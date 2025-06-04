@@ -7,7 +7,7 @@ from .config import DETAIL_COLUMN_NAME
 from .embedding import get_embedding
 from .llm_utils import extract_keywords_gemini, parallel_verify
 
-def search_combined_chroma(df_original, collection, user_query, top_n_final=300, return_json=False):
+def search_combined_chroma(df_original, collection, user_query, top_n_final=200, return_json=False, user=None):
     """
     Thực hiện tìm kiếm kết hợp:
     1. Tìm tất cả hồ sơ có ít nhất 1 từ khóa trùng khớp
@@ -20,6 +20,18 @@ def search_combined_chroma(df_original, collection, user_query, top_n_final=300,
     # --- Bước 1: Trích xuất từ khóa và tìm tất cả hồ sơ có ít nhất 1 từ khóa trùng khớp ---
     keywords = extract_keywords_gemini(user_query)
     print("Từ khóa trích xuất từ Gemini:", keywords)
+    
+    # Chỉ tạo thông báo nếu có user
+    if user:
+        from notifications.utils import create_notification
+        create_notification(
+            user=user,
+            notification_type='profile_creating',
+            content=f'Đang trích xuất các từ khóa từ Gemini: {keywords}',
+            additional_data={
+                'text': f'Đang trích xuất các từ khóa từ Gemini: {keywords}',
+            }
+        )
 
     # Tìm kiếm các hồ sơ chứa ít nhất một từ khóa
     keyword_match_indices = set()
@@ -27,6 +39,15 @@ def search_combined_chroma(df_original, collection, user_query, top_n_final=300,
 
     if keywords:
         print("Đang tìm kiếm hồ sơ chứa từ khóa...")
+        from notifications.utils import create_notification
+        create_notification(
+            user=user,
+            notification_type='profile_creating',
+            content=f'Đang tìm kiếm các hồ sơ chứa ít nhất 1 trong các từ khóa: {keywords}',
+            additional_data={
+                'text': f'Đang tìm kiếm các hồ sơ chứa ít nhất 1 trong các từ khóa: {keywords}',
+            }
+        )
         for keyword in keywords:
             for col in df_original.columns:
                 if df_original[col].dtype == object:
@@ -43,14 +64,41 @@ def search_combined_chroma(df_original, collection, user_query, top_n_final=300,
 
     if not valid_keyword_indices:
         print("\nKhông tìm thấy hồ sơ nào khớp với từ khóa. Sẽ tìm kiếm bằng vector search trên toàn bộ dữ liệu.")
+        from notifications.utils import create_notification
+        create_notification(
+            user=user,
+            notification_type='profile_creating',
+            content=f'Không tìm thấy hồ sơ nào khớp với từ khóa: {keywords}. Sẽ tìm kiếm bằng vector search trên toàn bộ dữ liệu.',
+            additional_data={
+                'text': f'Không tìm thấy hồ sơ nào khớp với từ khóa: {keywords}. Sẽ tìm kiếm bằng vector search trên toàn bộ dữ liệu.',
+            }
+        )
         keyword_match_counts = {idx: 0 for idx in df_original.index}
     else:
         print(f"\nTìm thấy {len(valid_keyword_indices)} hồ sơ khớp với ít nhất một từ khóa.")
+        from notifications.utils import create_notification
+        create_notification(
+            user=user,
+            notification_type='profile_creating',
+            content=f'Tìm thấy {len(valid_keyword_indices)} hồ sơ chứa ít nhất 1 trong các từ khóa: {keywords}.',
+            additional_data={
+                'text': f'Tìm thấy {len(valid_keyword_indices)} hồ sơ chứa ít nhất 1 trong các từ khóa: {keywords}.',
+            }
+        )
         keyword_counts = list(keyword_match_counts.values())
         print(f"Thống kê số lượng từ khóa khớp: Min={min(keyword_counts)}, Max={max(keyword_counts)}, Avg={sum(keyword_counts)/len(keyword_counts):.2f}")
 
     # --- Bước 2: Thực hiện vector search trên toàn bộ collection ---
     print("\nĐang tạo embedding cho truy vấn...")
+    from notifications.utils import create_notification
+    create_notification(
+        user=user,
+        notification_type='profile_creating',
+        content=f'Đang tạo mã hóa cho truy vấn: {user_query}',
+        additional_data={
+            'text': f'Đang tạo mã hóa cho truy vấn: {user_query}',
+        }
+    )   
     query_embedding = get_embedding(user_query, task_type="RETRIEVAL_QUERY")
 
     if query_embedding is None:
@@ -58,6 +106,15 @@ def search_combined_chroma(df_original, collection, user_query, top_n_final=300,
 
         if not valid_keyword_indices:
             print("Không tìm thấy kết quả từ khóa và không thể thực hiện vector search. Kết thúc tìm kiếm.")
+            from notifications.utils import create_notification
+            create_notification(
+                user=user,
+                notification_type='profile_creating',
+                content=f'Không tìm thấy kết quả từ khóa và không thể thực hiện vector search. Kết thúc tìm kiếm.',
+                additional_data={
+                    'text': f'Không tìm thấy kết quả từ khóa và không thể thực hiện vector search. Kết thúc tìm kiếm.',
+                }
+            )
             return None
 
         # Nếu không thể tạo embedding, xếp hạng chỉ dựa trên số lượng từ khóa khớp
@@ -75,11 +132,29 @@ def search_combined_chroma(df_original, collection, user_query, top_n_final=300,
 
         # Xác minh bằng LLM
         print(f"\nĐang xác minh {len(profiles_for_llm)} kết quả với Gemini LLM...")
+        from notifications.utils import create_notification
+        create_notification(
+            user=user,
+            notification_type='profile_creating',
+            content=f'Đang xác minh {len(profiles_for_llm)} kết quả với Gemini LLM...',
+            additional_data={
+                'text': f'Đang xác minh {len(profiles_for_llm)} kết quả với Gemini LLM...',
+            }
+        )
         verified_indices_str = parallel_verify(user_query, profiles_for_llm, max_profiles=len(profiles_for_llm))
 
         # Hiển thị kết quả cuối
         if verified_indices_str:
             print(f"\n=== {len(verified_indices_str)} KẾT QUẢ PHÙ HỢP NHẤT SAU KHI LỌC BẰNG LLM ===")
+            from notifications.utils import create_notification
+            create_notification(
+                user=user,
+                notification_type='profile_creating',
+                content=f'{len(verified_indices_str)} kết quả phù hợp nhất sau khi lọc bằng LLM.',
+                additional_data={
+                    'text': f'{len(verified_indices_str)} kết quả phù hợp nhất sau khi lọc bằng LLM.',
+                }
+            )
             for id_str in verified_indices_str:
                 try:
                     idx = int(id_str)
@@ -100,6 +175,15 @@ def search_combined_chroma(df_original, collection, user_query, top_n_final=300,
 
     # Thực hiện vector search
     print("Đang thực hiện vector search trên toàn bộ collection...")
+    from notifications.utils import create_notification
+    create_notification(
+        user=user,
+        notification_type='profile_creating',
+        content=f'Đang thực hiện vector search trên toàn bộ collection...',
+        additional_data={
+            'text': f'Đang thực hiện vector search trên toàn bộ collection...',
+        }
+    )
     try:
         vector_results = collection.query(
             query_embeddings=[query_embedding],
@@ -112,6 +196,15 @@ def search_combined_chroma(df_original, collection, user_query, top_n_final=300,
 
     # --- Bước 3: Kết hợp kết quả từ khóa và vector ---
     print("Đang kết hợp kết quả từ khóa và vector...")
+    from notifications.utils import create_notification
+    create_notification(
+        user=user,
+        notification_type='profile_creating',
+        content=f'Đang kết hợp kết quả từ khóa và vector...',
+        additional_data={
+            'text': f'Đang kết hợp kết quả từ khóa và vector...',
+        }
+    )
 
     vector_distances = {}
     if vector_results and vector_results.get('ids') and vector_results['ids'][0]:
@@ -146,6 +239,15 @@ def search_combined_chroma(df_original, collection, user_query, top_n_final=300,
     top_results = ranked_results[:top_n_final]
 
     print(f"\n--- Top {min(10, len(top_results))} Kết quả (Theo Điểm Kết Hợp, Trước LLM) ---")
+    from notifications.utils import create_notification
+    create_notification(
+        user=user,
+        notification_type='profile_creating',
+        content=f'Đã tìm thấy {len(top_results)} hồ sơ phù hợp sau khi kết hợp từ khóa và vector search.',
+        additional_data={
+            'text': f'Đã tìm thấy {len(top_results)} hồ sơ phù hợp sau khi kết hợp từ khóa và vector search.',
+        }
+    )
     for i, (idx, score) in enumerate(top_results[:10]):
         try:
             profile = df_original.loc[idx]
@@ -155,6 +257,16 @@ def search_combined_chroma(df_original, collection, user_query, top_n_final=300,
             print(f"  Rank: {i+1} | Tổng điểm: {score:.4f} (Vector: {vec_score:.4f}, KW: {kw_score:.4f}) | "
                   f"Từ khóa: {kw_count} | ID: {idx} | "
                   f"Tiêu đề: {profile.get('Tiêu đề', 'N/A')} | Họ và tên: {profile.get('Họ và tên', 'N/A')}")
+            
+            from notifications.utils import create_notification
+            create_notification(
+                user=user,
+                notification_type='profile_creating',
+                content=f'Hồ sơ {i+1} | ID: {idx} | Tiêu đề: {profile.get("Tiêu đề", "N/A")} | Họ và tên: {profile.get("Họ và tên", "N/A")}',
+                additional_data={
+                    'text': f'Hồ sơ {i+1} | ID: {idx} | Tiêu đề: {profile.get("Tiêu đề", "N/A")} | Họ và tên: {profile.get("Họ và tên", "N/A")}',
+                }
+            )
         except KeyError:
             print(f"  Rank: {i+1} | Tổng điểm: {score:.4f} | ID: {idx} | Lỗi: Không tìm thấy hồ sơ.")
 
@@ -175,10 +287,28 @@ def search_combined_chroma(df_original, collection, user_query, top_n_final=300,
         return None
 
     print(f"\nĐang xác minh {len(profiles_for_llm)} kết quả với Gemini LLM...")
+    from notifications.utils import create_notification
+    create_notification(
+        user=user,
+        notification_type='profile_creating',
+        content=f'Đang xác minh {len(profiles_for_llm)} kết quả với Gemini LLM...',
+        additional_data={
+            'text': f'Đang xác minh {len(profiles_for_llm)} kết quả với Gemini LLM...',
+        }
+    )
     verified_indices_str = parallel_verify(user_query, profiles_for_llm, max_profiles=len(profiles_for_llm))
 
     if verified_indices_str:
         print(f"\n=== {len(verified_indices_str)} KẾT QUẢ PHÙ HỢP NHẤT SAU KHI LỌC BẰNG LLM ===")
+        from notifications.utils import create_notification
+        create_notification(
+            user=user,
+            notification_type='profile_creating',
+            content=f'Đã tìm thấy {len(verified_indices_str)} kết quả phù hợp nhất sau khi lọc bằng LLM.',
+            additional_data={
+                'text': f'Đã tìm thấy {len(verified_indices_str)} kết quả phù hợp nhất sau khi lọc bằng LLM.',
+            }
+        )
         verified_indices_int = [int(id_str) for id_str in verified_indices_str if id_str.isdigit()]
         verified_with_scores = [(idx, combined_scores.get(idx, 0)) for idx in verified_indices_int if idx in combined_scores]
         verified_with_scores.sort(key=lambda x: x[1], reverse=True)
