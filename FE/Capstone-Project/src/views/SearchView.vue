@@ -4,7 +4,7 @@
             <!-- Hero section -->
             <div class="bg-white rounded-xl shadow-lg overflow-hidden p-5 mb-8 border border-blue-100">
                 <div class="flex flex-col md:flex-row items-center">
-                    <div class="flex-shrink-0 bg-blue-600 rounded-full p-3 mr-5 mb-4 md:mb-0 shadow-md">
+                    <div class="flex-shrink-0 bg-blue-400 rounded-full p-3 mr-5 mb-4 md:mb-0 shadow-md">
                         <i class="fas fa-search text-white text-2xl"></i>
                     </div>
                     <div>
@@ -36,7 +36,7 @@
 
                         <div class="flex justify-end">
                             <button type="submit" :disabled="loading || !searchQuery.trim()"
-                                class="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 hover:shadow-lg flex items-center">
+                                class="px-6 py-3 bg-gradient-to-r from-blue-400 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 hover:shadow-lg flex items-center">
                                 <i v-if="loading" class="fas fa-spinner fa-spin mr-2"></i>
                                 <i v-else class="fas fa-search mr-2"></i>
                                 <span>{{ loading ? 'Đang tìm kiếm...' : 'Tìm kiếm' }}</span>
@@ -92,7 +92,7 @@
                 class="bg-white rounded-xl shadow-lg p-6 mb-8 border border-blue-100 animate__animated animate__fadeIn">
                 <div class="flex items-center mb-6">
                     <div class="bg-gradient-to-r from-blue-100 to-indigo-100 p-3 rounded-lg mr-4">
-                        <i class="fas fa-cogs text-blue-600 text-2xl animate-spin"></i>
+                        <i class="fas fa-cogs text-blue-400 text-2xl animate-spin"></i>
                     </div>
                     <div>
                         <h3 class="text-xl font-semibold text-gray-800">Đang xử lý tìm kiếm</h3>
@@ -104,7 +104,7 @@
                 <div v-if="totalSteps > 0" class="mb-6">
                     <div class="flex justify-between items-center mb-2">
                         <span class="text-sm font-medium text-gray-700">Tiến độ tổng thể</span>
-                        <span class="text-sm font-semibold text-blue-600">{{ Math.round((progressStep / totalSteps) *
+                        <span class="text-sm font-semibold text-blue-400">{{ Math.round((progressStep / totalSteps) *
                             100) }}%</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
@@ -265,7 +265,7 @@
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-bold text-gray-800">Kết quả tìm kiếm ({{ searchResults.length }})</h2>
                         <button @click="clearSearch"
-                            class="text-blue-600 hover:text-blue-800 flex items-center text-sm">
+                            class="text-blue-400 hover:text-blue-800 flex items-center text-sm">
                             <i class="fas fa-times mr-1"></i> Xóa kết quả
                         </button>
                     </div>
@@ -326,7 +326,7 @@
                                 </span>
                                 <router-link v-if="profile.id"
                                     :to="{ name: 'profile-detail', params: { id: profile.id } }"
-                                    class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors flex items-center">
+                                    class="text-sm font-medium text-blue-400 hover:text-blue-800 transition-colors flex items-center">
                                     Chi tiết
                                     <i class="fas fa-arrow-right ml-1"></i>
                                 </router-link>

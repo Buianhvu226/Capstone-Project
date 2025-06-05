@@ -1,10 +1,19 @@
 import os
 import sys
 import django
+from pathlib import Path
 
 # Setup Django environment
-sys.path.append("F:\\Capstone-Project\\BE\\capstone_project")
+# sys.path.append("F:\\Capstone-Project\\BE\\capstone_project")
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "capstone_project.settings")
+# django.setup()
+
+# Setup Django environment
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.append(str(BASE_DIR / "capstone_project"))
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "capstone_project.settings")
+
 django.setup()
 
 from .embedding import initialize_vector_db

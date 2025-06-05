@@ -2,7 +2,7 @@
     <!-- Loading State -->
     <div v-if="loading" class="bg-white rounded-xl shadow p-12 flex justify-center">
         <div class="flex flex-col items-center">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400"></div>
             <p class="mt-4 text-gray-600">Đang tải hồ sơ gợi ý...</p>
         </div>
     </div>
@@ -15,7 +15,7 @@
         <h3 class="text-xl font-semibold text-gray-800 mb-2">Đã xảy ra lỗi</h3>
         <p class="text-gray-600 mb-6">{{ error }}</p>
         <button @click="fetchProfiles(1)"
-            class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
+            class="px-5 py-2 bg-blue-400 hover:bg-blue-700 text-white rounded-lg font-medium transition">
             <i class="fas fa-sync-alt mr-2"></i> Thử lại
         </button>
     </div>
@@ -31,7 +31,7 @@
             Hãy thử tạo thêm hồ sơ hoặc cập nhật thông tin chi tiết hơn để tăng khả năng tìm kiếm.
         </p>
         <button @click="fetchProfiles(1)"
-            class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition flex items-center gap-2 mx-auto">
+            class="px-6 py-3 bg-blue-400 hover:bg-blue-700 text-white rounded-lg font-medium transition flex items-center gap-2 mx-auto">
             <i class="fas fa-sync-alt"></i>
             <span>Làm mới gợi ý</span>
         </button>
@@ -61,7 +61,7 @@
                         <div>
                             <span class="text-sm font-medium text-gray-700 block">Gợi ý từ hồ sơ:</span>
                             <router-link :to="`/profile/${profile.suggested_from_profile.id}`"
-                                class="text-blue-600 hover:text-blue-800 hover:underline font-semibold">
+                                class="text-blue-400 hover:text-blue-800 hover:underline font-semibold">
                                 {{ profile.suggested_from_profile.title }}
                             </router-link>
                         </div>
@@ -156,7 +156,7 @@
                         <!-- Action Button -->
                         <div class="mt-auto pt-2">
                             <router-link :to="`/profile/${profile.id}`"
-                                class="inline-flex items-center justify-center w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-sm transition-all">
+                                class="inline-flex items-center justify-center w-full bg-gradient-to-r from-blue-400 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-sm transition-all">
                                 Xem chi tiết
                                 <i class="fas fa-arrow-right ml-2"></i>
                             </router-link>
@@ -190,7 +190,7 @@
                     <button :disabled="currentPage === 1" @click="currentPage > 1 && fetchProfiles(currentPage - 1)"
                         :class="[
                             'px-4 py-2 text-sm font-medium border border-gray-300 rounded-l-lg',
-                            currentPage === 1 ? 'bg-gray-100 text-gray-400' : 'bg-white text-blue-600 hover:bg-blue-50'
+                            currentPage === 1 ? 'bg-gray-100 text-gray-400' : 'bg-white text-blue-400 hover:bg-blue-50'
                         ]">
                         <i class="fas fa-chevron-left"></i>
                     </button>
@@ -203,7 +203,7 @@
                     <button :disabled="currentPage === totalPages"
                         @click="currentPage < totalPages && fetchProfiles(currentPage + 1)" :class="[
                             'px-4 py-2 text-sm font-medium border border-gray-300 rounded-r-lg',
-                            currentPage === totalPages ? 'bg-gray-100 text-gray-400' : 'bg-white text-blue-600 hover:bg-blue-50'
+                            currentPage === totalPages ? 'bg-gray-100 text-gray-400' : 'bg-white text-blue-400 hover:bg-blue-50'
                         ]">
                         <i class="fas fa-chevron-right"></i>
                     </button>

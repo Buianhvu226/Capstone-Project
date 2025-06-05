@@ -10,7 +10,7 @@ from notifications.views import NotificationViewSet
 
 # Create a router for our viewsets
 router = DefaultRouter()
-router.register(r'profiles', ProfileViewSet, basename='profile')
+# router.register(r'profiles', ProfileViewSet, basename='profile')
 router.register(r'match-suggestions', ProfileMatchSuggestionViewSet, basename='match-suggestion')
 router.register(r'notifications', NotificationViewSet, basename='notification')
 # router.register(r'chats', ChatSessionViewSet, basename='chat')

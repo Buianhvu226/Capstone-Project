@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Cấu hình API baseURL
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+const apiBaseUrl = import.meta.env.VITE_APP_API_URL;  
 
 /**
  * ProfileImageService - Service xử lý các thao tác liên quan đến hình ảnh hồ sơ

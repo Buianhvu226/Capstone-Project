@@ -329,7 +329,7 @@ function showToast(notification) {
       break;
     case "new_match":
       iconClass = "fa-handshake-o";
-      bgClass = "bg-blue-600";
+      bgClass = "bg-blue-400";
       break;
   }
 

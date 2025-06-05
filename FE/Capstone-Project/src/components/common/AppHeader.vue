@@ -2,7 +2,7 @@
   <header class="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-200 shadow-sm">
     <div class="container mx-auto flex items-center justify-between px-4 py-2">
       <!-- Logo -->
-      <router-link to="/" class="font-semibold text-blue-600">
+      <router-link to="/" class="font-semibold text-blue-400">
         <div class="flex items-center">
           <img src="@/assets/images/logo1.png" alt="Logo"
             class="w-[6rem] h-[2.5rem] xl:w-[8rem] xl:h-[3rem] object-contain mr-2 xl:mr-3" />
@@ -19,7 +19,7 @@
         <!-- Large screens: Show text -->
         <router-link v-for="link in navLinks" :key="link.path" :to="link.path"
           class="transition-colors duration-200 px-2 py-1 rounded-md text-sm lg:text-base whitespace-nowrap"
-          :class="[route.path === link.path ? 'font-semibold text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50']"
+          :class="[route.path === link.path ? 'font-semibold text-blue-400 bg-blue-50' : 'text-gray-600 hover:text-blue-400 hover:bg-gray-50']"
           :title="link.name">
 
           <!-- XL screens: Show full text -->
@@ -54,7 +54,7 @@
               <div class="py-2 px-3 bg-gray-100 flex justify-between items-center">
                 <h3 class="text-sm font-semibold text-gray-700">Thông báo</h3>
                 <button v-if="hasUnreadNotifications" @click="markAllAsRead"
-                  class="text-xs text-blue-600 hover:text-blue-800">
+                  class="text-xs text-blue-400 hover:text-blue-800">
                   Đánh dấu đã đọc tất cả
                 </button>
               </div>
@@ -73,13 +73,13 @@
                       <p class="text-sm text-gray-800 leading-relaxed" v-html="formatNotificationContent(notification)">
                       </p>
                       <span v-if="!notification.is_read"
-                        class="w-2 h-2 bg-blue-600 rounded-full ml-2 flex-shrink-0 mt-1"></span>
+                        class="w-2 h-2 bg-blue-400 rounded-full ml-2 flex-shrink-0 mt-1"></span>
                     </div>
                     <p class="text-xs text-gray-500 mt-1">{{ formatDate(notification.created_at) }}</p>
                   </div>
                 </div>
                 <div class="p-2 text-center border-t border-gray-200">
-                  <router-link to="/notifications" class="text-sm text-blue-600 hover:text-blue-800"
+                  <router-link to="/notifications" class="text-sm text-blue-400 hover:text-blue-800"
                     @click="showNotificationsPanel = false">
                     Xem tất cả thông báo
                   </router-link>
@@ -121,7 +121,7 @@
       <nav class="container mx-auto py-4 px-4 flex flex-col space-y-3">
         <router-link v-for="link in navLinks" :key="link.path" :to="link.path" @click="mobileMenuOpen = false"
           class="py-2 transition-colors duration-200"
-          :class="[route.path === link.path ? 'font-semibold text-blue-600' : 'text-gray-600']">
+          :class="[route.path === link.path ? 'font-semibold text-blue-400' : 'text-gray-600']">
           <i :class="link.icon" class="mr-2"></i>
           {{ link.name }}
         </router-link>
@@ -264,7 +264,7 @@ export default {
 
       let formattedContent = '';
       const ad = notification.additional_data || {};
-      const profileColor = "text-blue-600 font-medium";
+      const profileColor = "text-blue-400 font-medium";
 
       if (notification.type === 'new_message' || notification.content?.includes('Tin nhắn mới từ')) {
         // Xử lý thông báo tin nhắn

@@ -3,23 +3,55 @@
     <AppHeader />
 
     <!-- Hero Section -->
-    <section class="bg-gradient-to-r from-blue-600 to-indigo-700 py-16 px-4 mb-10">
-      <div class="container mx-auto text-center text-white">
-        <h1 class="text-4xl font-bold mb-4">Tìm kiếm người thân thất lạc gần đây</h1>
-        <p class="text-xl mb-8 max-w-3xl mx-auto opacity-80">
-          Tìm kiếm người thân thất lạc trong thời gian gần đây bằng công nghệ nhận diện khuôn mặt
-        </p>
-        <div class="flex flex-wrap justify-center gap-4">
+    <section class="relative py-20 px-4 overflow-hidden">
+      <!-- Background Image with Overlay -->
+      <div class="absolute inset-0">
+        <img
+          src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80"
+          alt="Family background" class="w-full h-full object-cover blur-xs" />
+        <!-- Subtle overlay for better text readability -->
+        <div class=""></div>
+      </div>
+
+      <!-- Content Container -->
+      <div class="relative z-10 container mx-auto text-center max-w-5xl">
+        <!-- Main heading -->
+        <div class="mb-8">
+          <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+            Tìm kiếm người thân <br>
+            <span class="text-blue-400 font-light">thất lạc gần đây</span>
+          </h1>
+        </div>
+
+        <!-- Subtitle -->
+        <div class="mb-12 max-w-3xl mx-auto">
+          <p class="text-xl md:text-2xl text-gray-200 leading-relaxed mb-4">
+            Sử dụng công nghệ nhận diện khuôn mặt để tìm kiếm người thân thất lạc
+          </p>
+          <p class="text-lg text-blue-100 opacity-90">
+            Nhanh chóng • Chính xác • Tin cậy
+          </p>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-16">
+          <!-- Primary CTA -->
           <router-link to="/recently-missing/create"
-            class="bg-white text-blue-700 hover:bg-blue-50 px-6 py-3 rounded-lg shadow hover:shadow-lg transition-all font-medium flex items-center">
-            <i class="fas fa-plus-circle mr-2"></i> Đăng hồ sơ mới
+            class="inline-flex items-center px-8 py-4 bg-white text-blue-400 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 font-semibold text-lg">
+            <i class="fas fa-plus-circle mr-3 text-blue-400"></i>
+            Đăng hồ sơ mới
           </router-link>
+
+          <!-- Secondary CTA -->
           <button @click="scrollToSearch"
-            class="bg-transparent border-2 border-white text-white hover:bg-white/10 px-6 py-3 rounded-lg transition-all font-medium flex items-center">
-            <i class="fas fa-search mr-2"></i> Tìm kiếm hồ sơ
+            class="inline-flex items-center px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-lg hover:bg-white/20 transition-all duration-300 font-semibold text-lg">
+            <i class="fas fa-search mr-3"></i>
+            Tìm kiếm hồ sơ
           </button>
         </div>
+
       </div>
+
     </section>
 
     <!-- Container -->
@@ -28,7 +60,7 @@
       <section class="bg-white rounded-xl shadow-lg mb-6 border border-gray-100">
         <div class="flex border-b border-gray-200">
           <button @click="setActiveTab('seeker')" :class="{
-            'border-b-2 border-blue-500 text-blue-600': activeTab === 'seeker',
+            'border-b-2 border-blue-500 text-blue-400': activeTab === 'seeker',
             'text-gray-500 hover:text-gray-700': activeTab !== 'seeker'
           }" class="flex-1 py-4 px-6 text-center font-medium transition-colors">
             <i class="fas fa-search mr-2"></i>
@@ -59,7 +91,7 @@
             <i class="fas fa-filter text-blue-500 mr-2"></i> Bộ lọc tìm kiếm
           </h2>
           <button @click="showFilters = !showFilters"
-            class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
+            class="text-blue-400 hover:text-blue-800 text-sm font-medium flex items-center">
             {{ showFilters ? 'Thu gọn' : 'Mở rộng' }}
             <i :class="showFilters ? 'fas fa-chevron-up ml-1' : 'fas fa-chevron-down ml-1'"></i>
           </button>
@@ -104,7 +136,7 @@
             <i class="fas fa-redo-alt mr-2"></i> Đặt lại
           </button>
           <button @click="applyFilters"
-            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+            class="bg-blue-400 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
             <i class="fas fa-search mr-2"></i> Tìm kiếm
           </button>
         </div>
@@ -116,16 +148,16 @@
           <div class="flex items-start">
             <div class="bg-blue-100 p-2 rounded-full mr-3 shadow-sm">
               <i :class="{
-                'fas fa-search text-blue-600': activeTab === 'seeker',
+                'fas fa-search text-blue-400': activeTab === 'seeker',
                 'fas fa-eye text-green-600': activeTab === 'finder',
                 'fas fa-user-edit text-yellow-600': activeTab === 'my-report'
               }"></i>
             </div>
             <div>
               <h2 class="text-xl font-semibold text-gray-800">
-                {{ activeTab === 'seeker' ? 'Danh sách người đi tìm' : 
-                   activeTab === 'finder' ? 'Danh sách người cung cấp thông tin' : 
-                   'Báo cáo của tôi' }}
+                {{ activeTab === 'seeker' ? 'Danh sách người đi tìm' :
+                activeTab === 'finder' ? 'Danh sách người cung cấp thông tin' :
+                'Báo cáo của tôi' }}
               </h2>
               <p class="text-gray-600 text-sm">{{ filteredProfiles.length }} hồ sơ được tìm thấy</p>
             </div>
@@ -144,14 +176,14 @@
           </div>
           <h3 class="text-xl font-medium text-gray-700 mb-2">Không tìm thấy kết quả</h3>
           <p class="text-gray-500 mb-6">
-            Không có hồ sơ {{ 
-              activeTab === 'seeker' ? 'người đi tìm' : 
-              activeTab === 'finder' ? 'người cung cấp thông tin' : 
-              'của bạn' 
+            Không có hồ sơ {{
+            activeTab === 'seeker' ? 'người đi tìm' :
+            activeTab === 'finder' ? 'người cung cấp thông tin' :
+            'của bạn'
             }} nào phù hợp với tiêu chí tìm kiếm của bạn
           </p>
           <router-link to="/recently-missing/create"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg inline-flex items-center transition-colors">
+            class="bg-blue-400 hover:bg-blue-700 text-white px-6 py-2 rounded-lg inline-flex items-center transition-colors">
             <i class="fas fa-plus-circle mr-2"></i> Đăng hồ sơ mới
           </router-link>
         </div>
@@ -520,3 +552,51 @@ export default {
   }
 }
 </script>
+<style scoped>
+/* Smooth transitions */
+.transition-all {
+  transition: all 0.3s ease;
+}
+
+/* Backdrop blur support */
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Bounce animation for scroll indicator */
+@keyframes bounce {
+
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  40%,
+  43% {
+    transform: translate3d(0, -8px, 0);
+  }
+
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 2s infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .text-6xl {
+    font-size: 3rem;
+  }
+}
+</style>

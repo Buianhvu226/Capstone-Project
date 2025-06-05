@@ -11,7 +11,7 @@
                                 showConversationList ? 'h-[40vh]' : 'h-[60px]'
                                 : 'h-full'
                         ]">
-                        <div class="p-3 border-b border-gray-100 bg-gradient-to-r from-blue-600 to-indigo-600 
+                        <div class="p-3 border-b border-gray-100 bg-gradient-to-r from-blue-400 to-indigo-600 
                              flex justify-between items-center min-h-[60px]">
                             <h2 class="text-white font-bold text-lg sm:text-xl flex items-center">
                                 <i class="fas fa-comments mr-2"></i> Tin nhắn
@@ -93,7 +93,7 @@
                                 <p class="text-sm text-gray-500 mb-4 sm:mb-6">Bắt đầu một cuộc trò chuyện mới bằng cách
                                     nhấn nút Liên hệ với chủ bài đăng trong trang chi tiết bài đăng.</p>
                                 <button
-                                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-2 rounded-lg transition-colors flex items-center mx-auto text-sm cursor-pointer"
+                                    class="bg-blue-500 hover:bg-blue-400 text-white px-4 sm:px-6 py-2 rounded-lg transition-colors flex items-center mx-auto text-sm cursor-pointer"
                                     @click="turnBacktoHome">
                                     <i class="fas fa-home text-xs sm:text-sm mr-2"></i> Quay về trang chủ
                                 </button>
@@ -209,7 +209,7 @@
                                             <!-- Message bubble -->
                                             <div class="max-w-[75%] rounded-2xl px-3 sm:px-4 py-2 shadow-sm mb-1 text-sm"
                                                 :class="message.is_mine
-                                                    ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-tr-none'
+                                                    ? 'bg-gradient-to-r from-blue-400 to-blue-500 text-white rounded-tr-none'
                                                     : 'bg-white border border-gray-100 text-gray-800 rounded-tl-none'">
                                                 <p class="whitespace-pre-line text-xs sm:text-sm">{{ message.content }}
                                                 </p>
@@ -225,7 +225,7 @@
 
                                             <!-- Avatar (only show for first message in group) -->
                                             <div v-if="message.is_mine && isFirstInGroup(message, messageGroup[i - 1])"
-                                                class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-r from-indigo-500 to-blue-600 flex-shrink-0 
+                                                class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-r from-indigo-500 to-blue-400 flex-shrink-0 
                                                 flex items-center justify-center text-white ml-1 sm:ml-2 shadow-sm">
                                                 <i class="fas fa-user text-[8px] sm:text-xs"></i>
                                             </div>
@@ -269,7 +269,7 @@
                                         class="flex-1 border border-gray-300 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 
                                         focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 text-xs sm:text-sm"
                                         placeholder="Nhập tin nhắn..." />
-                                    <button type="submit" :disabled="!newMessage.trim()" class="ml-1 sm:ml-2 bg-blue-500 hover:bg-blue-600 text-white p-1.5 sm:p-2 
+                                    <button type="submit" :disabled="!newMessage.trim()" class="ml-1 sm:ml-2 bg-blue-500 hover:bg-blue-400 text-white p-1.5 sm:p-2 
                                         w-8 h-8 sm:w-10 sm:h-10 rounded-full disabled:opacity-50 disabled:cursor-not-allowed 
                                         transition-colors flex items-center justify-center">
                                         <i class="fas fa-paper-plane text-xs sm:text-base"></i>

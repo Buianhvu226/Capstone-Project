@@ -89,12 +89,18 @@ export default {
     const handleSubmit = async () => {
       try {
         const response = await store.dispatch('auth/login', {
-          username: form.email, // Đổi từ email sang username
+          username: form.email,
           password: form.password
         })
         if (response && response.access) {
           localStorage.setItem('token', response.access)
-          router.push('/') // Redirect to homepage
+          // Kiểm tra nếu user id = 1 thì điều hướng đến admin
+          if (response.user && response.user.id === 1) {
+            router.push('/admin')
+          }
+          setTimeout(() => {
+            window.location.reload()
+          }, 1000)  
         }
       } catch (error) {
         console.error('Login failed:', error)

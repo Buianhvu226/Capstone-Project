@@ -10,14 +10,14 @@
             <nav class="flex py-4" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-3">
                     <li class="inline-flex items-center">
-                        <router-link to="/" class="text-gray-700 hover:text-blue-600">
+                        <router-link to="/" class="text-gray-700 hover:text-blue-400">
                             <i class="fas fa-home mr-2"></i> Trang chủ
                         </router-link>
                     </li>
                     <li>
                         <div class="flex items-center">
                             <i class="fas fa-chevron-right text-gray-400 mx-2 text-sm"></i>
-                            <router-link to="/recently-missing" class="text-gray-700 hover:text-blue-600">
+                            <router-link to="/recently-missing" class="text-gray-700 hover:text-blue-400">
                                 Người mất tích gần đây
                             </router-link>
                         </div>
@@ -25,7 +25,7 @@
                     <li>
                         <div class="flex items-center">
                             <i class="fas fa-chevron-right text-gray-400 mx-2 text-sm"></i>
-                            <router-link :to="`/recently-missing/${id}`" class="text-gray-700 hover:text-blue-600">
+                            <router-link :to="`/recently-missing/${id}`" class="text-gray-700 hover:text-blue-400">
                                 Chi tiết
                             </router-link>
                         </div>
@@ -40,7 +40,7 @@
             </nav>
 
             <!-- Hero section -->
-            <section class="bg-gradient-to-r from-blue-600 to-indigo-700 py-10 px-4 mb-8 rounded-xl">
+            <section class="bg-gradient-to-r from-blue-400 to-indigo-700 py-10 px-4 mb-8 rounded-xl">
                 <div class="container mx-auto max-w-4xl text-center text-white">
                     <h1 class="text-3xl font-bold mb-4">Chỉnh sửa hồ sơ</h1>
                     <p class="text-lg opacity-90 max-w-2xl mx-auto">
@@ -137,7 +137,7 @@
                                 Hủy
                             </router-link>
                             <button type="submit" :disabled="submitting"
-                                class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                class="bg-blue-400 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                                 <i class="fas fa-spinner fa-spin mr-2" v-if="submitting"></i>
                                 <i class="fas fa-save mr-2" v-else></i>
                                 {{ submitting ? 'Đang lưu...' : 'Lưu thay đổi' }}

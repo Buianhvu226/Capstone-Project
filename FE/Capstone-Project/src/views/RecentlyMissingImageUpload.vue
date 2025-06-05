@@ -5,14 +5,14 @@
       <nav class="flex py-4" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
-            <router-link to="/" class="text-gray-700 hover:text-blue-600">
+            <router-link to="/" class="text-gray-700 hover:text-blue-400">
               <i class="fas fa-home mr-2"></i> Trang chủ
             </router-link>
           </li>
           <li>
             <div class="flex items-center">
               <i class="fas fa-chevron-right text-gray-400 mx-2 text-sm"></i>
-              <router-link to="/recently-missing" class="text-gray-700 hover:text-blue-600">
+              <router-link to="/recently-missing" class="text-gray-700 hover:text-blue-400">
                 Người mất tích gần đây
               </router-link>
             </div>
@@ -20,7 +20,7 @@
           <li>
             <div class="flex items-center">
               <i class="fas fa-chevron-right text-gray-400 mx-2 text-sm"></i>
-              <router-link :to="`/recently-missing/${reportId}`" class="text-gray-700 hover:text-blue-600">
+              <router-link :to="`/recently-missing/${reportId}`" class="text-gray-700 hover:text-blue-400">
                 Chi tiết
               </router-link>
             </div>
@@ -75,7 +75,7 @@
                 <i class="fas fa-cloud-upload-alt text-gray-400 text-4xl mb-3"></i>
                 <p class="text-gray-500 mb-2">
                   Kéo và thả ảnh vào đây hoặc
-                  <label for="file-upload" class="text-blue-600 hover:text-blue-800 cursor-pointer">
+                  <label for="file-upload" class="text-blue-400 hover:text-blue-800 cursor-pointer">
                     chọn từ máy tính
                   </label>
                 </p>
@@ -113,7 +113,7 @@
           <div v-if="uploading" class="mb-6">
             <p class="text-sm font-medium text-gray-700 mb-1">Đang tải lên... {{ Math.round(uploadProgress) }}%</p>
             <div class="w-full bg-gray-200 rounded-full h-2.5">
-              <div class="bg-blue-600 h-2.5 rounded-full" :style="{ width: `${uploadProgress}%` }"></div>
+              <div class="bg-blue-400 h-2.5 rounded-full" :style="{ width: `${uploadProgress}%` }"></div>
             </div>
           </div>
 
@@ -124,7 +124,7 @@
               Hủy
             </router-link>
             <button @click="uploadImage" :disabled="uploading || !selectedFile"
-              class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              class="bg-blue-400 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               <i class="fas fa-cloud-upload-alt mr-2" v-if="!uploading"></i>
               <i class="fas fa-spinner fa-spin mr-2" v-else></i>
               {{ uploading ? 'Đang tải lên...' : 'Tải lên' }}

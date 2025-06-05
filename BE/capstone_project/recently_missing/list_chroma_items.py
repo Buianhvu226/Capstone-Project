@@ -1,7 +1,10 @@
 import chromadb
+from django.conf import settings
+from pathlib import Path
 
 # Cấu hình
-CHROMA_DB_PATH = "F:/Capstone-Project/BE/capstone_project/chroma_db_face"
+# CHROMA_DB_PATH = "F:/Capstone-Project/BE/capstone_project/chroma_db_face"
+CHROMA_DB_PATH = Path(settings.BASE_DIR) / 'chroma_db_face'
 COLLECTION_NAME = "face_report"
 
 def connect_to_chroma():

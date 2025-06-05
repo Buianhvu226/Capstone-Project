@@ -33,7 +33,7 @@
                 <!-- Year info badges -->
                 <div class="absolute top-3 left-3 flex flex-col space-y-2">
                     <span v-if="profile.born_year"
-                        class="bg-blue-600/80 text-white text-xs px-2 py-1 rounded-md backdrop-blur-sm">
+                        class="bg-blue-400 text-white text-xs px-2 py-1 rounded-md backdrop-blur-sm">
                         <i class="fas fa-birthday-cake mr-1"></i> {{ profile.born_year }}
                     </span>
                     <span v-if="profile.losing_year"

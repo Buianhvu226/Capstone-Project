@@ -21,7 +21,7 @@
         </nav>
         
         <div class="flex items-center space-x-3">
-          <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+          <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-400 rounded-xl flex items-center justify-center">
             <i class="fas fa-user-circle text-white text-2xl"></i>
           </div>
           <div>
@@ -36,7 +36,7 @@
         <div class="text-center">
           <div class="relative">
             <div class="w-20 h-20 border-4 border-blue-200 border-t-blue-400 rounded-full animate-spin mb-4 mx-auto"></div>
-            <div class="absolute inset-0 w-20 h-20 border-4 border-blue-200 border-b-blue-600 rounded-full animate-spin mx-auto" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
+            <div class="absolute inset-0 w-20 h-20 border-4 border-blue-200 border-b-blue-400 rounded-full animate-spin mx-auto" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
           </div>
           <p class="text-gray-600 font-medium">Đang tải thông tin tài khoản...</p>
         </div>
@@ -74,7 +74,7 @@
               <div class="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
                 <div class="relative">
                   <div class="w-24 h-24 bg-white rounded-full p-1 shadow-lg">
-                    <div class="w-full h-full bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold relative overflow-hidden">
+                    <div class="w-full h-full bg-gradient-to-br from-blue-500 to-blue-400 rounded-full flex items-center justify-center text-white text-2xl font-bold relative overflow-hidden">
                       <img v-if="accountData.avatar_url" 
                         :src="accountData.avatar_url" 
                         :alt="accountData.full_name"
@@ -161,7 +161,7 @@
                     <p class="text-gray-600 mt-1">Quản lý thông tin cá nhân của bạn</p>
                   </div>
                   <button v-if="!isEditing" @click="startEditing"
-                    class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-700 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                    class="bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-400 hover:to-blue-700 text-white px-6 py-3 rounded-xl text-sm font-semibold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                     <i class="fas fa-edit mr-2"></i>
                     Chỉnh sửa thông tin
                   </button>
@@ -274,7 +274,7 @@
                       Hủy bỏ
                     </button>
                     <button type="submit" :disabled="updating"
-                      class="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-700 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                      class="px-8 py-3 bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-400 hover:to-blue-700 text-white rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                       <i v-if="updating" class="fas fa-spinner fa-spin mr-2"></i>
                       <i v-else class="fas fa-save mr-2"></i>
                       {{ updating ? 'Đang cập nhật...' : 'Lưu thay đổi' }}
@@ -375,7 +375,7 @@
                       <div class="flex-1">
                         <h4 class="text-lg font-semibold text-gray-900 mb-2">Phiên đăng nhập</h4>
                         <p class="text-gray-600 text-sm mb-4">Quản lý các thiết bị đã đăng nhập</p>
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-all shadow hover:shadow-lg">
+                        <button class="bg-blue-500 hover:bg-blue-400 text-white px-6 py-2 rounded-lg text-sm font-semibold transition-all shadow hover:shadow-lg">
                           <i class="fas fa-eye mr-2"></i>
                           Xem phiên đăng nhập
                         </button>

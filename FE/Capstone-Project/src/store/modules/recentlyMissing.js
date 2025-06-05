@@ -354,6 +354,22 @@ const actions = {
       commit("SET_LOADING", false);
     }
   },
+  
+  // Fetch statistics for missing reports
+  async fetchStatistics({ commit }) {
+    try {
+      commit("SET_LOADING", true);
+      commit("SET_ERROR", null);
+      
+      const response = await recentlyMissingService.getStatistics();
+      return response; // Return the response directly to be used in the component
+    } catch (error) {
+      commit("SET_ERROR", error.message || "Failed to fetch statistics");
+      throw error;
+    } finally {
+      commit("SET_LOADING", false);
+    }
+  },
 };
 
 const getters = {

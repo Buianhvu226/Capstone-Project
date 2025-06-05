@@ -4,6 +4,7 @@ import profile from "./modules/profile";
 import message from "./modules/message";
 import notifications from "./modules/notifications";
 import recentlyMissing from "./modules/recentlyMissing";
+import admin from "./modules/admin";
 
 export default createStore({
   modules: {
@@ -12,5 +13,6 @@ export default createStore({
     message,
     notifications,
     recentlyMissing,
+    admin,
   },
 });

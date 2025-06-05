@@ -6,7 +6,7 @@
         }" class="rounded-xl shadow-md hover:shadow-lg transition-all overflow-hidden">
 
             <!-- Own Profile Badge -->
-            <div v-if="isOwnProfile(profile)" class="bg-blue-600 text-white px-4 py-2 text-sm font-medium">
+            <div v-if="isOwnProfile(profile)" class="bg-blue-400 text-white px-4 py-2 text-sm font-medium">
                 <i class="fas fa-crown mr-2"></i> Hồ sơ của bạn
             </div>
 
@@ -55,7 +55,7 @@
                                 <div class="flex items-center gap-3 mb-2 flex-wrap">
                                     <!-- Profile Type Badge -->
                                     <span :class="{
-                                        'bg-blue-600 text-white': profile.profile_type === 'seeker',
+                                        'bg-blue-400 text-white': profile.profile_type === 'seeker',
                                         'bg-green-600 text-white': profile.profile_type === 'finder'
                                     }" class="px-3 py-1 rounded-full text-sm font-medium">
                                         <i :class="{
@@ -77,7 +77,7 @@
 
                                 <router-link :to="`/recently-missing/${profile.id}`" class="block">
                                     <h3
-                                        class="text-xl font-bold text-gray-800 hover:text-blue-600 transition-colors mb-1">
+                                        class="text-xl font-bold text-gray-800 hover:text-blue-400 transition-colors mb-1">
                                         {{ profile.title }}
                                     </h3>
                                 </router-link>
@@ -91,7 +91,7 @@
                                     <span class="hidden sm:inline">•</span>
                                     <span>{{ formatTimeAgo(profile.created_at) }}</span>
                                     <!-- Own profile indicator -->
-                                    <div v-if="isOwnProfile(profile)" class="flex items-center text-blue-600">
+                                    <div v-if="isOwnProfile(profile)" class="flex items-center text-blue-400">
                                         <span class="hidden sm:inline">•</span>
                                         <i class="fas fa-user-check mr-1"></i>
                                         <span class="text-xs">Của bạn</span>
@@ -123,7 +123,7 @@
                             <div v-if="profile.name" class="flex items-center">
                                 <div
                                     class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                    <i class="fas fa-user text-blue-600"></i>
+                                    <i class="fas fa-user text-blue-400"></i>
                                 </div>
                                 <div class="min-w-0">
                                     <p class="text-sm text-gray-500">Tên người thất lạc</p>
@@ -159,7 +159,7 @@
                             <div v-if="profile.missing_date" class="flex items-center">
                                 <div
                                     class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                    <i class="fas fa-calendar-alt text-blue-600"></i>
+                                    <i class="fas fa-calendar-alt text-blue-400"></i>
                                 </div>
                                 <div>
                                     <p class="text-sm text-gray-500">
@@ -191,7 +191,7 @@
                             <div class="flex items-center gap-3">
                                 <!-- Contact button (if not own profile and user is logged in) -->
                                 <button v-if="!isOwnProfile(profile) && currentUser" @click="openContactModal(profile)"
-                                    class="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                                    class="bg-blue-400 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors">
                                     <i class="fas fa-envelope mr-1"></i>
                                     <span class="hidden sm:inline">Liên hệ</span>
                                 </button>

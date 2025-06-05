@@ -136,6 +136,30 @@ const routes = [
       title: "Tải lên ảnh khuôn mặt",
     },
   },
+  {
+    path: "/admin",
+    name: "admin",
+    component: () => import("../views/AdminView.vue"), // Đảm bảo bạn đã tạo AdminView.vue
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/users/:id",
+    name: "admin-user-detail",
+    component: () => import("../views/AdminUserDetail.vue"),
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/users/:id/edit",
+    name: "admin-user-edit",
+    component: () => import("../views/AdminUserEdit.vue"),
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
+  {
+    path: "/admin/analytics",
+    name: "admin-analytics",
+    component: () => import("../components/admin/AdminAnalytics.vue"),
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
 ];
 
 const router = createRouter({
@@ -149,6 +173,26 @@ const router = createRouter({
 // Navigation guard
 router.beforeEach((to, from, next) => {
   const isAuthenticated = localStorage.getItem("token");
+  
+  // Kiểm tra quyền admin
+  if (to.matched.some((record) => record.meta.requiresAdmin)) {
+    const userData = localStorage.getItem("user");
+    let isAdmin = false;
+    
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        isAdmin = user && user.id === 1;
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
+    }
+    
+    if (!isAuthenticated || !isAdmin) {
+      next({ name: "home" });
+      return;
+    }
+  }
 
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!isAuthenticated) {

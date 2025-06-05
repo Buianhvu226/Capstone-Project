@@ -38,7 +38,7 @@
           <button v-for="tab in tabs" :key="tab.id" @click="activeTab = tab.id" class="flex-shrink-0" :class="[
             'px-6 py-4 font-medium text-sm whitespace-nowrap transition-colors flex items-center gap-2',
             activeTab === tab.id
-              ? 'text-blue-600 border-b-2 border-blue-600'
+              ? 'text-blue-400 border-b-2 border-blue-400'
               : 'text-gray-600 hover:text-gray-900'
           ]">
             <i :class="tab.icon"></i>

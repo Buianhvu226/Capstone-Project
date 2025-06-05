@@ -118,7 +118,7 @@
         <!-- Submit Button -->
         <div class="flex justify-end">
             <button type="submit" :disabled="loading"
-                class="bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white px-6 py-3 rounded-lg transition-all shadow-md hover:shadow-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
+                class="bg-blue-400 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white px-6 py-3 rounded-lg transition-all shadow-md hover:shadow-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
                 <i v-if="loading" class="fas fa-spinner fa-spin mr-2"></i>
                 <i v-else class="fas fa-save mr-2"></i>
                 {{ submitButtonText }}

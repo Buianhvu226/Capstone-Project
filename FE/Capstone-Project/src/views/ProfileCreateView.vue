@@ -6,7 +6,7 @@
       <div
         class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all hover:shadow-xl p-6 mb-8 border border-blue-100">
         <div class="flex flex-col md:flex-row items-start md:items-center">
-          <div class="flex-shrink-0 bg-blue-600 rounded-full p-3 mr-5 mb-4 md:mb-0 shadow-md">
+          <div class="flex-shrink-0 bg-blue-400 rounded-full p-3 mr-5 mb-4 md:mb-0 shadow-md">
             <i class="fas fa-user-friends text-white text-2xl"></i>
           </div>
           <div>
@@ -25,7 +25,7 @@
           <button @click="activeTab = 'manual'" :class="[
             'flex-1 py-3 px-6 font-medium text-sm rounded-md transition-all duration-300 ease-in-out flex items-center justify-center',
             activeTab === 'manual'
-              ? 'bg-blue-600 text-white shadow-md transform scale-105'
+              ? 'bg-blue-400 text-white shadow-md transform scale-105'
               : 'bg-transparent text-gray-600 hover:bg-gray-100'
           ]">
             <i class="fas fa-list-ul mr-2"></i>
@@ -61,12 +61,12 @@
               <div :class="[
                 'flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 ease-in-out',
                 step >= 1
-                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md'
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-400 text-white shadow-md'
                   : 'bg-gray-200 text-gray-500'
               ]">
                 <i class="fas fa-keyboard"></i>
               </div>
-              <span class="mt-2 font-medium text-sm" :class="step >= 1 ? 'text-blue-600' : 'text-gray-500'">Nhập thông
+              <span class="mt-2 font-medium text-sm" :class="step >= 1 ? 'text-blue-400' : 'text-gray-500'">Nhập thông
                 tin</span>
             </div>
 
@@ -75,12 +75,12 @@
               <div :class="[
                 'flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 ease-in-out',
                 step >= 2
-                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md transform scale-110'
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-400 text-white shadow-md transform scale-110'
                   : 'bg-gray-200 text-gray-500'
               ]">
                 <i class="fas fa-edit"></i>
               </div>
-              <span class="mt-2 font-medium text-sm" :class="step >= 2 ? 'text-blue-600' : 'text-gray-500'">Xem lại &
+              <span class="mt-2 font-medium text-sm" :class="step >= 2 ? 'text-blue-400' : 'text-gray-500'">Xem lại &
                 chỉnh sửa</span>
             </div>
 
@@ -212,7 +212,7 @@
         <div class="flex justify-end">
           <button @click="handleAutoSubmit"
             :disabled="loading || !autoProfileData.title || !autoProfileData.description"
-            class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-lg hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 hover:shadow-lg flex items-center">
+            class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-400 text-white rounded-lg hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 hover:shadow-lg flex items-center">
             <i v-if="loading" class="fas fa-spinner fa-spin mr-2"></i>
             <i v-else class="fas fa-brain mr-2"></i>
             <span>{{ loading ? 'Đang xử lý...' : 'Phân tích mô tả' }}</span>
@@ -232,12 +232,12 @@
 
           <div class="flex justify-center space-x-4">
             <router-link :to="{ name: 'profile-detail', params: { id: createdProfileId } }"
-              class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all transform hover:scale-105 hover:shadow-lg flex items-center">
+              class="px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all transform hover:scale-105 hover:shadow-lg flex items-center">
               <i class="fas fa-eye mr-2"></i> Xem hồ sơ
             </router-link>
             <button @click="resetForm"
               class="px-6 py-3 bg-white text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all hover:shadow flex items-center">
-              <i class="fas fa-plus mr-2 text-blue-600"></i> Tạo hồ sơ mới
+              <i class="fas fa-plus mr-2 text-blue-400"></i> Tạo hồ sơ mới
             </button>
           </div>
         </div>
@@ -288,7 +288,7 @@
                     {{ formatDate(profile.created_at || new Date()) }}
                   </span>
                   <router-link :to="{ name: 'profile-detail', params: { id: profile.id } }"
-                    class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors flex items-center group">
+                    class="text-sm font-medium text-blue-400 hover:text-blue-800 transition-colors flex items-center group">
                     Xem chi tiết
                     <i class="fas fa-arrow-right ml-1 group-hover:translate-x-1 transition-transform duration-300"></i>
                   </router-link>
@@ -329,7 +329,7 @@
         class="bg-white rounded-xl shadow-lg p-6 mb-8 border border-blue-100">
         <div class="flex items-center mb-6">
           <div class="bg-gradient-to-r from-blue-100 to-indigo-100 p-3 rounded-lg mr-4">
-            <i class="fas fa-cogs text-blue-600 text-2xl animate-spin"></i>
+            <i class="fas fa-cogs text-blue-400 text-2xl animate-spin"></i>
           </div>
           <div>
             <h3 class="text-xl font-semibold text-gray-800">Đang xử lý hồ sơ</h3>
@@ -341,7 +341,7 @@
         <div v-if="totalSteps > 0" class="mb-6">
           <div class="flex justify-between items-center mb-2">
             <span class="text-sm font-medium text-gray-700">Tiến độ tổng thể</span>
-            <span class="text-sm font-semibold text-blue-600">{{ Math.round((progressStep / totalSteps) * 100)
+            <span class="text-sm font-semibold text-blue-400">{{ Math.round((progressStep / totalSteps) * 100)
               }}%</span>
           </div>
           <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">

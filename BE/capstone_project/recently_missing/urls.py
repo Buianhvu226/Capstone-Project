@@ -20,4 +20,5 @@ urlpatterns = [
     path('reports/<int:report_id>/matches/', views.get_missing_report_matches, name='missing-report-matches'),
     path('matches/<int:match_id>/update_status/', views.update_match_status, name='update-match-status'),
     path('reports/analyze-matches/', views.analyze_matches_with_llm, name='analyze-matches-llm'), 
+    path('statistics/', views.statistics, name='missing-report-statistics'),
 ]

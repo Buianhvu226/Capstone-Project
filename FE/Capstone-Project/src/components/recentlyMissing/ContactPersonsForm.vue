@@ -2,7 +2,7 @@
     <div class="space-y-4">
         <div class="flex items-center justify-between">
             <label class="block text-sm font-medium text-gray-700">
-                <i class="fas fa-users mr-2 text-blue-600"></i>
+                <i class="fas fa-users mr-2 text-blue-400"></i>
                 Thông tin người thân liên hệ
                 <span class="text-gray-400 font-normal ml-1">(tùy chọn)</span>
             </label>
@@ -63,7 +63,7 @@
                     Gợi ý mối quan hệ phổ biến:
                 </p>
                 <button type="button" @click="showSuggestions = !showSuggestions"
-                    class="text-xs text-blue-600 hover:text-blue-800">
+                    class="text-xs text-blue-400 hover:text-blue-800">
                     {{ showSuggestions ? 'Ẩn' : 'Hiện' }}
                 </button>
             </div>

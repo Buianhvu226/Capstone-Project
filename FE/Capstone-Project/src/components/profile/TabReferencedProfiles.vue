@@ -2,7 +2,7 @@
     <!-- Loading State -->
     <div v-if="loading" class="bg-white rounded-xl shadow p-12 flex justify-center">
         <div class="flex flex-col items-center">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400"></div>
             <p class="mt-4 text-gray-600">Đang tải hồ sơ tham chiếu...</p>
         </div>
     </div>
@@ -15,7 +15,7 @@
         <h3 class="text-xl font-semibold text-gray-800 mb-2">Đã xảy ra lỗi</h3>
         <p class="text-gray-600 mb-6">{{ error }}</p>
         <button @click="fetchProfiles(1)"
-            class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
+            class="px-5 py-2 bg-blue-400 hover:bg-blue-700 text-white rounded-lg font-medium transition">
             <i class="fas fa-sync-alt mr-2"></i> Thử lại
         </button>
     </div>
@@ -31,7 +31,7 @@
             Khi hệ thống phát hiện hồ sơ khác có liên quan đến hồ sơ của bạn, thông tin sẽ hiển thị tại đây.
         </p>
         <button @click="fetchProfiles(1)"
-            class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition flex items-center gap-2 mx-auto">
+            class="px-6 py-3 bg-blue-400 hover:bg-blue-700 text-white rounded-lg font-medium transition flex items-center gap-2 mx-auto">
             <i class="fas fa-sync-alt"></i>
             <span>Làm mới</span>
         </button>
@@ -61,7 +61,7 @@
                         <div>
                             <span class="text-sm font-medium text-gray-700 block">Tham chiếu đến hồ sơ của bạn:</span>
                             <router-link :to="`/profile/${profile.referenced_to_profile.id}`"
-                                class="text-blue-600 hover:text-blue-800 hover:underline font-semibold">
+                                class="text-blue-400 hover:text-blue-800 hover:underline font-semibold">
                                 {{ profile.referenced_to_profile.title }}
                             </router-link>
                         </div>
@@ -168,7 +168,7 @@
                         <!-- Action Button -->
                         <div class="mt-auto pt-2">
                             <router-link :to="`/profile/${profile.id}`"
-                                class="inline-flex items-center justify-center w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-sm transition-all">
+                                class="inline-flex items-center justify-center w-full bg-gradient-to-r from-indigo-600 to-blue-400 hover:from-indigo-700 hover:to-blue-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-sm transition-all">
                                 Xem chi tiết
                                 <i class="fas fa-arrow-right ml-2"></i>
                             </router-link>

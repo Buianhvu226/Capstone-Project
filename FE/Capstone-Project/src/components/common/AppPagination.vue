@@ -16,7 +16,7 @@
             <!-- Page numbers -->
             <template v-for="page in displayPages" :key="page">
                 <button v-if="page !== '...'" @click="changePage(page)" :class="{
-                    'bg-blue-50 border-blue-500 text-blue-600': page === currentPage,
+                    'bg-blue-50 border-blue-500 text-blue-400': page === currentPage,
                     'bg-white border-gray-300 text-gray-700 hover:bg-gray-50': page !== currentPage
                 }" class="px-4 py-2 border-t border-b text-sm font-medium">
                     {{ page }}

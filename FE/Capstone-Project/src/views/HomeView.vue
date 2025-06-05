@@ -19,7 +19,7 @@
                   {{ slide.description }}
                 </p>
                 <router-link to="/profile/create"
-                  class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition transform hover:scale-105 animate-pulse">
+                  class="bg-blue-400 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:shadow-xl transition transform hover:scale-105 animate-pulse">
                   Đăng tin tìm kiếm ngay
                 </router-link>
               </div>
@@ -39,16 +39,16 @@
       <!-- Advanced Search Section - Enhanced -->
       <section class="container mx-auto px-4 -mt-10 relative z-10">
         <div
-          class="bg-white rounded-xl shadow-xl p-6 md:p-8 mb-12 transform transition hover:shadow-2xl border-t-4 border-blue-600">
+          class="bg-white rounded-xl shadow-xl p-6 md:p-8 mb-12 transform transition hover:shadow-2xl border-t-4 border-blue-400">
           <div class="flex items-center justify-between mb-6">
             <div class="flex items-center">
               <div class="bg-blue-100 rounded-full p-2 mr-3">
-                <i class="fas fa-filter text-blue-600 text-lg"></i>
+                <i class="fas fa-filter text-blue-400 text-lg"></i>
               </div>
               <h2 class="text-2xl font-bold text-gray-800">Bộ lọc tìm kiếm</h2>
             </div>
             <button @click="toggleAdvancedSearch"
-              class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
+              class="text-blue-400 hover:text-blue-800 text-sm font-medium flex items-center">
               {{ showAdvancedSearch ? 'Thu gọn' : 'Mở rộng' }}
               <i :class="showAdvancedSearch ? 'fas fa-chevron-up ml-1' : 'fas fa-chevron-down ml-1'"></i>
             </button>
@@ -134,12 +134,12 @@
                 <div class="flex space-x-4">
                   <label class="inline-flex items-center">
                     <input type="radio" v-model="filters.status" value="active"
-                      class="text-blue-600 focus:ring-blue-500 h-4 w-4" />
+                      class="text-blue-400 focus:ring-blue-500 h-4 w-4" />
                     <span class="ml-2 text-sm text-gray-700">Đang tìm kiếm</span>
                   </label>
                   <label class="inline-flex items-center">
                     <input type="radio" v-model="filters.status" value="all"
-                      class="text-blue-600 focus:ring-blue-500 h-4 w-4" />
+                      class="text-blue-400 focus:ring-blue-500 h-4 w-4" />
                     <span class="ml-2 text-sm text-gray-700">Tất cả</span>
                   </label>
                 </div>
@@ -151,7 +151,7 @@
                   <i class="fas fa-redo-alt mr-2"></i> Đặt lại
                 </button>
                 <button type="submit"
-                  class="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg shadow hover:shadow-lg transition transform hover:scale-105 flex items-center justify-center flex-1 md:flex-none">
+                  class="px-8 py-3 bg-gradient-to-r from-blue-400 to-blue-700 text-white font-semibold rounded-lg shadow hover:shadow-lg transition transform hover:scale-105 flex items-center justify-center flex-1 md:flex-none">
                   <i class="fas fa-search mr-2"></i> Tìm kiếm
                 </button>
               </div>
@@ -165,7 +165,7 @@
         <div class="flex justify-between items-center mb-8">
           <div class="flex items-center space-x-3">
             <div class="bg-blue-100 p-2.5 rounded-full shadow-sm">
-              <i class="fas fa-user-circle text-blue-600 text-xl"></i>
+              <i class="fas fa-user-circle text-blue-400 text-xl"></i>
             </div>
             <div>
               <h2 class="text-2xl font-bold text-gray-800 flex items-center">
@@ -178,7 +178,7 @@
               <p class="text-gray-500 text-sm mt-0.5">Các hồ sơ đang tìm kiếm người thân thất lạc</p>
             </div>
           </div>
-          <div class="hidden md:flex items-center space-x-2 text-sm text-blue-600">
+          <div class="hidden md:flex items-center space-x-2 text-sm text-blue-400">
             <button class="hover:text-blue-800 transition-colors flex items-center p-1.5">
               <i class="fas fa-sort-amount-down mr-1.5"></i> Mới nhất
               <i class="fas fa-chevron-down ml-1 text-xs"></i>

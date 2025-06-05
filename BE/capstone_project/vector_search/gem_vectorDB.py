@@ -13,6 +13,9 @@ import requests
 import json
 from google.api_core import exceptions as google_exceptions # Import exceptions của Google
 
+from django.conf import settings
+from pathlib import Path
+
 # --- Cấu hình ---
 PRIMARY_GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "AIzaSyCN_flhR6pXNOvQWjZSMAwe_t1DnI_O8IM")
 GEMINI_API_KEYS = [
@@ -35,11 +38,14 @@ GEMINI_API_KEYS = [key for key in GEMINI_API_KEYS if key] # Loại bỏ key rỗ
 
 # --- Cấu hình ChromaDB và Embedding ---
 # F:\Capstone-Project\BE\capstone_project\chroma_db_store
-CHROMA_PERSIST_PATH = "F:\\Capstone-Project\\BE\\capstone_project\\chroma_db_store"  # Đường dẫn lưu trữ ChromaDB
+# CHROMA_PERSIST_PATH = "F:\\Capstone-Project\\BE\\capstone_project\\chroma_db_store"
+CHROMA_PERSIST_PATH = Path(settings.BASE_DIR) / "chroma_db_store"
+CHROMA_PERSIST_PATH.mkdir(parents=True, exist_ok=True)
+
 CHROMA_COLLECTION_NAME = "missing_people_profiles"  # Tên collection trong ChromaDB
 EMBEDDING_MODEL_NAME = "models/text-embedding-004"  # Model embedding của Google
 DETAIL_COLUMN_NAME = "Chi tiet_merged"  # Tên cột chứa nội dung chi tiết
-CSV_PATH = "F:\\missing_people(NCHCCCL)\\data\\profiles_detailed_data_final.csv"
+# CSV_PATH = "F:\\missing_people(NCHCCCL)\\data\\profiles_detailed_data_final.csv"
 
 # Cấu hình LLM (giữ nguyên hoặc điều chỉnh nếu cần)
 BATCH_SIZE_LLM = 3

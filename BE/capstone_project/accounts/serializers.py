@@ -8,7 +8,7 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'full_name', 'address', 'phone', 'avatar_url']
+        fields = ['id', 'username', 'email', 'full_name', 'address', 'phone', 'avatar_url','is_active']
         read_only_fields = ['id']
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -38,8 +38,13 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def validate(self, attrs):
-        data = super().validate(attrs)
-        user = self.user
-        user_serializer = UserSerializer(user)
-        data['user'] = user_serializer.data
-        return data
+        try:
+            data = super().validate(attrs)
+            user = self.user
+            user_serializer = UserSerializer(user)
+            data['user'] = user_serializer.data
+            data['user']['is_admin'] = user.is_staff or user.is_superuser
+            return data
+        except Exception as e:
+            print(f"Authentication error: {str(e)}")
+            raise

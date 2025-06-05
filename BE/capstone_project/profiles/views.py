@@ -19,6 +19,7 @@ from rest_framework.permissions import IsAuthenticated  # <-- Add this import
 from django_filters.rest_framework import DjangoFilterBackend
 import django_filters
 from datetime import datetime
+from django.db.models import Count
 
 # Define ProfileFilter class
 class ProfileFilter(django_filters.FilterSet):
@@ -784,6 +785,48 @@ class ProfileViewSet(viewsets.ModelViewSet):
                 "created_at": profile_image.created_at
             }
         }, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def statistics(self, request):
+        """
+        Endpoint để thống kê số lượng hồ sơ theo trạng thái và số lượng cặp hồ sơ ghép đôi theo trạng thái
+        """
+        # Thống kê số lượng hồ sơ theo trạng thái
+        profile_stats = Profile.objects.values('status').annotate(count=Count('id'))
+        profile_stats_dict = {}
+        for stat in profile_stats:
+            profile_stats_dict[stat['status']] = stat['count']
+        
+        # Đảm bảo tất cả trạng thái đều có trong kết quả, ngay cả khi không có hồ sơ nào
+        for status, _ in Profile.STATUS_CHOICES:
+            if status not in profile_stats_dict:
+                profile_stats_dict[status] = 0
+        
+        # Thống kê số lượng cặp hồ sơ ghép đôi theo trạng thái
+        match_stats = ProfileMatchSuggestion.objects.values('match_status').annotate(count=Count('id'))
+        match_stats_dict = {}
+        for stat in match_stats:
+            match_stats_dict[stat['match_status']] = stat['count']
+        
+        # Đảm bảo tất cả trạng thái đều có trong kết quả, ngay cả khi không có cặp ghép đôi nào
+        for status, _ in ProfileMatchSuggestion.STATUS_CHOICES:
+            if status not in match_stats_dict:
+                match_stats_dict[status] = 0
+        
+        # Tổng số hồ sơ và cặp ghép đôi
+        total_profiles = Profile.objects.count()
+        total_matches = ProfileMatchSuggestion.objects.count()
+        
+        return Response({
+            'profiles': {
+                'total': total_profiles,
+                'by_status': profile_stats_dict
+            },
+            'matches': {
+                'total': total_matches,
+                'by_status': match_stats_dict
+            }
+        })
 
 class ProfileMatchSuggestionViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProfileMatchSuggestionSerializer

@@ -3,7 +3,7 @@
     <div class="max-w-3xl mx-auto">
       <div class="bg-white rounded-lg shadow-lg overflow-hidden">
         <!-- Header -->
-        <div class="px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-between">
+        <div class="px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-400 flex items-center justify-between">
           <h1 class="text-xl font-bold text-white flex items-center">
             <i class="fa fa-bell mr-3"></i>
             Thông báo
@@ -11,7 +11,7 @@
           <button 
             v-if="hasUnreadNotifications"
             @click="markAllAsRead" 
-            class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-medium transition-colors">
+            class="text-sm bg-blue-400 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-medium transition-colors">
             <i class="fa fa-check-circle mr-1"></i> Đánh dấu đã đọc tất cả
           </button>
         </div>
@@ -58,7 +58,7 @@
                       :class="`px-2 py-0.5 rounded-full text-xs font-medium ${getNotificationTagClass(notification.type)}`">
                       {{ getNotificationTagText(notification.type) }}
                     </span>
-                    <span v-if="!notification.is_read" class="ml-2 w-2 h-2 bg-blue-600 rounded-full"></span>
+                    <span v-if="!notification.is_read" class="ml-2 w-2 h-2 bg-blue-400 rounded-full"></span>
                   </div>
                   <p class="text-xs text-gray-500 flex items-center">
                     <i class="fa fa-clock-o mr-1"></i>
@@ -74,7 +74,7 @@
                   <div class="mt-2 flex items-start space-x-2">
                     <div class="w-1 h-full flex-shrink-0 bg-blue-500 rounded-full mt-1.5"></div>
                     <div>
-                      <p class="text-gray-700">Hồ sơ mới: <span class="font-medium text-blue-600">{{ getProfileTitle(notification, 'matching_profile_title') }}</span></p>
+                      <p class="text-gray-700">Hồ sơ mới: <span class="font-medium text-blue-400">{{ getProfileTitle(notification, 'matching_profile_title') }}</span></p>
                       <p class="text-gray-700">Hồ sơ của bạn: <span class="font-medium text-green-600">{{ getProfileTitle(notification, 'your_profile_title') }}</span></p>
                     </div>
                   </div>
@@ -82,7 +82,7 @@
                 
                 <div v-else-if="notification.type === 'profile_created_with_matches'" class="text-sm mb-3 leading-relaxed">
                   <p class="font-medium text-gray-800">
-                    Hồ sơ <span class="text-blue-600">"{{ getRelatedProfileTitle(notification) }}"</span> 
+                    Hồ sơ <span class="text-blue-400">"{{ getRelatedProfileTitle(notification) }}"</span> 
                     đã được tạo thành công
                   </p>
                   
@@ -114,7 +114,7 @@
                 
                 <!-- Action button -->
                 <div class="mt-3">
-                  <button class="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center">
+                  <button class="text-xs text-blue-400 hover:text-blue-800 font-medium flex items-center">
                     <span>{{ getActionText(notification.type) }}</span>
                     <i class="fa fa-chevron-right ml-1"></i>
                   </button>
@@ -228,7 +228,7 @@ export default {
         case 'profile_created_with_matches':
           return 'bg-green-100 text-green-600'
         case 'new_match':
-          return 'bg-blue-100 text-blue-600'
+          return 'bg-blue-100 text-blue-400'
         default:
           return 'bg-gray-100 text-gray-600'
       }

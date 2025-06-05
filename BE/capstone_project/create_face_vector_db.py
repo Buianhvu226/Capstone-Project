@@ -1,8 +1,10 @@
 import chromadb
+from django.conf import settings
+from pathlib import Path
 
 # Đường dẫn lưu DB
-persist_directory = "F:\\Capstone-Project\\BE\\capstone_project\\chroma_db_face"
-
+# persist_directory = "F:\\Capstone-Project\\BE\\capstone_project\\chroma_db_face"
+persist_directory = Path(settings.BASE_DIR) / "chroma_db_face"
 # Khởi tạo client Chroma theo chuẩn mới
 client = chromadb.PersistentClient(path=persist_directory)
 

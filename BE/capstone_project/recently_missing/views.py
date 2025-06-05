@@ -26,13 +26,25 @@ import json
 from rest_framework import permissions, status
 from notifications.utils import create_notification
 from rest_framework.permissions import AllowAny
-from rest_framework.permissions import IsAuthenticated 
+from rest_framework.permissions import IsAuthenticated
+from django.db.models import Count
+from django.conf import settings
+from pathlib import Path
 
 genai.configure(api_key="AIzaSyCN_flhR6pXNOvQWjZSMAwe_t1DnI_O8IM")
 task_queue = queue.Queue()
 
 def get_chroma_collection():
-    client = chromadb.PersistentClient(path="F:\\Capstone-Project\\BE\\capstone_project\\chroma_db_face")
+    # client = chromadb.PersistentClient(path="F:\\Capstone-Project\\BE\\capstone_project\\chroma_db_face")
+
+    # Tạo đường dẫn trực tiếp từ BASE_DIR
+    chroma_db_path = Path(settings.BASE_DIR) / "chroma_db_face"
+
+    # Đảm bảo thư mục tồn tại
+    chroma_db_path.mkdir(parents=True, exist_ok=True)
+
+    # Khởi tạo client
+    client = chromadb.PersistentClient(path=str(chroma_db_path))
     return client.get_or_create_collection("face_report")
 
 def encode_face_from_url(image_url, scale=0.5):
@@ -678,3 +690,47 @@ class MyReportsListView(generics.ListAPIView):
         return RecentlyMissingReport.objects.filter(
             user=self.request.user
         ).order_by('-created_at')
+
+# Thống kê
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def statistics(request):
+    """
+    Endpoint để thống kê số lượng báo cáo theo trạng thái và số lượng cặp báo cáo ghép đôi theo trạng thái
+    """
+    # Thống kê số lượng báo cáo theo trạng thái
+    report_stats = RecentlyMissingReport.objects.values('status').annotate(count=Count('id'))
+    report_stats_dict = {}
+    for stat in report_stats:
+        report_stats_dict[stat['status']] = stat['count']
+    
+    # Đảm bảo tất cả trạng thái đều có trong kết quả, ngay cả khi không có báo cáo nào
+    for status, _ in RecentlyMissingReport.STATUS_CHOICES:
+        if status not in report_stats_dict:
+            report_stats_dict[status] = 0
+    
+    # Thống kê số lượng cặp báo cáo ghép đôi theo trạng thái
+    match_stats = MissingPersonMatchResult.objects.values('status').annotate(count=Count('id'))
+    match_stats_dict = {}
+    for stat in match_stats:
+        match_stats_dict[stat['status']] = stat['count']
+    
+    # Đảm bảo tất cả trạng thái đều có trong kết quả, ngay cả khi không có cặp ghép đôi nào
+    for status, _ in MissingPersonMatchResult.STATUS_CHOICES:
+        if status not in match_stats_dict:
+            match_stats_dict[status] = 0
+    
+    # Tổng số báo cáo và cặp ghép đôi
+    total_reports = RecentlyMissingReport.objects.count()
+    total_matches = MissingPersonMatchResult.objects.count()
+    
+    return Response({
+        'reports': {
+            'total': total_reports,
+            'by_status': report_stats_dict
+        },
+        'matches': {
+            'total': total_matches,
+            'by_status': match_stats_dict
+        }
+    })

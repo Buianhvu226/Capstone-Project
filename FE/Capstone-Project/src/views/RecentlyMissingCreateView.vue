@@ -1,7 +1,7 @@
 <template>
     <div class="bg-gray-50 min-h-screen pt-16 pb-10">
         <!-- Hero section -->
-        <section class="bg-gradient-to-r from-blue-600 to-indigo-700 py-12 px-4 mb-8">
+        <section class="bg-gradient-to-r from-blue-400 to-blue-500 py-12 px-4 mb-8">
             <div class="container mx-auto max-w-4xl text-center text-white">
                 <h1 class="text-3xl font-bold mb-4">Đăng hồ sơ người thất lạc gần đây</h1>
                 <p class="text-lg opacity-90 max-w-2xl mx-auto">
@@ -137,7 +137,7 @@
                                 Hủy
                             </router-link>
                             <button type="submit" :disabled="submitting"
-                                class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                class="bg-blue-400 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                                 <i class="fas fa-spinner fa-spin mr-2" v-if="submitting"></i>
                                 <i class="fas fa-save mr-2" v-else></i>
                                 {{ submitting ? 'Đang tạo...' : 'Tạo hồ sơ' }}

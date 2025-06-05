@@ -93,7 +93,7 @@
               <!-- Non-owner controls -->
               <template v-else>
                 <button @click="startConversation"
-                  class="inline-flex items-center px-6 py-2 bg-white hover:bg-gray-50 text-blue-600 rounded-lg font-medium transition-all hover:scale-105 shadow-lg">
+                  class="inline-flex items-center px-6 py-2 bg-white hover:bg-gray-50 text-blue-400 rounded-lg font-medium transition-all hover:scale-105 shadow-lg">
                   <i class="fas fa-envelope mr-2"></i>
                   <span>Liên hệ</span>
                 </button>
@@ -122,7 +122,7 @@
               <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-semibold text-gray-800">Hình ảnh</h3>
                 <router-link v-if="isOwner" :to="`/profiles/${profile.id}/upload-image`"
-                  class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-md transition flex items-center">
+                  class="px-3 py-1 bg-blue-400 hover:bg-blue-700 text-white text-sm rounded-md transition flex items-center">
                   <i class="fas fa-upload mr-1"></i>
                   {{ profile.images ? 'Cập nhật ảnh' : 'Thêm ảnh' }}
                 </router-link>
@@ -134,7 +134,7 @@
                   <i class="fas fa-image text-4xl text-gray-400 mb-2"></i>
                   <p class="text-gray-500 text-center">Không có hình ảnh</p>
                   <router-link v-if="isOwner" :to="`/profiles/${profile.id}/upload-image`"
-                    class="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition">
+                    class="mt-4 px-4 py-2 bg-blue-400 hover:bg-blue-700 text-white rounded-md transition">
                     <i class="fas fa-cloud-upload-alt mr-2"></i>
                     Tải ảnh lên
                   </router-link>
@@ -225,7 +225,7 @@
             <div v-if="profile.status === 'found'" class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-md mb-6">
               <div class="flex">
                 <div class="flex-shrink-0">
-                  <i class="fas fa-check-circle text-blue-600"></i>
+                  <i class="fas fa-check-circle text-blue-400"></i>
                 </div>
                 <div class="ml-3">
                   <h3 class="text-sm font-medium text-blue-800">Đã tìm thấy</h3>
@@ -253,7 +253,7 @@
                         rows="2"></textarea>
                       <div class="flex justify-end mt-2">
                         <button type="submit" :disabled="!newComment.trim()"
-                          :class="`px-4 py-2 rounded-md font-medium transition ${newComment.trim() ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`">
+                          :class="`px-4 py-2 rounded-md font-medium transition ${newComment.trim() ? 'bg-blue-400 hover:bg-blue-700 text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`">
                           Gửi bình luận
                         </button>
                       </div>
@@ -286,12 +286,12 @@
                       <p class="mt-1 text-gray-700">{{ comment.content }}</p>
                       <div class="mt-2 flex items-center space-x-4 text-sm">
                         <button @click="likeComment(comment.id)"
-                          class="flex items-center text-gray-500 hover:text-blue-600">
-                          <i :class="`${comment.is_liked ? 'fas text-blue-600' : 'far'} fa-thumbs-up mr-1`"></i>
+                          class="flex items-center text-gray-500 hover:text-blue-400">
+                          <i :class="`${comment.is_liked ? 'fas text-blue-400' : 'far'} fa-thumbs-up mr-1`"></i>
                           <span>{{ comment.likes || 0 }}</span>
                         </button>
                         <button @click="replyToComment(comment.id)"
-                          class="flex items-center text-gray-500 hover:text-blue-600">
+                          class="flex items-center text-gray-500 hover:text-blue-400">
                           <i class="far fa-comment mr-1"></i>
                           <span>Trả lời</span>
                         </button>
@@ -314,7 +314,7 @@
               <!-- Pagination -->
               <div v-if="comments.length > 0 && hasMoreComments" class="mt-4 text-center">
                 <button @click="loadMoreComments"
-                  class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm text-blue-600 hover:bg-blue-50">
+                  class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm text-blue-400 hover:bg-blue-50">
                   Xem thêm bình luận
                 </button>
               </div>
@@ -327,7 +327,7 @@
           <div class="flex flex-col md:flex-row md:items-center justify-between">
             <div class="flex items-center">
               <div class="bg-blue-100 rounded-full p-2 mr-3">
-                <i class="fas fa-hands-helping text-blue-600"></i>
+                <i class="fas fa-hands-helping text-blue-400"></i>
               </div>
               <div>
                 <h3 class="font-medium text-gray-800">Bạn có thông tin về người thân này?</h3>
@@ -335,7 +335,7 @@
               </div>
             </div>
             <button @click="startConversation"
-              class="mt-4 md:mt-0 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-700 hover:to-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-sm transition">
+              class="mt-4 md:mt-0 bg-gradient-to-r from-blue-400 to-blue-400 hover:from-blue-700 hover:to-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-sm transition">
               <i class="fas fa-comment-alt mr-2"></i> Liên hệ ngay
             </button>
           </div>
@@ -350,7 +350,7 @@
         <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
         <p class="text-gray-600 mb-4">Có lỗi xảy ra khi tải thông tin hồ sơ.</p>
         <button @click="fetchProfile"
-          class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition">
+          class="bg-blue-400 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition">
           Thử lại
         </button>
       </div>
@@ -359,7 +359,7 @@
       <div v-else-if="!loading && !error && !profile" class="bg-white rounded-lg p-8 text-center shadow-md">
         <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
         <p class="text-gray-600 mb-4">Không tìm thấy hồ sơ hoặc hồ sơ đã bị xóa.</p>
-        <router-link to="/" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition">
+        <router-link to="/" class="bg-blue-400 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow transition">
           Quay lại trang chủ
         </router-link>
       </div>
@@ -414,7 +414,7 @@
                   <!-- Status info -->
                   <div class="flex-1">
                     <div class="font-medium text-gray-900"
-                      :class="{ 'text-blue-600': profile.status === status.value }">
+                      :class="{ 'text-blue-400': profile.status === status.value }">
                       {{ status.label }}
                     </div>
                     <div class="text-sm text-gray-500 mt-1">{{ status.description }}</div>
@@ -423,7 +423,7 @@
                   <!-- Current status indicator -->
                   <div v-if="profile.status === status.value" class="ml-3">
                     <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                      <i class="fas fa-check text-blue-600 text-sm"></i>
+                      <i class="fas fa-check text-blue-400 text-sm"></i>
                     </div>
                   </div>
                 </div>
@@ -510,7 +510,7 @@ export default {
         value: 'found',
         label: 'Đã tìm thấy',
         description: 'Đánh dấu đã đoàn tụ thành công',
-        iconClass: 'fas fa-check-circle text-blue-600',
+        iconClass: 'fas fa-check-circle text-blue-400',
         bgClass: 'bg-blue-100',
       },
       {

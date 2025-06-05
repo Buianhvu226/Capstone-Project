@@ -42,7 +42,7 @@
                     <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-md">
                         <div class="flex">
                             <div class="flex-shrink-0">
-                                <i class="fas fa-info-circle text-blue-600"></i>
+                                <i class="fas fa-info-circle text-blue-400"></i>
                             </div>
                             <div class="ml-3">
                                 <p class="text-sm text-blue-700">

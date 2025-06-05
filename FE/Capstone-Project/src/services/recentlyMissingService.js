@@ -221,6 +221,19 @@ const recentlyMissingService = {
       throw error;
     }
   },
+
+  /**
+   * Lấy thống kê báo cáo người mất tích gần đây
+   */
+  async getStatistics() {
+    try {
+      const response = await api.get("/recently-missing/statistics/");
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching missing report statistics:", error);
+      throw error;
+    }
+  },
 };
 
 export default recentlyMissingService;

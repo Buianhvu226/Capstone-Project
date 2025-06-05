@@ -1,9 +1,11 @@
 import chromadb
 from chromadb.utils import embedding_functions
+from django.conf import settings
+from pathlib import Path
 
 # --- Config (copy từ gem_vectorDB.py) ---
-# F:\Capstone-Project\BE\capstone_project\chroma_db_store
-CHROMA_PERSIST_PATH = "F:\\Capstone-Project\\BE\\capstone_project\\chroma_db_store"
+# CHROMA_PERSIST_PATH = "F:\\Capstone-Project\\BE\\capstone_project\\chroma_db_store"
+CHROMA_PERSIST_PATH = Path(settings.BASE_DIR) / "chroma_db_store"
 CHROMA_COLLECTION_NAME = "missing_people_profiles"
 EMBEDDING_MODEL_NAME = "models/text-embedding-004"
 PRIMARY_GOOGLE_API_KEY = "AIzaSyCN_flhR6pXNOvQWjZSMAwe_t1DnI_O8IM"

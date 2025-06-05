@@ -4,7 +4,7 @@
         <div class="container mx-auto px-4 py-6">
             <div class="bg-white rounded-xl shadow-lg overflow-hidden p-6 mb-8 border border-blue-100">
                 <div class="flex flex-col md:flex-row items-start md:items-center">
-                    <div class="flex-shrink-0 bg-blue-600 rounded-full p-3 mr-5 mb-4 md:mb-0 shadow-md">
+                    <div class="flex-shrink-0 bg-blue-400 rounded-full p-3 mr-5 mb-4 md:mb-0 shadow-md">
                         <i class="fas fa-edit text-white text-2xl"></i>
                     </div>
                     <div>
@@ -28,7 +28,7 @@
             <!-- Loading State -->
             <div v-if="initialLoading" class="bg-white rounded-xl shadow-lg p-12 text-center">
                 <div class="inline-flex items-center justify-center">
-                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400"></div>
                 </div>
                 <p class="text-gray-600 mt-4">Đang tải thông tin hồ sơ...</p>
             </div>
@@ -42,7 +42,7 @@
                 <p class="text-gray-600 mb-4">{{ error }}</p>
                 <div class="flex justify-center space-x-4">
                     <button @click="fetchProfile"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                        class="px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-700 transition">
                         <i class="fas fa-sync-alt mr-2"></i> Thử lại
                     </button>
                     <router-link to="/my-profile"
@@ -85,7 +85,7 @@
                     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div
                         class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 animate__animated animate__fadeInUp animate__faster">
-                        <div class="flex items-center text-blue-600 mb-4">
+                        <div class="flex items-center text-blue-400 mb-4">
                             <div class="bg-blue-100 p-2 rounded-full mr-3">
                                 <i class="fas fa-info-circle"></i>
                             </div>
@@ -99,7 +99,7 @@
                                 <i class="fas fa-arrow-left mr-2"></i> Tiếp tục chỉnh sửa
                             </button>
                             <button @click="confirmSubmit" :disabled="submitting"
-                                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                                class="px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
                                 <i class="fas fa-check mr-2"></i>
                                 <span v-if="submitting">Đang lưu...</span>
                                 <span v-else>Xác nhận lưu</span>
@@ -174,7 +174,7 @@ export default {
                     return;
                 }
 
-                const response = await axios.get(`http://127.0.0.1:8000/api/profiles/${profileId.value}/`, {
+                const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/api/profiles/${profileId.value}/`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -216,7 +216,7 @@ export default {
                 }
 
                 // 1. Create a new profile with the updated data
-                const createResponse = await axios.post('http://127.0.0.1:8000/api/profiles/', profileData.value, {
+                const createResponse = await axios.post(`${import.meta.env.VITE_APP_API_URL}/api/profiles/`, profileData.value, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -224,7 +224,7 @@ export default {
 
                 // 2. Delete the old profile
                 if (newProfileId) {
-                    await axios.delete(`http://127.0.0.1:8000/api/profiles/${profileId.value}/`, {
+                    await axios.delete(`${import.meta.env.VITE_APP_API_URL}/api/profiles/${profileId.value}/`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
 

@@ -4,14 +4,14 @@
     <div class="flex items-center justify-between mb-6">
       <div class="flex items-center">
         <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-          <i class="fas fa-link text-blue-600"></i>
+          <i class="fas fa-link text-blue-400"></i>
         </div>
         <h2 class="text-xl font-bold text-gray-800">Hồ sơ có thể liên quan</h2>
       </div>
       
       <div v-if="profiles.length > 3" class="text-sm">
         <button @click="showAllProfiles = !showAllProfiles" 
-          class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
+          class="text-blue-400 hover:text-blue-800 font-medium flex items-center">
           <span>{{ showAllProfiles ? 'Thu gọn' : `Xem tất cả (${profiles.length})` }}</span>
           <i class="fas" :class="showAllProfiles ? 'fa-chevron-up ml-1' : 'fa-chevron-right ml-1'"></i>
         </button>
@@ -45,7 +45,7 @@
     <!-- Show more/less button for mobile -->
     <div v-if="profiles.length > 3" class="mt-6 text-center md:hidden">
       <button @click="showAllProfiles = !showAllProfiles" 
-        class="w-full py-2 bg-white text-blue-600 rounded-md border border-blue-200 hover:bg-blue-50 transition-colors">
+        class="w-full py-2 bg-white text-blue-400 rounded-md border border-blue-200 hover:bg-blue-50 transition-colors">
         <i class="fas" :class="showAllProfiles ? 'fa-chevron-up mr-1' : 'fa-chevron-down mr-1'"></i>
         {{ showAllProfiles ? 'Thu gọn' : `Xem tất cả ${profiles.length} hồ sơ` }}
       </button>

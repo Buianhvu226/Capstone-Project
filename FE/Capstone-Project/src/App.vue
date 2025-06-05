@@ -1,19 +1,20 @@
 <template>
   <div class="min-h-screen bg-gray-50">
-    <AppHeader />
+    <!-- Conditionally render AppHeader only for non-admin routes -->
+    <AppHeader v-if="!isAdminRoute" />
     <main class="container mx-auto px-4 py-6">
       <router-view />
     </main>
     <AppFooter v-if="isAuthenticated" />
-
   </div>
 </template>
 
 <script>
-import { computed, onMounted, onBeforeUnmount, ref } from 'vue' // Thêm ref
-import { useStore } from 'vuex'
-import AppHeader from './components/common/AppHeader.vue'
-import AppFooter from './components/common/AppFooter.vue'
+import { computed, onMounted, onBeforeUnmount, ref } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
+import AppHeader from './components/common/AppHeader.vue';
+import AppFooter from './components/common/AppFooter.vue';
 
 export default {
   components: {
@@ -21,11 +22,14 @@ export default {
     AppFooter,
   },
   setup() {
-    const store = useStore()
-    const isAuthenticated = computed(() => store.getters['auth/isAuthenticated'])
+    const store = useStore();
+    const route = useRoute();
 
-    // Thêm biến để kiểm tra môi trường
+    const isAuthenticated = computed(() => store.getters['auth/isAuthenticated']);
     const isDevelopmentMode = ref(process.env.NODE_ENV === 'development');
+
+    // Check if the current route is an admin route
+    const isAdminRoute = computed(() => route.path.startsWith('/admin'));
 
     onMounted(() => {
       // Check if notifications are supported
@@ -39,36 +43,32 @@ export default {
         Notification.requestPermission().then(permission => {
           console.log('Quyền thông báo:', permission);
 
-          // If permission granted and user is logged in, subscribe to real-time notifications
-          if (permission === 'granted' && isLoggedIn.value) {
+          if (permission === 'granted' && isAuthenticated.value) {
             store.dispatch('notifications/subscribeToNotifications');
           }
         });
-      } else if (Notification.permission === 'granted' && isLoggedIn.value) {
-        // If permission already granted and user is logged in, subscribe to real-time notifications
+      } else if (Notification.permission === 'granted' && isAuthenticated.value) {
         store.dispatch('notifications/subscribeToNotifications');
       }
 
       // Check auth status
       const token = localStorage.getItem('token');
       if (token) {
-        // Subscribe to realtime notifications and messages
         store.dispatch('notifications/subscribeToNotifications');
         store.dispatch('message/subscribeToMessages');
       }
-    })
+    });
 
-    // Clean up when app is destroyed
     onBeforeUnmount(() => {
-      // Unsubscribe from notifications and messages
       store.dispatch('notifications/unsubscribeFromNotifications');
       store.dispatch('message/unsubscribeFromMessages');
-    })
+    });
 
     return {
       isAuthenticated,
-      isDevelopmentMode // Trả về để sử dụng trong template
-    }
-  }
-}
+      isDevelopmentMode,
+      isAdminRoute,
+    };
+  },
+};
 </script>

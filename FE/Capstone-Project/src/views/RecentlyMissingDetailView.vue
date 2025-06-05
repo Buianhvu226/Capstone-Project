@@ -5,14 +5,14 @@
       <nav class="flex py-4" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
-            <router-link to="/" class="text-gray-700 hover:text-blue-600">
+            <router-link to="/" class="text-gray-700 hover:text-blue-400">
               <i class="fas fa-home mr-2"></i> Trang chủ
             </router-link>
           </li>
           <li>
             <div class="flex items-center">
               <i class="fas fa-chevron-right text-gray-400 mx-2 text-sm"></i>
-              <router-link to="/recently-missing" class="text-gray-700 hover:text-blue-600">
+              <router-link to="/recently-missing" class="text-gray-700 hover:text-blue-400">
                 Người mất tích gần đây
               </router-link>
             </div>
@@ -71,13 +71,13 @@
                   <div v-if="isOwner && !missingReport.image_url"
                     class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
                     <button @click="goToUploadImage"
-                      class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                      class="bg-blue-400 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
                       <i class="fas fa-cloud-upload-alt mr-2"></i> Tải lên ảnh
                     </button>
                   </div>
                 </div>
                 <button v-if="isOwner && missingReport.image_url" @click="goToUploadImage"
-                  class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                  class="w-full mt-4 bg-blue-400 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
                   <i class="fas fa-camera mr-2"></i> Cập nhật ảnh
                 </button>
               </div>
@@ -102,7 +102,7 @@
                   </div>
                 </div>
                 <button @click="viewAIMatches"
-                  class="w-full bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-700 hover:to-blue-700 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center shadow-md hover:shadow-lg">
+                  class="w-full bg-gradient-to-r from-blue-400 to-blue-400 hover:from-blue-700 hover:to-blue-700 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center shadow-md hover:shadow-lg">
                   <i class="fas fa-search-plus mr-2"></i> Tìm kiếm và phân tích độ khớp
                 </button>
               </div>
@@ -143,7 +143,7 @@
                   </div>
                   <div v-if="isOwner" class="flex space-x-2">
                     <button @click="goToEdit"
-                      class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm transition-colors">
+                      class="bg-blue-400 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm transition-colors">
                       <i class="fas fa-edit mr-1"></i> Chỉnh sửa
                     </button>
                     <button @click="confirmDelete"
@@ -238,7 +238,7 @@
                 <div class="flex items-center justify-between">
                   <div class="flex items-center space-x-3">
                     <div class="bg-blue-100 p-2 rounded-full">
-                      <i class="fas fa-search-plus text-blue-600 text-lg"></i>
+                      <i class="fas fa-search-plus text-blue-400 text-lg"></i>
                     </div>
                     <div>
                       <h3 class="text-xl font-bold text-gray-900">Kết quả tìm kiếm AI</h3>
@@ -282,7 +282,7 @@
                                 class="flex items-center justify-center w-12 h-12 rounded-full text-xs font-bold text-white"
                                 :class="{
                                   'bg-gradient-to-br from-green-400 to-green-600': match.face_match_score >= 90,
-                                  'bg-gradient-to-br from-blue-400 to-blue-600': match.face_match_score >= 85 && match.face_match_score < 90,
+                                  'bg-gradient-to-br from-blue-400 to-blue-400': match.face_match_score >= 85 && match.face_match_score < 90,
                                   'bg-gradient-to-br from-yellow-400 to-yellow-600': match.face_match_score >= 80 && match.face_match_score < 85,
                                   'bg-gradient-to-br from-orange-400 to-orange-600': match.face_match_score >= 75 && match.face_match_score < 80,
                                   'bg-gradient-to-br from-red-400 to-red-600': match.face_match_score < 75
@@ -381,7 +381,7 @@
                                     <p class="text-xs text-gray-500 mb-1">Độ khớp khuôn mặt</p>
                                     <p class="text-sm font-bold" :class="{
                                       'text-green-600': match.face_match_score >= 90,
-                                      'text-blue-600': match.face_match_score >= 85 && match.face_match_score < 90,
+                                      'text-blue-400': match.face_match_score >= 85 && match.face_match_score < 90,
                                       'text-yellow-600': match.face_match_score >= 80 && match.face_match_score < 85,
                                       'text-orange-600': match.face_match_score >= 75 && match.face_match_score < 80,
                                       'text-red-600': match.face_match_score < 75
@@ -417,7 +417,7 @@
                                 <span class="text-sm font-medium text-gray-700">Độ khớp khuôn mặt</span>
                                 <span class="text-sm font-bold" :class="{
                                   'text-green-600': match.face_match_score >= 90,
-                                  'text-blue-600': match.face_match_score >= 85 && match.face_match_score < 90,
+                                  'text-blue-400': match.face_match_score >= 85 && match.face_match_score < 90,
                                   'text-yellow-600': match.face_match_score >= 80 && match.face_match_score < 85,
                                   'text-orange-600': match.face_match_score >= 75 && match.face_match_score < 80,
                                   'text-red-600': match.face_match_score < 75
@@ -428,7 +428,7 @@
                                   class="h-full rounded-full transition-all duration-1000 ease-out relative overflow-hidden"
                                   :class="{
                                     'bg-gradient-to-r from-green-400 to-green-600': match.face_match_score >= 90,
-                                    'bg-gradient-to-r from-blue-400 to-blue-600': match.face_match_score >= 85 && match.face_match_score < 90,
+                                    'bg-gradient-to-r from-blue-400 to-blue-400': match.face_match_score >= 85 && match.face_match_score < 90,
                                     'bg-gradient-to-r from-yellow-400 to-yellow-600': match.face_match_score >= 80 && match.face_match_score < 85,
                                     'bg-gradient-to-r from-orange-400 to-orange-600': match.face_match_score >= 75 && match.face_match_score < 80,
                                     'bg-gradient-to-r from-red-400 to-red-600': match.face_match_score < 75
@@ -449,10 +449,10 @@
                       <div v-if="match.llm_analysis" class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4">
                         <div class="flex items-center justify-between mb-3">
                           <h5 class="font-semibold text-gray-800 flex items-center">
-                            <i class="fas fa-brain text-blue-600 mr-2"></i>
+                            <i class="fas fa-brain text-blue-400 mr-2"></i>
                             Phân tích AI chi tiết
                           </h5>
-                          <button class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                          <button class="text-blue-400 hover:text-blue-800 text-sm font-medium"
                             @click="toggleAnalysisDetail(match.id)">
                             <span v-if="!showAnalysisDetail[match.id]">
                               <i class="fas fa-chevron-down mr-1"></i>Xem chi tiết
@@ -524,7 +524,7 @@
                       <!-- Action Buttons -->
                       <div class="flex flex-col sm:flex-row gap-3 mt-auto">
                         <router-link :to="`/recently-missing/${getSuggestedReportId(match)}`" class="flex-1 inline-flex items-center justify-center px-4 py-2.5 
-     bg-gradient-to-r from-blue-600 to-blue-700 text-white 
+     bg-gradient-to-r from-blue-400 to-blue-700 text-white 
      rounded-lg hover:from-blue-700 hover:to-blue-800 
      transition-all duration-200 font-medium shadow-md 
      hover:shadow-lg transform hover:-translate-y-0.5 group">
@@ -562,7 +562,7 @@
                 <h3 class="text-lg font-semibold text-gray-600 mb-2">Chưa có kết quả khớp</h3>
                 <p class="text-gray-500 mb-4">Hệ thống AI chưa tìm thấy báo cáo nào có khả năng trùng khớp</p>
                 <button @click="viewAIMatches"
-                  class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                  class="inline-flex items-center px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-700 transition-colors">
                   <i class="fas fa-sync-alt mr-2"></i>
                   Tìm kiếm lại
                 </button>
@@ -780,7 +780,7 @@ export default {
     // Function để lấy trạng thái màu cho match score
     const getMatchScoreColor = (score) => {
       if (score >= 90) return 'text-green-600';
-      if (score >= 85) return 'text-blue-600';
+      if (score >= 85) return 'text-blue-400';
       if (score >= 80) return 'text-yellow-600';
       if (score >= 75) return 'text-orange-600';
       return 'text-red-600';
@@ -789,7 +789,7 @@ export default {
     // Function để lấy background color cho match score
     const getMatchScoreBgColor = (score) => {
       if (score >= 90) return 'bg-gradient-to-br from-green-400 to-green-600';
-      if (score >= 85) return 'bg-gradient-to-br from-blue-400 to-blue-600';
+      if (score >= 85) return 'bg-gradient-to-br from-blue-400 to-blue-400';
       if (score >= 80) return 'bg-gradient-to-br from-yellow-400 to-yellow-600';
       if (score >= 75) return 'bg-gradient-to-br from-orange-400 to-orange-600';
       return 'bg-gradient-to-br from-red-400 to-red-600';

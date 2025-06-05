@@ -117,7 +117,7 @@
         <i class="fas fa-times mr-2"></i> Hủy
       </button>
       <button type="submit" :disabled="loading"
-        class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all transform hover:scale-105 hover:shadow-lg flex items-center">
+        class="px-6 py-3 bg-gradient-to-r from-blue-400 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all transform hover:scale-105 hover:shadow-lg flex items-center">
         <i class="fas fa-save mr-2"></i>
         <span v-if="loading">
           <svg class="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
