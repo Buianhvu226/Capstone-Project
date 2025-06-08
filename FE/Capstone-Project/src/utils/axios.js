@@ -16,6 +16,8 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    // ⚠️ Bắt buộc khi dùng ngrok Free
+    config.headers["ngrok-skip-browser-warning"] = "true";
     return config;
   },
   (error) => {
