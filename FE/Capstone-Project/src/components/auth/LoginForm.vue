@@ -87,6 +87,7 @@ export default {
     const error = computed(() => store.getters['auth/authError'])
 
     const handleSubmit = async () => {
+// No need for preventDefault() since we're using @submit.prevent in the template
       try {
         const response = await store.dispatch('auth/login', {
           username: form.email,
