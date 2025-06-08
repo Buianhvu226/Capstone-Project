@@ -15,11 +15,15 @@ api.interceptors.request.use(
       config.headers["Authorization"] = `Bearer ${token}`;
     }
 
+    // ⚠️ Bắt buộc khi dùng ngrok Free
+    config.headers["ngrok-skip-browser-warning"] = "true";
+
     return config;
   },
   (error) => {
     return Promise.reject(error);
   }
 );
+
 
 export default api;

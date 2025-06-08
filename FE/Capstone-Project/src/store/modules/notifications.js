@@ -19,7 +19,10 @@ export default {
     },
     ADD_NOTIFICATION(state, notification) {
       state.notifications.unshift(notification);
-      state.unreadCount += 1;
+      // Chỉ cộng unreadCount nếu không phải là profile_creating
+      if (notification.type !== "profile_creating") {
+        state.unreadCount += 1;
+      }
     },
     SET_UNREAD_COUNT(state, count) {
       state.unreadCount = count;
@@ -30,7 +33,10 @@ export default {
       );
       if (notification && !notification.is_read) {
         notification.is_read = true;
-        state.unreadCount = Math.max(0, state.unreadCount - 1);
+        // Chỉ trừ unreadCount nếu không phải là profile_creating
+        if (notification.type !== "profile_creating") {
+          state.unreadCount = Math.max(0, state.unreadCount - 1);
+        }
       }
     },
     MARK_ALL_AS_READ(state) {
@@ -52,8 +58,10 @@ export default {
       state.notifications = state.notifications.filter(
         (n) => n.id !== notificationId
       );
-      // Cập nhật lại số lượng thông báo chưa đọc
-      state.unreadCount = state.notifications.filter((n) => !n.is_read).length;
+      // Cập nhật lại số lượng thông báo chưa đọc (loại trừ profile_creating)
+      state.unreadCount = state.notifications.filter(
+        (n) => !n.is_read && n.type !== "profile_creating"
+      ).length;
     },
   },
 
@@ -88,8 +96,10 @@ export default {
         // Cập nhật state với dữ liệu thông báo
         commit("SET_NOTIFICATIONS", notifications);
 
-        // Đếm số thông báo chưa đọc
-        const unreadCount = notifications.filter((n) => !n.is_read).length;
+        // Đếm số thông báo chưa đọc (loại trừ profile_creating)
+        const unreadCount = notifications.filter(
+          (n) => !n.is_read && n.type !== "profile_creating"
+        ).length;
         commit("SET_UNREAD_COUNT", unreadCount);
       } catch (error) {
         console.error("Không thể lấy thông báo:", error);
@@ -235,21 +245,29 @@ export default {
   },
 
   getters: {
+    // Cập nhật getter để loại trừ profile_creating
     hasUnreadNotifications: (state) => state.unreadCount > 0,
     allNotifications: (state) => state.notifications || [], // Đảm bảo luôn trả về mảng
     unreadNotifications: (state) =>
-      (state.notifications || []).filter((n) => !n.is_read),
+      (state.notifications || []).filter(
+        (n) => !n.is_read && n.type !== "profile_creating"
+      ),
     // Thêm getter mới để lấy thông báo profile_creating
     profileCreatingNotifications: (state) =>
-      (state.notifications || []).filter((n) => n.type === 'profile_creating')
-      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
+      (state.notifications || [])
+        .filter((n) => n.type === "profile_creating")
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)),
   },
 };
 
 // Hiển thị thông báo trên trình duyệt
 function displayBrowserNotification(notification) {
   // Bỏ qua thông báo loại profile_creating
-  if (!window.Notification || Notification.permission !== "granted" || notification.type === 'profile_creating') {
+  if (
+    !window.Notification ||
+    Notification.permission !== "granted" ||
+    notification.type === "profile_creating"
+  ) {
     return;
   }
 
@@ -297,7 +315,7 @@ function displayBrowserNotification(notification) {
 // Helper function for showing toast notifications
 function showToast(notification) {
   // Bỏ qua thông báo loại profile_creating
-  if (notification.type === 'profile_creating') {
+  if (notification.type === "profile_creating") {
     return;
   }
 
@@ -393,7 +411,7 @@ function showToast(notification) {
   // Remove after 7 seconds
   setTimeout(() => {
     removeToast(toast);
-  }, 7000);
+  }, 5000);
 }
 
 // Helper function to remove toast with animation

@@ -141,14 +141,10 @@
                       </span>
                     </div>
                   </div>
-                  <div v-if="isOwner" class="flex space-x-2">
-                    <button @click="goToEdit"
-                      class="bg-blue-400 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm transition-colors">
-                      <i class="fas fa-edit mr-1"></i> Chỉnh sửa
-                    </button>
+                  <div v-if="isOwner || isAdmin" class="flex space-x-2">
                     <button @click="confirmDelete"
                       class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm transition-colors">
-                      <i class="fas fa-trash mr-1"></i> Xóa
+                      <i class="fas fa-trash mr-1"></i> Xóa báo cáo
                     </button>
                   </div>
                 </div>
@@ -540,14 +536,6 @@
                           <i class="fas fa-comments mr-2 group-hover:scale-110 transition-transform"></i>
                           <span class="hidden sm:inline">Liên hệ</span>
                         </button>
-                        <router-link v-if="isReportOwner(match)"
-                          :to="`/recently-missing/${getSuggestedReportId(match)}/edit`" class="flex-shrink-0 inline-flex items-center justify-center px-4 py-2.5 
-           bg-white border-2 border-blue-300 text-blue-700 
-           rounded-lg hover:border-blue-400 hover:bg-blue-50
-           transition-all duration-200 font-medium group">
-                          <i class="fas fa-edit mr-2 group-hover:scale-110 transition-transform"></i>
-                          <span class="hidden sm:inline">Chỉnh sửa</span>
-                        </router-link>
                       </div>
                     </div>
                   </div>
@@ -601,6 +589,7 @@ export default {
     const matches = ref([]);
     const showAnalysisDetail = ref({});
     const isLoading = ref(false);
+    const isAdmin = ref(false)
 
     const formatKey = (key) => {
       // Thay thế dấu gạch dưới bằng khoảng trắng và viết hoa chữ cái đầu mỗi từ
@@ -813,10 +802,6 @@ export default {
       }
     };
 
-    const goToEdit = () => {
-      router.push(`/recently-missing/${reportId}/edit`);
-    };
-
     const goToUploadImage = () => {
       router.push(`/recently-missing/${reportId}/upload-image`);
     };
@@ -1010,6 +995,18 @@ export default {
       if (isAuthenticated.value) {
         await fetchMatches();
       }
+
+      // Kiểm tra thông tin người dùng trong localStorage
+      const userStr = localStorage.getItem('user')
+      if (userStr) {
+        try {
+          const userData = JSON.parse(userStr)
+          isAdmin.value = userData.id === 1;
+        } catch (error) {
+          console.error('Lỗi khi phân tích dữ liệu người dùng:', error)
+        }
+      }
+      console.log('Là Admin:', isAdmin.value);
     });
 
     return {
@@ -1022,12 +1019,12 @@ export default {
       currentUser,
       isAuthenticated,
       isOwner,
+      isAdmin,
       formattedMissingDate,
       timeAgo,
       fetchMissingReport,
       confirmDelete,
       deleteMissingReport,
-      goToEdit,
       goToUploadImage,
       goToMatches,
       handleImageError,

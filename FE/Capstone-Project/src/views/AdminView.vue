@@ -2,19 +2,21 @@
 <template>
     <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
         <!-- Sidebar Navigation -->
-        <div class="fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-b from-blue-800 via-blue-800 to-blue-900 shadow-2xl transform transition-transform duration-300 ease-in-out"
+        <div class="fixed inset-y-0 left-0 z-50 w-72 bg-gradient-to-b from-blue-500 via-blue-600 to-blue-700 shadow-2xl transform transition-transform duration-300 ease-in-out"
             :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen, 'lg:translate-x-0': true }">
 
             <!-- Logo & Brand -->
-            <div class="flex items-center justify-center h-20 px-6 border-b border-blue-700/50 backdrop-blur-sm">
-                <div class="flex items-center space-x-3">
-                    <div
-                        class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-                        <i class="fas fa-crown text-white text-lg"></i>
-                    </div>
+            <div
+                class="flex items-center justify-center h-20 px-6 border-b border-blue-700/50 bg-blue-200 backdrop-blur-sm">
+                <div class="flex items-center">
+                    <router-link to="/admin" class="font-semibold text-blue-400">
+                        <div class="flex items-center">
+                            <img src="@/assets/images/logo1.png" alt="Logo"
+                                class="w-[6rem] h-[2.5rem] xl:w-[8rem] xl:h-[3rem] object-contain" />
+                        </div>
+                    </router-link>
                     <div>
-                        <span class="text-xl font-bold text-white">Admin</span>
-                        <p class="text-xs text-blue-200">Trang chủ Admin</p>
+                        <span class="text-xl font-bold text-blue-500">Admin</span>
                     </div>
                 </div>
             </div>
@@ -24,7 +26,7 @@
                 <div class="space-y-2">
                     <!-- Dashboard -->
                     <button @click="scrollToSection('dashboard')"
-                        class="w-full flex items-center px-5 py-4 text-white rounded-xl hover:bg-white/10 transition-all duration-300 transform hover:scale-105 hover:shadow-lg group"
+                        class="w-full flex items-center px-5 py-4 text-white rounded-xl hover:bg-white/10 transition-all duration-300 transform hover:scale-105 hover:shadow-lg group cursor-pointer"
                         :class="{ 'bg-white/20 shadow-lg scale-105': activeSection === 'dashboard' }">
                         <div
                             class="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-400 rounded-lg flex items-center justify-center mr-4 group-hover:rotate-6 transition-transform">
@@ -38,7 +40,7 @@
 
                     <!-- Users Management -->
                     <button @click="scrollToSection('users')"
-                        class="w-full flex items-center px-5 py-4 text-white rounded-xl hover:bg-white/10 transition-all duration-300 transform hover:scale-105 hover:shadow-lg group"
+                        class="w-full flex items-center px-5 py-4 text-white rounded-xl hover:bg-white/10 transition-all duration-300 transform hover:scale-105 hover:shadow-lg group cursor-pointer"
                         :class="{ 'bg-white/20 shadow-lg scale-105': activeSection === 'users' }">
                         <div
                             class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center mr-4 group-hover:rotate-6 transition-transform">
@@ -52,7 +54,7 @@
 
                     <!-- Analytics -->
                     <button @click="scrollToSection('analytics')"
-                        class="w-full flex items-center px-5 py-4 text-white rounded-xl hover:bg-white/10 transition-all duration-300 transform hover:scale-105 hover:shadow-lg group"
+                        class="w-full flex items-center px-5 py-4 text-white rounded-xl hover:bg-white/10 transition-all duration-300 transform hover:scale-105 hover:shadow-lg group cursor-pointer"
                         :class="{ 'bg-white/20 shadow-lg scale-105': activeSection === 'analytics' }">
                         <div
                             class="w-10 h-10 bg-gradient-to-br from-pink-400 to-rose-600 rounded-lg flex items-center justify-center mr-4 group-hover:rotate-6 transition-transform">
@@ -63,6 +65,21 @@
                             <p class="text-xs text-blue-200 opacity-75">Báo cáo & phân tích</p>
                         </div>
                     </button>
+
+                    <!-- Nút đến trang xem hệ thống -->
+                    <button @click="goToPageUserSystem"
+                        class="w-full flex items-center px-5 py-4 text-white rounded-xl hover:bg-white/10 transition-all duration-300 transform hover:scale-105 hover:shadow-lg group cursor-pointer">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center mr-4 group-hover:rotate-6 transition-transform">
+                            <i class="fas fa-cogs text-white"></i>
+                        </div>
+                        <div class="text-left">
+                            <span class="font-semibold">Hệ thống</span>
+                            <p class="text-xs text-blue-200 opacity-75">Đi đến trang chủ hệ thống</p>
+                        </div>
+                    </button>
+
+                    <!-- Settings -->
                 </div>
             </nav>
 
@@ -115,17 +132,6 @@
 
                     <!-- Header Actions -->
                     <div class="flex items-center space-x-4">
-                        <!-- Quick Stats -->
-                        <div class="hidden md:flex items-center space-x-6">
-                            <div class="text-center">
-                                <p class="text-2xl font-bold text-blue-500">{{ totalUsers }}</p>
-                                <p class="text-xs text-gray-500">Người dùng</p>
-                            </div>
-                            <div class="text-center">
-                                <p class="text-2xl font-bold text-emerald-600">{{ activeUsers }}</p>
-                                <p class="text-xs text-gray-500">Đang hoạt động</p>
-                            </div>
-                        </div>
 
                         <!-- Profile dropdown -->
                         <div class="relative profile-dropdown">
@@ -324,6 +330,10 @@ export default {
         const totalUsers = ref(1248)
         const activeUsers = ref(892)
 
+        const goToPageUserSystem = () => {
+            router.push('/')
+        }
+
         const currentSectionTitle = computed(() => {
             const titles = {
                 'dashboard': 'Dashboard',
@@ -367,23 +377,17 @@ export default {
 
         const logout = async () => {
             try {
-                if (store.state.notifications.subscribed) {
-                    await store.dispatch('notifications/unsubscribeFromNotifications');
-                }
 
-                if (store.state.message.realtime.subscribed) {
-                    await store.dispatch('message/unsubscribeFromMessages');
-                }
+                // Xóa thông tin người dùng khỏi localStorage
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
 
                 await store.dispatch('auth/logout');
             } catch (error) {
                 console.error('Lỗi khi đăng xuất:', error);
             }
 
-            router.push('/auth');
-            showNotificationsPanel.value = false;
-
-            router.push('/auth').then(() => {
+            router.push('/').then(() => {
                 // Force reload page để clear tất cả state
                 window.location.reload();
             });
@@ -449,6 +453,7 @@ export default {
             totalUsers,
             activeUsers,
             scrollToSection,
+            goToPageUserSystem,
             logout
         }
     }

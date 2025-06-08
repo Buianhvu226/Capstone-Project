@@ -24,11 +24,8 @@
                             <label for="query" class="block text-sm font-medium text-gray-700 mb-1">Nhập nội dung tìm
                                 kiếm</label>
                             <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-search text-gray-400"></i>
-                                </div>
-                                <textarea id="query" v-model="searchQuery" rows="3"
-                                    class="pl-10 w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                                <textarea id="query" v-model="searchQuery" rows="12"
+                                    class="pl-5 w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                                     placeholder="Nhập câu hỏi của bạn (Ví dụ: Tôi muốn tìm những hồ sơ người thất lạc tên Hoàng)"
                                     required></textarea>
                             </div>

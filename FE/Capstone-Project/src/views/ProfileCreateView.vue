@@ -4,18 +4,46 @@
     <!-- Hero section với hiệu ứng hover -->
     <div class="container mx-auto px-4 py-6">
       <div
-        class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all hover:shadow-xl p-6 mb-8 border border-blue-100">
-        <div class="flex flex-col md:flex-row items-start md:items-center">
-          <div class="flex-shrink-0 bg-blue-400 rounded-full p-3 mr-5 mb-4 md:mb-0 shadow-md">
-            <i class="fas fa-user-friends text-white text-2xl"></i>
+        class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all hover:shadow-xl p-6 mb-8 border border-blue-100 relative">
+        <!-- Decorative background elements -->
+        <div
+          class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-50 to-transparent rounded-full opacity-40 -translate-y-16 translate-x-16">
+        </div>
+        <div
+          class="absolute bottom-0 left-0 w-24 h-24 bg-blue-100 rounded-full opacity-30 translate-y-12 -translate-x-12">
+        </div>
+
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between relative z-10">
+          <div class="flex flex-col md:flex-row items-start md:items-center flex-1">
+            <div
+              class="flex-shrink-0 bg-gradient-to-br from-blue-400 to-blue-500 rounded-full p-3 mr-5 mb-4 md:mb-0 shadow-lg">
+              <i class="fas fa-user-friends text-white text-2xl"></i>
+            </div>
+            <div class="flex-1">
+              <h1 class="text-3xl font-bold text-gray-800 mb-2 flex items-center">
+                Đăng ký hồ sơ tìm kiếm
+                <span class="animate-pulse inline-flex ml-3 h-3 w-3 rounded-full bg-blue-500"></span>
+              </h1>
+              <p class="text-gray-600 mb-3">Hãy cung cấp thông tin chi tiết để tăng khả năng tìm kiếm người thân của
+                bạn.</p>
+            </div>
           </div>
-          <div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2 flex items-center">
-              Đăng ký hồ sơ tìm kiếm
-              <span class="animate-pulse inline-flex ml-3 h-3 w-3 rounded-full bg-blue-500"></span>
-            </h1>
-            <p class="text-gray-600">Hãy cung cấp thông tin chi tiết để tăng khả năng tìm kiếm người thân của bạn.</p>
+
+          <div class="mt-4 md:mt-0 md:ml-6">
+            <a href="/recently-missing/create"
+              class="bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white px-6 py-3 rounded-lg flex items-center gap-3 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-medium">
+              <i class="fas fa-clock text-white text-lg"></i>
+              <div class="text-left">
+                <div class="text-sm font-semibold">Mất tích gần đây?</div>
+                <div class="text-xs opacity-90 italic underline">Bạn nên tạo báo cáo tại đây</div>
+              </div>
+            </a>
           </div>
+        </div>
+
+        <!-- Subtle bottom border -->
+        <div
+          class="absolute bottom-0 left-6 right-6 h-0.5 bg-gradient-to-r from-transparent via-blue-200 to-transparent">
         </div>
       </div>
 
@@ -183,20 +211,6 @@
           năm thất lạc, tên cha mẹ, anh chị em, địa điểm thất lạc và các chi tiết khác.
         </p>
 
-        <div class="mb-4">
-          <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Tiêu đề hồ sơ <span
-              class="text-red-500">*</span></label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <i class="fas fa-heading text-indigo-400"></i>
-            </div>
-            <input type="text" id="title" v-model="autoProfileData.title"
-              class="pl-10 w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-              placeholder="VD: Nguyễn Văn A tìm mẹ Trần Thị B" required />
-          </div>
-          <p class="mt-1 text-xs text-gray-500">Tiêu đề nên bao gồm tên người tìm kiếm và tên người thất lạc</p>
-        </div>
-
         <div class="mb-6">
           <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Mô tả chi tiết <span
               class="text-red-500">*</span></label>
@@ -210,8 +224,7 @@
         </div>
 
         <div class="flex justify-end">
-          <button @click="handleAutoSubmit"
-            :disabled="loading || !autoProfileData.title || !autoProfileData.description"
+          <button @click="handleAutoSubmit" :disabled="loading || !autoProfileData.description"
             class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-400 text-white rounded-lg hover:from-indigo-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 hover:shadow-lg flex items-center">
             <i v-if="loading" class="fas fa-spinner fa-spin mr-2"></i>
             <i v-else class="fas fa-brain mr-2"></i>
@@ -325,98 +338,98 @@
       </div>
     </div>
     <!-- Progress indicator cho quá trình xử lý -->
-<div v-if="showProgress && loading" ref="progressSection"
-        class="bg-white rounded-xl shadow-lg p-6 mb-8 border border-blue-100">
-        <div class="flex items-center mb-6">
-          <div class="bg-gradient-to-r from-blue-100 to-indigo-100 p-3 rounded-lg mr-4">
-            <i class="fas fa-cogs text-blue-400 text-2xl animate-spin"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-semibold text-gray-800">Đang xử lý hồ sơ</h3>
-            <p class="text-sm text-gray-600">AI đang phân tích và tạo hồ sơ cho bạn</p>
+    <div v-if="showProgress && loading" ref="progressSection"
+      class="bg-white rounded-xl shadow-lg p-6 mb-8 border border-blue-100">
+      <div class="flex items-center mb-6">
+        <div class="bg-gradient-to-r from-blue-100 to-indigo-100 p-3 rounded-lg mr-4">
+          <i class="fas fa-cogs text-blue-400 text-2xl animate-spin"></i>
+        </div>
+        <div>
+          <h3 class="text-xl font-semibold text-gray-800">Đang xử lý hồ sơ</h3>
+          <p class="text-sm text-gray-600">AI đang phân tích và tạo hồ sơ cho bạn</p>
+        </div>
+      </div>
+
+      <!-- Overall Progress bar -->
+      <div v-if="totalSteps > 0" class="mb-6">
+        <div class="flex justify-between items-center mb-2">
+          <span class="text-sm font-medium text-gray-700">Tiến độ tổng thể</span>
+          <span class="text-sm font-semibold text-blue-400">{{ Math.round((progressStep / totalSteps) * 100)
+            }}%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+          <div
+            class="bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 h-3 rounded-full transition-all duration-1000 ease-out"
+            :style="{ width: (progressStep / totalSteps) * 100 + '%' }">
+            <div class="w-full h-full bg-gradient-to-r from-white/30 to-transparent animate-pulse"></div>
           </div>
         </div>
+      </div>
 
-        <!-- Overall Progress bar -->
-        <div v-if="totalSteps > 0" class="mb-6">
-          <div class="flex justify-between items-center mb-2">
-            <span class="text-sm font-medium text-gray-700">Tiến độ tổng thể</span>
-            <span class="text-sm font-semibold text-blue-400">{{ Math.round((progressStep / totalSteps) * 100)
-              }}%</span>
-          </div>
-          <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-            <div
-              class="bg-gradient-to-r from-blue-500 via-indigo-500 to-blue-500 h-3 rounded-full transition-all duration-1000 ease-out"
-              :style="{ width: (progressStep / totalSteps) * 100 + '%' }">
-              <div class="w-full h-full bg-gradient-to-r from-white/30 to-transparent animate-pulse"></div>
-            </div>
-          </div>
-        </div>
+      <!-- Progress Steps Log -->
+      <div class="space-y-3 max-h-80 overflow-y-auto">
+        <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
+          <i class="fas fa-list-ul mr-2 text-indigo-500"></i>
+          Quá trình xử lý
+        </h4>
 
-        <!-- Progress Steps Log -->
-        <div class="space-y-3 max-h-80 overflow-y-auto">
-          <h4 class="text-sm font-medium text-gray-700 mb-3 flex items-center">
-            <i class="fas fa-list-ul mr-2 text-indigo-500"></i>
-            Quá trình xử lý
-          </h4>
-
-          <div class="space-y-2">
-            <div v-for="(log, index) in progressLogs" :key="index"
-              class="flex items-start p-3 rounded-lg transition-all duration-500" :class="[
+        <div class="space-y-2">
+          <div v-for="(log, index) in progressLogs" :key="index"
+            class="flex items-start p-3 rounded-lg transition-all duration-500" :class="[
                 index === progressLogs.length - 1
                   ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-400 transform scale-105'
                   : 'bg-gray-50 border-l-4 border-gray-300'
               ]">
 
-              <!-- Status Icon -->
-              <div class="flex-shrink-0 mt-0.5">
-                <div class="w-6 h-6 rounded-full flex items-center justify-center" :class="[
+            <!-- Status Icon -->
+            <div class="flex-shrink-0 mt-0.5">
+              <div class="w-6 h-6 rounded-full flex items-center justify-center" :class="[
                   index === progressLogs.length - 1
                     ? 'bg-blue-500 animate-pulse'
                     : log.completed
                       ? 'bg-green-500'
                       : 'bg-gray-400'
                 ]">
-                  <i v-if="index === progressLogs.length - 1 && !log.completed"
-                    class="fas fa-spinner fa-spin text-white text-xs"></i>
-                  <i v-else-if="log.completed" class="fas fa-check text-white text-xs"></i>
-                  <i v-else class="fas fa-circle text-white text-xs"></i>
-                </div>
+                <i v-if="index === progressLogs.length - 1 && !log.completed"
+                  class="fas fa-spinner fa-spin text-white text-xs"></i>
+                <i v-else-if="log.completed" class="fas fa-check text-white text-xs"></i>
+                <i v-else class="fas fa-circle text-white text-xs"></i>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="ml-3 flex-1">
+              <div class="flex items-center justify-between">
+                <p class="text-sm font-medium"
+                  :class="index === progressLogs.length - 1 ? 'text-blue-700' : 'text-gray-700'">
+                  {{ log.message }}
+                </p>
+                <span class="text-xs text-gray-500">{{ log.timestamp }}</span>
               </div>
 
-              <!-- Content -->
-              <div class="ml-3 flex-1">
-                <div class="flex items-center justify-between">
-                  <p class="text-sm font-medium"
-                    :class="index === progressLogs.length - 1 ? 'text-blue-700' : 'text-gray-700'">
-                    {{ log.message }}
-                  </p>
-                  <span class="text-xs text-gray-500">{{ log.timestamp }}</span>
-                </div>
-
-                <!-- Sub-progress for current step -->
-                <div v-if="index === progressLogs.length - 1 && log.subProgress" class="mt-2">
-                  <div class="w-full bg-blue-200 rounded-full h-1">
-                    <div class="bg-blue-500 h-1 rounded-full transition-all duration-500"
-                      :style="{ width: log.subProgress + '%' }"></div>
-                  </div>
+              <!-- Sub-progress for current step -->
+              <div v-if="index === progressLogs.length - 1 && log.subProgress" class="mt-2">
+                <div class="w-full bg-blue-200 rounded-full h-1">
+                  <div class="bg-blue-500 h-1 rounded-full transition-all duration-500"
+                    :style="{ width: log.subProgress + '%' }"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Current Status Message -->
-        <div class="mt-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 p-4 rounded-lg">
-          <div class="flex items-center">
-            <div class="w-2 h-2 bg-blue-500 rounded-full animate-ping mr-3"></div>
-            <p class="text-blue-700 text-sm font-medium flex items-center">
-              <i class="fas fa-info-circle mr-2"></i>
-              {{ currentProgressMessage }}
-            </p>
-          </div>
+      <!-- Current Status Message -->
+      <div class="mt-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 p-4 rounded-lg">
+        <div class="flex items-center">
+          <div class="w-2 h-2 bg-blue-500 rounded-full animate-ping mr-3"></div>
+          <p class="text-blue-700 text-sm font-medium flex items-center">
+            <i class="fas fa-info-circle mr-2"></i>
+            {{ currentProgressMessage }}
+          </p>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -473,7 +486,6 @@ export default {
     })
 
     const autoProfileData = ref({
-      title: '',
       description: '',
       status: 'active',
       images: []
@@ -597,7 +609,6 @@ export default {
 
         // Lưu dữ liệu người dùng đã nhập
         originalUserInput.value = {
-          title: autoProfileData.value.title,
           description: autoProfileData.value.description,
         };
         addProgressLog('💾 Đã lưu mô tả gốc', true)
@@ -743,7 +754,6 @@ export default {
         images: []
       }
       autoProfileData.value = {
-        title: '',
         description: '',
         status: 'active',
         images: []

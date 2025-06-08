@@ -99,10 +99,16 @@
                 </button>
               </template>
               <!-- Share button -->
-              <button @click="shareProfile"
+              <button v-if="!isAdmin" @click="shareProfile"
                 class="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-lg font-medium transition-all hover:scale-105">
                 <i class="fas fa-share-alt mr-2"></i>
                 <span class="hidden sm:inline">Chia sẻ</span>
+              </button>
+              <!-- Delete button for admin -->
+              <button v-else @click="deleteProfile"
+                class="inline-flex items-center px-4 py-2 bg-red-500/80 hover:bg-red-600/80 backdrop-blur-sm text-white rounded-lg font-medium transition-all hover:scale-105">
+                <i class="fas fa-trash-alt mr-2"></i>
+                <span class="hidden sm:inline">Xóa</span>
               </button>
               <!-- Loading indicator when updating status -->
               <div v-if="isLoading" class="inline-flex items-center px-4 py-2 bg-white/20 rounded-lg">
@@ -497,6 +503,7 @@ export default {
     const showStatusDropdown = ref(false);
     const dropdownWidth = ref(200); // Default dropdown width
     const showStatusModal = ref(false); // Modal visibility
+    const isAdmin = ref(false);
 
     const statusOptions = ref([
       {
@@ -907,6 +914,17 @@ export default {
       fetchComments(1);
       document.addEventListener('click', handleClickOutside);
       window.addEventListener('resize', handleResize);
+      
+      // Kiểm tra thông tin người dùng trong localStorage
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        try {
+          const userData = JSON.parse(userStr);
+          isAdmin.value = userData.id === 1;
+        } catch (error) {
+          console.error('Lỗi khi phân tích dữ liệu người dùng:', error);
+        }
+      }
     });
 
     onUnmounted(() => {
@@ -934,6 +952,23 @@ export default {
       }
     });
 
+    // Delete profile function for admin
+    const deleteProfile = async () => {
+      if (!confirm('Bạn có chắc chắn muốn xóa hồ sơ này không?')) return;
+      
+      try {
+        isLoading.value = true;
+        await profileService.deleteProfile(profileId.value);
+        alert('Đã xóa hồ sơ thành công');
+        router.push('/');
+      } catch (err) {
+        console.error('Error deleting profile:', err);
+        alert('Không thể xóa hồ sơ. Vui lòng thử lại sau.');
+      } finally {
+        isLoading.value = false;
+      }
+    };
+    
     return {
       profile,
       loading,
@@ -967,6 +1002,8 @@ export default {
       updateProfileStatus,
       statusOptions,
       showStatusModal,
+      isAdmin,
+      deleteProfile,
     };
   },
 };

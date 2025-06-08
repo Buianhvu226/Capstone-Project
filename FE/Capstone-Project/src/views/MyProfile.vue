@@ -1,9 +1,16 @@
 <template>
-  <div class="pt-20 pb-16 bg-gray-50 min-h-screen">
+  <div class="pt-10 pb-16 bg-gray-50 min-h-screen">
     <div class="container mx-auto px-4"> <!-- Header Section -->
-      <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Hồ sơ tìm kiếm</h1>
-        <p class="text-gray-600">Quản lý các hồ sơ tìm kiếm người thân của bạn</p>
+      <div class="relative z-10 p-6">
+        <div class="flex items-center gap-4">
+          <div class="bg-blue-500 p-3 rounded-lg shadow-sm flex-shrink-0">
+            <i class="fas fa-user-circle text-white text-2xl"></i>
+          </div>
+          <div class="flex flex-col">
+            <h1 class="text-3xl font-bold text-gray-800 mb-1">Hồ sơ của tôi</h1>
+            <p class="text-gray-600 text-lg">Quản lý các hồ sơ tìm kiếm người thân của bạn</p>
+          </div>
+        </div>
       </div>
 
       <!-- Edit Success Message -->

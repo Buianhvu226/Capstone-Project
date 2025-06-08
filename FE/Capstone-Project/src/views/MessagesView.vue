@@ -142,7 +142,7 @@
 
                                     <!-- Nút đi đến báo cáo liên quan -->
                                     <router-link v-if="currentConversation.related_report_id"
-                                        :to="`/profile/${currentConversation.related_report_id}`"
+                                        :to="`/recently-missing/${currentConversation.related_report_id}`"
                                         class="text-gray-500 hover:text-blue-500 hover:bg-blue-50 p-2 rounded-full transition-colors group relative"
                                         title="Đi đến báo cáo liên quan">
                                         <i class="fas fa-user-circle"></i>

@@ -160,6 +160,82 @@
       </nav>
     </div>
   </header>
+
+  <!-- Admin Header -->
+  <header v-if="isAdmin" class="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-200 shadow-sm py-2 px-4">
+    <div class="container mx-auto flex items-center justify-between">
+      <!-- Logo và nút điều hướng về trang chính admin -->
+      <router-link to="/admin" class="flex items-center hover:opacity-80 transition-opacity">
+        <img src="@/assets/images/logo1.png" alt="Logo"
+          class="w-[6rem] h-[2.5rem] xl:w-[8rem] xl:h-[3rem] object-contain" />
+        <span class="ml-2 font-semibold text-blue-600 text-lg">Admin</span>
+      </router-link>
+
+      <!-- Navigation Links cho Admin -->
+      <nav class="hidden md:flex items-center space-x-4">
+        <router-link to="/search"
+          class="flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors duration-200"
+          :class="[route.path === '/search' ? 'bg-blue-100 text-blue-600 font-medium' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100']">
+          <i class="fas fa-search"></i>
+          <span class="hidden lg:inline">Tìm kiếm</span>
+        </router-link>
+
+        <router-link to="/" class="flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors duration-200"
+          :class="[route.path === '/' ? 'bg-blue-100 text-blue-600 font-medium' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100']">
+          <i class="fa-solid fa-newspaper"></i>
+          <span class="hidden lg:inline">Hồ sơ thất lạc lâu năm</span>
+        </router-link>
+
+        <router-link to="/recently-missing"
+          class="flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors duration-200"
+          :class="[route.path === '/recently-missing' ? 'bg-blue-100 text-blue-600 font-medium' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-100']">
+          <i class="fas fa-clock"></i>
+          <span class="hidden lg:inline">Báo cáo thất lạc gần đây</span>
+        </router-link>
+      </nav>
+
+      <!-- Mobile Menu Button cho Admin -->
+      <button @click="toggleAdminMobileMenu" class="md:hidden text-gray-600 focus:outline-none">
+        <i class="fa fa-bars text-xl"></i>
+      </button>
+
+      <!-- Phần bên phải -->
+      <div class="flex items-center">
+        <!-- Nút đăng xuất -->
+        <button @click="logout"
+          class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition text-sm">
+          <i class="fa fa-sign-out-alt mr-1"></i>
+          <span class="hidden sm:inline">Đăng xuất</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu cho Admin -->
+    <div v-if="adminMobileMenuOpen" class="md:hidden bg-white border-t border-gray-200 shadow-md animate-slide-down">
+      <nav class="container mx-auto py-4 px-4 flex flex-col space-y-3">
+        <router-link to="/search" @click="adminMobileMenuOpen = false"
+          class="flex items-center space-x-2 py-2 transition-colors duration-200"
+          :class="[route.path === '/search' ? 'font-semibold text-blue-600' : 'text-gray-600']">
+          <i class="fas fa-search"></i>
+          <span>Tìm kiếm</span>
+        </router-link>
+
+        <router-link to="/" @click="adminMobileMenuOpen = false"
+          class="flex items-center space-x-2 py-2 transition-colors duration-200"
+          :class="[route.path === '/' ? 'font-semibold text-blue-600' : 'text-gray-600']">
+          <i class="fa-solid fa-newspaper"></i>
+          <span>Hồ sơ thất lạc lâu năm</span>
+        </router-link>
+
+        <router-link to="/recently-missing" @click="adminMobileMenuOpen = false"
+          class="flex items-center space-x-2 py-2 transition-colors duration-200"
+          :class="[route.path === '/recently-missing' ? 'font-semibold text-blue-600' : 'text-gray-600']">
+          <i class="fas fa-clock"></i>
+          <span>Báo cáo thất lạc gần đây</span>
+        </router-link>
+      </nav>
+    </div>
+  </header>
 </template>
 
 <script>
@@ -174,16 +250,34 @@ export default {
     const router = useRouter()
     const route = useRoute()
 
+    const isAdmin = ref(false)
+    const adminMobileMenuOpen = ref(false)
+
+    onMounted(() => {
+      // Kiểm tra thông tin người dùng trong localStorage
+      const userStr = localStorage.getItem('user')
+      if (userStr) {
+        try {
+          const userData = JSON.parse(userStr)
+          isAdmin.value = userData.id === 1;
+        } catch (error) {
+          console.error('Lỗi khi phân tích dữ liệu người dùng:', error)
+        }
+      }
+    })
+
+    const isAuthenticated = computed(() => store.getters['auth/isAuthenticated']);
+
     // Mobile menu state
     const mobileMenuOpen = ref(false)
 
     // Navigation links with icons
     const navLinks = computed(() => {
       const links = [
-        { path: '/', name: 'Trang chủ', icon: 'fas fa-home' },
+        { path: '/', name: 'Hồ sơ thất lạc lâu năm', icon: 'fa-solid fa-newspaper' },
         { path: '/search', name: 'Tìm kiếm', icon: 'fas fa-search' },
-        { path: '/profile/create', name: 'Đăng ký hồ sơ', icon: 'fas fa-user-plus' },
-        { path: '/recently-missing', name: 'Người thất lạc gần đây', icon: 'fas fa-clock' },
+        { path: '/profile/create', name: 'Đăng ký hồ sơ', icon: 'fa-solid fa-people-group' },
+        { path: '/recently-missing', name: 'Báo cáo thất lạc gần đây', icon: 'fas fa-clock' },
       ];
       if (isLoggedIn.value) {
         links.push(
@@ -205,24 +299,24 @@ export default {
     const recentNotifications = computed(() => {
       const notifications = allNotifications.value || [];
       if (!Array.isArray(notifications)) return [];
-  
+
       // Lọc tin nhắn trùng lặp, chỉ giữ lại tin nhắn mới nhất từ mỗi người gửi
       const latestMessageNotifications = new Map();
       const nonMessageNotifications = [];
-  
+
       // Phân loại và lọc thông báo
       notifications.forEach(notification => {
         // Bỏ qua thông báo loại profile_creating
         if (notification.type === 'profile_creating') {
           return;
         }
-        
+
         // Kiểm tra thông báo tin nhắn bằng nội dung hoặc type
         if (notification.type === 'new_message' || notification.content?.includes('Tin nhắn mới từ')) {
           // Lấy ra ID người gửi từ additional_data hoặc phân tích từ nội dung
           const senderInfo = notification.additional_data?.sender_id ||
             notification.content.match(/Tin nhắn mới từ ([^\s]+)/)?.[1];
-  
+
           if (senderInfo) {
             // Nếu chưa có thông báo nào từ người gửi này hoặc thông báo này mới hơn
             if (!latestMessageNotifications.has(senderInfo) ||
@@ -238,13 +332,13 @@ export default {
           nonMessageNotifications.push(notification);
         }
       });
-  
+
       // Kết hợp danh sách thông báo tin nhắn mới nhất và các thông báo khác
       const filteredNotifications = [...latestMessageNotifications.values(), ...nonMessageNotifications];
-  
+
       // Sắp xếp lại theo thời gian mới nhất
       filteredNotifications.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  
+
       // Chỉ lấy 5 thông báo gần nhất
       return filteredNotifications.slice(0, 5);
     })
@@ -329,6 +423,7 @@ export default {
 
       router.push('/auth');
       mobileMenuOpen.value = false;
+      adminMobileMenuOpen.value = false;
       showNotificationsPanel.value = false;
 
       router.push('/auth').then(() => {
@@ -339,6 +434,10 @@ export default {
 
     const toggleMobileMenu = () => {
       mobileMenuOpen.value = !mobileMenuOpen.value
+    }
+
+    const toggleAdminMobileMenu = () => {
+      adminMobileMenuOpen.value = !adminMobileMenuOpen.value
     }
 
     const toggleNotifications = async () => {
@@ -383,7 +482,7 @@ export default {
       if (!notification) return;
 
       // Đánh dấu đã đọc
-      if (notification.id && !notification.is_read) {
+      if (notification.id && !notification.is_read || notification.type === "profile_creating") {
         store.dispatch('notifications/markAsRead', notification.id);
       }
 
@@ -483,6 +582,8 @@ export default {
       navLinks,
       mobileMenuOpen,
       toggleMobileMenu,
+      adminMobileMenuOpen,
+      toggleAdminMobileMenu,
       showNotificationsPanel,
       toggleNotifications,
       hasUnreadNotifications,
@@ -494,7 +595,9 @@ export default {
       handleNotificationClick,
       markAllAsRead,
       formatNotificationContent,
-      route
+      route,
+      isAdmin,
+      isAuthenticated,
     }
   }
 }

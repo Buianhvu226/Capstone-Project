@@ -7,7 +7,7 @@
 
             <!-- Own Profile Badge -->
             <div v-if="isOwnProfile(profile)" class="bg-blue-400 text-white px-4 py-2 text-sm font-medium">
-                <i class="fas fa-crown mr-2"></i> Hồ sơ của bạn
+                <i class="fa fa-user-check mr-2"></i> Báo cáo của bạn
             </div>
 
             <!-- Main Content -->
@@ -101,14 +101,6 @@
 
                             <!-- Action Buttons -->
                             <div class="flex items-center gap-2 ml-4">
-                                <div v-if="isOwnProfile(profile)" class="flex gap-2">
-                                    <router-link :to="`/recently-missing/edit/${profile.id}`"
-                                        class="bg-blue-100 text-blue-700 hover:bg-blue-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">
-                                        <i class="fas fa-edit mr-1"></i>
-                                        <span class="hidden sm:inline">Sửa</span>
-                                    </router-link>
-                                </div>
-
                                 <router-link :to="`/recently-missing/${profile.id}`"
                                     class="bg-gray-100 text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                                     <i class="fas fa-eye mr-1"></i>
@@ -135,7 +127,7 @@
                             <div v-if="profile.age" class="flex items-center">
                                 <div
                                     class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3 flex-shrink-0">
-                                    <i class="fas fa-birthday-cake text-green-600"></i>
+                                    <i class="fa-solid fa-table"></i>
                                 </div>
                                 <div>
                                     <p class="text-sm text-gray-500">Tuổi</p>
@@ -185,7 +177,7 @@
                             <div class="flex items-center text-sm text-gray-500">
                                 <i class="fas fa-clock mr-1"></i>
                                 <span class="hidden sm:inline">Cập nhật: </span>{{ formatDate(profile.updated_at ||
-                                    profile.created_at) }}
+                                profile.created_at) }}
                             </div>
 
                             <div class="flex items-center gap-3">

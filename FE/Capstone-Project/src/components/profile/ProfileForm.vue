@@ -7,7 +7,7 @@
         <label for="title" class="block text-sm font-medium text-gray-700 mb-1">
           Tiêu đề hồ sơ <span class="text-red-500">*</span>
         </label>
-        <input id="title" v-model="formData.title" type="text" required
+        <input id="title" v-model="formData.title" type="text"
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
           placeholder="Ví dụ: Nguyễn Văn A tìm con gái thất lạc năm 1975" />
       </div>
