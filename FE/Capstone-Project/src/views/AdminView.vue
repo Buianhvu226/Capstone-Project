@@ -193,7 +193,7 @@
                                         class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-400 rounded-xl flex items-center justify-center">
                                         <i class="fas fa-users text-white text-xl"></i>
                                     </div>
-                                    <span class="text-green-500 text-sm font-semibold">+12%</span>
+                                    <span class="text-green-500 text-sm font-semibold">+0%</span>
                                 </div>
                                 <h3 class="text-3xl font-bold text-gray-800 mb-2">{{ totalUsers }}</h3>
                                 <p class="text-gray-600">Tổng người dùng</p>
@@ -206,7 +206,7 @@
                                         class="w-14 h-14 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center">
                                         <i class="fas fa-user-check text-white text-xl"></i>
                                     </div>
-                                    <span class="text-green-500 text-sm font-semibold">+8%</span>
+                                    <span class="text-green-500 text-sm font-semibold">+0%</span>
                                 </div>
                                 <h3 class="text-3xl font-bold text-gray-800 mb-2">{{ activeUsers }}</h3>
                                 <p class="text-gray-600">Đang hoạt động</p>
@@ -221,8 +221,8 @@
                                     </div>
                                     <span class="text-green-500 text-sm font-semibold">+24%</span>
                                 </div>
-                                <h3 class="text-3xl font-bold text-gray-800 mb-2">85.2%</h3>
-                                <p class="text-gray-600">Tỷ lệ tương tác</p>
+                                <h3 class="text-3xl font-bold text-gray-800 mb-2">11382</h3>
+                                <p class="text-gray-600">Tổng số hồ sơ</p>
                             </div>
 
                             <div
@@ -230,12 +230,12 @@
                                 <div class="flex items-center justify-between mb-4">
                                     <div
                                         class="w-14 h-14 bg-gradient-to-br from-pink-400 to-rose-600 rounded-xl flex items-center justify-center">
-                                        <i class="fas fa-trophy text-white text-xl"></i>
+                                        <i class="fa-solid fa-file text-white text-xl"></i>
                                     </div>
-                                    <span class="text-green-500 text-sm font-semibold">+15%</span>
+                                    <span class="text-green-500 text-sm font-semibold">+0%</span>
                                 </div>
-                                <h3 class="text-3xl font-bold text-gray-800 mb-2">98.5%</h3>
-                                <p class="text-gray-600">Độ hài lòng</p>
+                                <h3 class="text-3xl font-bold text-gray-800 mb-2">50</h3>
+                                <p class="text-gray-600">Tổng số báo cáo</p>
                             </div>
                         </div>
 
@@ -327,8 +327,8 @@ export default {
         const activeSection = ref('dashboard')
 
         // Mock data for stats
-        const totalUsers = ref(1248)
-        const activeUsers = ref(892)
+        const totalUsers = ref(7)
+        const activeUsers = ref(7)
 
         const goToPageUserSystem = () => {
             router.push('/')

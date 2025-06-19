@@ -462,6 +462,7 @@ import AppLoader from '../components/common/AppLoader.vue';
 import AppHeader from '../components/common/AppHeader.vue';
 import SuggestedProfilesSection from '../components/profile/SuggestedProfilesSection.vue';
 import messageService from '../services/messageService';
+import commentService from '../services/commentService';
 
 export default {
   name: 'ProfileDetailView',
@@ -604,26 +605,17 @@ export default {
 
     // Format date
     const formatDate = (dateString) => {
-      if (!dateString) return 'N/A';
+      if (!dateString) return '';
       const date = new Date(dateString);
-      return new Intl.DateTimeFormat('vi-VN', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      }).format(date);
+      if (isNaN(date.getTime())) return '';
+      return date.toLocaleDateString('vi-VN');
     };
 
-    // Format date with time
     const formatDateWithTime = (dateString) => {
-      if (!dateString) return 'N/A';
+      if (!dateString) return '';
       const date = new Date(dateString);
-      return new Intl.DateTimeFormat('vi-VN', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(date);
+      if (isNaN(date.getTime())) return '';
+      return date.toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit' });
     };
 
     // Get status text
@@ -776,71 +768,30 @@ export default {
       }
     };
 
-    // Fetch comments
+    // Fetch comments từ API
     const fetchComments = async (page = 1) => {
       try {
+        const data = await commentService.getComments(profileId.value, page);
+        // Đúng trường dữ liệu:
+        const commentsArr = data.comments || [];
         if (page === 1) {
-          comments.value = [
-            {
-              id: 1,
-              user_name: 'Nguyễn Văn A',
-              content: 'Tôi nghĩ mình đã từng gặp người này ở Đà Nẵng vào năm 2018. Có thể liên hệ thêm với tôi để biết chi tiết.',
-              created_at: new Date(Date.now() - 86400000).toISOString(),
-              likes: 3,
-              is_liked: false,
-              replies: [
-                {
-                  id: 101,
-                  user_name: 'Trần Thị B',
-                  content: 'Bạn có thể chia sẻ thêm thông tin được không?',
-                  created_at: new Date(Date.now() - 43200000).toISOString(),
-                },
-              ],
-            },
-            {
-              id: 2,
-              user_name: 'Lê Văn C',
-              content: 'Tôi có người quen ở quê này, để tôi hỏi thăm giúp bạn.',
-              created_at: new Date(Date.now() - 172800000).toISOString(),
-              likes: 5,
-              is_liked: true,
-              replies: [],
-            },
-          ];
+          comments.value = commentsArr;
         } else {
-          comments.value = [
-            ...comments.value,
-            {
-              id: 3,
-              user_name: 'Phạm Văn D',
-              content: 'Chia sẻ thông tin này đến người dân ở địa phương để hỗ trợ tìm kiếm nhé.',
-              created_at: new Date(Date.now() - 259200000).toISOString(),
-              likes: 2,
-              is_liked: false,
-              replies: [],
-            },
-          ];
+          comments.value = [...comments.value, ...commentsArr];
         }
-        hasMoreComments.value = page < 2;
+        hasMoreComments.value = !!data.has_more;
         commentsPage.value = page;
       } catch (err) {
         console.error('Error fetching comments:', err);
       }
     };
 
-    // Submit comment
+    // Gửi bình luận mới
     const submitComment = async () => {
       if (!currentUser.value || !newComment.value.trim()) return;
       try {
-        comments.value.unshift({
-          id: Date.now(),
-          user_name: currentUser.value.username || 'Người dùng',
-          content: newComment.value,
-          created_at: new Date().toISOString(),
-          likes: 0,
-          is_liked: false,
-          replies: [],
-        });
+        const newCmt = await commentService.postComment(profileId.value, newComment.value.trim());
+        comments.value.unshift(newCmt);
         newComment.value = '';
       } catch (err) {
         console.error('Error submitting comment:', err);

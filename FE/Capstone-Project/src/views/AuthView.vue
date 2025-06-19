@@ -5,12 +5,12 @@
       class="relative flex-1 hidden lg:flex items-center justify-center px-10 py-12 bg-gradient-to-br from-blue-100 via-blue-100 to-blue-50">
       <div class="max-w-xl w-full text-center space-y-8">
         <img src="@/assets/images/logo1.png" alt="Logo" class="mx-auto w-32 mb-6 drop-shadow-lg" />
-        <h1 class="text-4xl font-extrabold text-gray-700 mb-2 tracking-tight">
-          Hệ thống tìm kiếm người thân
+        <h1 class="text-3xl font-extrabold text-gray-700 mb-2 tracking-tight">
+          Kinnect - Hệ thống hỗ trợ tìm kiếm và nhận dạng người thân thất lạc
         </h1>
         <p class="text-lg text-gray-500 mb-6">
-          Kết nối, tìm kiếm và đoàn tụ với người thân đã mất tích. Trải nghiệm công nghệ hiện đại với giao diện thân
-          thiện, nhẹ nhàng và ấm áp.
+          Kết nối, tìm kiếm và đoàn tụ với người thân bị thất lạc. Hoạt động thiện nguyện tìm kiếm và đoàn tụ người thân
+          miễn phí!
         </p>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
           <div v-for="(feature, index) in features" :key="index"
