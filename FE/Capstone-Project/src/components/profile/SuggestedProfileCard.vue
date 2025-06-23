@@ -1,7 +1,31 @@
 <template>
-    <div
-        class="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl border border-gray-100 transition-all duration-300 h-full flex flex-col">
+    <div class="rounded-lg overflow-hidden shadow-md hover:shadow-xl border transition-all duration-300 h-full flex flex-col"
+        :class="[
+            {
+                'bg-white border-gray-100': !profile.match_status,
+                'bg-yellow-50 border-yellow-200': profile.match_status === 'pending',
+                'bg-green-50 border-green-200': profile.match_status === 'accepted',
+                'bg-red-50 border-red-200': profile.match_status === 'rejected'
+            }
+        ]">
         <router-link :to="`/profile/${profile.id}`" class="flex-grow flex flex-col">
+            <!-- Match status banner -->
+            <div v-if="profile.match_status" class="py-1.5 px-3 text-center text-sm font-medium" :class="{
+                'bg-yellow-200 text-yellow-800': profile.match_status === 'pending',
+                'bg-green-200 text-green-800': profile.match_status === 'accepted',
+                'bg-red-200 text-red-800': profile.match_status === 'rejected'
+            }">
+                <div class="flex items-center justify-center">
+                    <i :class="[
+                        'mr-1.5',
+                        { 'fas fa-clock': profile.match_status === 'pending' },
+                        { 'fas fa-check-circle': profile.match_status === 'accepted' },
+                        { 'fas fa-times-circle': profile.match_status === 'rejected' }
+                    ]"></i>
+                    {{ getMatchStatusText(profile.match_status) }}
+                </div>
+            </div>
+
             <!-- Header with status badge -->
             <div class="relative">
                 <!-- Profile image -->
@@ -107,6 +131,14 @@ export default {
                 'closed': 'Đã đóng'
             };
             return statusMap[status] || 'Không xác định';
+        },
+        getMatchStatusText(matchStatus) {
+            const matchStatusMap = {
+                'pending': 'Đang chờ xác nhận',
+                'accepted': 'Xác nhận khớp',
+                'rejected': 'Không trùng khớp'
+            };
+            return matchStatusMap[matchStatus] || 'Không xác định';
         }
     }
 };

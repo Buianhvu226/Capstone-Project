@@ -184,61 +184,6 @@
                             </p>
                         </div>
 
-                        <!-- Quick Stats Cards -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-                            <div
-                                class="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div
-                                        class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-400 rounded-xl flex items-center justify-center">
-                                        <i class="fas fa-users text-white text-xl"></i>
-                                    </div>
-                                    <span class="text-green-500 text-sm font-semibold">+0%</span>
-                                </div>
-                                <h3 class="text-3xl font-bold text-gray-800 mb-2">{{ totalUsers }}</h3>
-                                <p class="text-gray-600">Tổng người dùng</p>
-                            </div>
-
-                            <div
-                                class="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div
-                                        class="w-14 h-14 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center">
-                                        <i class="fas fa-user-check text-white text-xl"></i>
-                                    </div>
-                                    <span class="text-green-500 text-sm font-semibold">+0%</span>
-                                </div>
-                                <h3 class="text-3xl font-bold text-gray-800 mb-2">{{ activeUsers }}</h3>
-                                <p class="text-gray-600">Đang hoạt động</p>
-                            </div>
-
-                            <div
-                                class="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div
-                                        class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-400 rounded-xl flex items-center justify-center">
-                                        <i class="fas fa-chart-line text-white text-xl"></i>
-                                    </div>
-                                    <span class="text-green-500 text-sm font-semibold">+24%</span>
-                                </div>
-                                <h3 class="text-3xl font-bold text-gray-800 mb-2">11382</h3>
-                                <p class="text-gray-600">Tổng số hồ sơ</p>
-                            </div>
-
-                            <div
-                                class="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-                                <div class="flex items-center justify-between mb-4">
-                                    <div
-                                        class="w-14 h-14 bg-gradient-to-br from-pink-400 to-rose-600 rounded-xl flex items-center justify-center">
-                                        <i class="fa-solid fa-file text-white text-xl"></i>
-                                    </div>
-                                    <span class="text-green-500 text-sm font-semibold">+0%</span>
-                                </div>
-                                <h3 class="text-3xl font-bold text-gray-800 mb-2">50</h3>
-                                <p class="text-gray-600">Tổng số báo cáo</p>
-                            </div>
-                        </div>
-
                         <!-- Action Cards -->
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             <div

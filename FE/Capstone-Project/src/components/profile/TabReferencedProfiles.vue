@@ -125,19 +125,19 @@
                                 <i class="fas fa-user text-indigo-500 mr-2 w-5 text-center"></i>
                                 <span class="text-gray-700 mr-1">Họ và tên:</span>
                                 <span class="text-gray-900 font-medium">{{ profile.full_name || 'Chưa xác định'
-                                }}</span>
+                                    }}</span>
                             </div>
                             <div class="flex items-center">
                                 <i class="fas fa-birthday-cake text-indigo-500 mr-2 w-5 text-center"></i>
                                 <span class="text-gray-700 mr-1">Năm sinh:</span>
                                 <span class="text-gray-900 font-medium">{{ profile.born_year || 'Chưa xác định'
-                                }}</span>
+                                    }}</span>
                             </div>
                             <div class="flex items-center">
                                 <i class="fas fa-calendar-day text-indigo-500 mr-2 w-5 text-center"></i>
                                 <span class="text-gray-700 mr-1">Năm thất lạc:</span>
                                 <span class="text-gray-900 font-medium">{{ profile.losing_year || 'Chưa xác định'
-                                }}</span>
+                                    }}</span>
                             </div>
                             <div class="flex items-center" v-if="profile.name_of_father">
                                 <i class="fas fa-male text-indigo-500 mr-2 w-5 text-center"></i>
@@ -176,16 +176,61 @@
                     </div>
                 </div>
 
-                <!-- Footer with Match Status -->
+                <!-- Footer with Match Status and Actions -->
                 <div class="px-5 py-4 bg-gray-50 border-t border-gray-100">
-                    <div class="flex items-center">
-                        <span class="text-gray-600 mr-2">Trạng thái tham chiếu:</span>
-                        <span :class="`px-2.5 py-1 rounded-full text-sm font-medium ${profile.suggestion_info.match_status === 'confirmed' ? 'bg-green-100 text-green-700' :
-                            profile.suggestion_info.match_status === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-indigo-100 text-indigo-700'
-                            }`">
-                            {{ profile.suggestion_info.match_status === 'confirmed' ? 'Đã xác nhận' :
-                                profile.suggestion_info.match_status === 'rejected' ? 'Đã từ chối' : 'Chưa xác nhận' }}
-                        </span>
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <!-- Current Status Display -->
+                        <div class="flex items-center gap-3">
+                            <span class="text-gray-600 font-medium">Trạng thái tham chiếu:</span>
+                            <span
+                                :class="`px-3 py-1.5 rounded-full text-sm font-medium ${getMatchStatusClass(profile.suggestion_info.match_status)}`">
+                                <i :class="getMatchStatusIcon(profile.suggestion_info.match_status)" class="mr-1"></i>
+                                {{ getMatchStatusLabel(profile.suggestion_info.match_status) }}
+                            </span>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-wrap gap-2">
+                            <!-- Chờ xác nhận button -->
+                            <button :class="`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1 ${profile.suggestion_info.match_status === 'pending'
+                                ? 'bg-blue-500 text-white shadow-md cursor-not-allowed'
+                                : 'bg-blue-100 text-blue-700 hover:bg-blue-200 hover:shadow-sm'
+                                }`"
+                                :disabled="profile.suggestion_info.match_status === 'pending' || updatingStatus[profile.suggestion_info.id]"
+                                @click="updateMatchStatus(profile, 'pending')">
+                                <i class="fas fa-clock text-xs"></i>
+                                <span>Chờ xác nhận</span>
+                            </button>
+
+                            <!-- Xác nhận khớp button -->
+                            <button :class="`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1 ${profile.suggestion_info.match_status === 'accepted'
+                                ? 'bg-green-500 text-white shadow-md cursor-not-allowed'
+                                : 'bg-green-100 text-green-700 hover:bg-green-200 hover:shadow-sm'
+                                }`"
+                                :disabled="profile.suggestion_info.match_status === 'accepted' || updatingStatus[profile.suggestion_info.id]"
+                                @click="updateMatchStatus(profile, 'accepted')">
+                                <i class="fas fa-check text-xs"></i>
+                                <span>Xác nhận khớp</span>
+                            </button>
+
+                            <!-- Không khớp button -->
+                            <button :class="`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1 ${profile.suggestion_info.match_status === 'rejected'
+                                ? 'bg-red-500 text-white shadow-md cursor-not-allowed'
+                                : 'bg-red-100 text-red-700 hover:bg-red-200 hover:shadow-sm'
+                                }`"
+                                :disabled="profile.suggestion_info.match_status === 'rejected' || updatingStatus[profile.suggestion_info.id]"
+                                @click="updateMatchStatus(profile, 'rejected')">
+                                <i class="fas fa-times text-xs"></i>
+                                <span>Không khớp</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Loading indicator when updating -->
+                    <div v-if="updatingStatus[profile.suggestion_info.id]"
+                        class="flex items-center justify-center mt-3 text-blue-600">
+                        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
+                        <span class="text-sm">Đang cập nhật trạng thái...</span>
                     </div>
                 </div>
             </div>
@@ -244,6 +289,7 @@ export default {
         const currentPage = ref(1)
         const totalPages = ref(1)
         const totalItems = ref(0)
+        const updatingStatus = ref({}) // Track updating status for each suggestion
 
         // Fetch referenced profiles
         const fetchProfiles = async (page = 1) => {
@@ -301,9 +347,54 @@ export default {
             }
         }
 
+        // Match status label
+        const getMatchStatusLabel = (status) => {
+            switch (status) {
+                case 'accepted': return 'Đã xác nhận khớp'
+                case 'rejected': return 'Đã từ chối'
+                case 'pending': return 'Chờ xác nhận'
+                default: return 'Chưa xác định'
+            }
+        }
+
+        // Match status class
+        const getMatchStatusClass = (status) => {
+            switch (status) {
+                case 'accepted': return 'bg-green-100 text-green-700 border border-green-200'
+                case 'rejected': return 'bg-red-100 text-red-700 border border-red-200'
+                case 'pending': return 'bg-blue-100 text-blue-700 border border-blue-200'
+                default: return 'bg-gray-100 text-gray-700 border border-gray-200'
+            }
+        }
+
+        // Match status icon
+        const getMatchStatusIcon = (status) => {
+            switch (status) {
+                case 'accepted': return 'fas fa-check-circle'
+                case 'rejected': return 'fas fa-times-circle'
+                case 'pending': return 'fas fa-clock'
+                default: return 'fas fa-question-circle'
+            }
+        }
+
         // Handle image error
         const handleImageError = (event) => {
             event.target.src = noImage
+        }
+
+        // Cập nhật trạng thái tham chiếu
+        const updateMatchStatus = async (profile, status) => {
+            if (profile.suggestion_info.match_status === status) return
+            const suggestionId = profile.suggestion_info.id
+            updatingStatus.value[suggestionId] = true
+            try {
+                await profileService.updateSuggestionMatchStatus(suggestionId, status)
+                profile.suggestion_info.match_status = status
+            } catch (err) {
+                alert('Cập nhật trạng thái thất bại! Vui lòng thử lại.')
+            } finally {
+                updatingStatus.value[suggestionId] = false
+            }
         }
 
         onMounted(() => {
@@ -317,11 +408,15 @@ export default {
             currentPage,
             totalPages,
             totalItems,
+            updatingStatus,
+            getMatchStatusLabel,
+            getMatchStatusClass,
+            getMatchStatusIcon,
+            updateMatchStatus,
             fetchProfiles,
             formatDate,
             getStatusLabel,
-            getStatusClass,
-            handleImageError
+            getStatusClass
         }
     }
 }

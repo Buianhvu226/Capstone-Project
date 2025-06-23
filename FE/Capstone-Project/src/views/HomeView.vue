@@ -132,15 +132,26 @@
                   <i class="fas fa-flag text-blue-500 mr-1.5"></i> Trạng thái hồ sơ
                 </label>
                 <div class="flex space-x-4">
+
+                  <label class="inline-flex items-center">
+                    <input type="radio" v-model="filters.status" value="all"
+                      class="text-blue-400 focus:ring-blue-500 h-4 w-4" />
+                    <span class="ml-2 text-sm text-gray-700">Tất cả</span>
+                  </label>
                   <label class="inline-flex items-center">
                     <input type="radio" v-model="filters.status" value="active"
                       class="text-blue-400 focus:ring-blue-500 h-4 w-4" />
                     <span class="ml-2 text-sm text-gray-700">Đang tìm kiếm</span>
                   </label>
                   <label class="inline-flex items-center">
-                    <input type="radio" v-model="filters.status" value="all"
+                    <input type="radio" v-model="filters.status" value="found"
                       class="text-blue-400 focus:ring-blue-500 h-4 w-4" />
-                    <span class="ml-2 text-sm text-gray-700">Tất cả</span>
+                    <span class="ml-2 text-sm text-gray-700">Đã tìm thấy</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="radio" v-model="filters.status" value="closed"
+                      class="text-blue-400 focus:ring-blue-500 h-4 w-4" />
+                    <span class="ml-2 text-sm text-gray-700">Đã đóng</span>
                   </label>
                 </div>
               </div>

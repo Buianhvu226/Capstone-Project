@@ -56,6 +56,11 @@ const profileService = {
   updateProfileStatus(profileId, status) {
     return api.patch(`/profiles/${profileId}/`, { status });
   },
+
+  // Cập nhật trạng thái xác nhận gợi ý
+  updateSuggestionMatchStatus(suggestionId, status) {
+    return api.post(`/profile-match-suggestion/${suggestionId}/update_status/`, { match_status: status });
+  },
 };
 
 export default profileService;

@@ -18,20 +18,6 @@
       </div>
     </div>
 
-    <!-- Reason for suggestion -->
-    <div v-if="profiles[0]?.suggestion_info?.match_summary" 
-      class="mb-6 bg-white/70 p-4 rounded-lg border border-blue-100">
-      <div class="flex">
-        <div class="flex-shrink-0 mr-3">
-          <i class="fas fa-lightbulb text-yellow-500 mt-1"></i>
-        </div>
-        <div>
-          <h3 class="font-medium text-gray-800 mb-1">Lý do gợi ý</h3>
-          <p class="text-sm text-gray-600">{{ profiles[0].suggestion_info.match_summary }}</p>
-        </div>
-      </div>
-    </div>
-
     <!-- Grid layout for cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <template v-for="(profile, index) in displayedProfiles" :key="profile.id">
