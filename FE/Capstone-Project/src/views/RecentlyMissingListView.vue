@@ -3,55 +3,46 @@
     <AppHeader />
 
     <!-- Hero Section -->
-    <section class="relative py-20 px-4 overflow-hidden">
+    <section class="relative min-h-[80vh] flex items-center px-4 overflow-hidden">
       <!-- Background Image with Overlay -->
       <div class="absolute inset-0">
         <img
           src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80"
-          alt="Family background" class="w-full h-full object-cover blur-xs" />
-        <!-- Subtle overlay for better text readability -->
-        <div class=""></div>
+          alt="Family background" class="w-full h-full object-cover" />
+        <!-- Subtle overlay -->
+        <div class="absolute inset-0 bg-black/50"></div>
       </div>
 
       <!-- Content Container -->
-      <div class="relative z-10 container mx-auto text-center max-w-5xl">
-        <!-- Main heading -->
-        <div class="mb-8">
-          <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-            Tìm kiếm người thân <br>
-            <span class="text-blue-400 font-light">thất lạc gần đây</span>
+      <div class="relative z-10 container mx-auto max-w-4xl py-8">
+        <div class="text-center md:text-left">
+          <!-- Main heading -->
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+            Tìm kiếm <span class="text-blue-300">người thân thất lạc gần đây</span>
           </h1>
-        </div>
 
-        <!-- Subtitle -->
-        <div class="mb-12 max-w-3xl mx-auto">
-          <p class="text-xl md:text-2xl text-gray-200 leading-relaxed mb-4">
-            Sử dụng công nghệ nhận diện khuôn mặt để tìm kiếm người thân thất lạc
+          <!-- Simple subtitle -->
+          <p class="text-lg sm:text-xl text-gray-200 leading-relaxed mb-10 max-w-2xl mx-auto md:mx-0">
+            Sử dụng công nghệ nhận diện khuôn mặt để tìm kiếm người thân đặc biệt như trẻ em, người già lẫn, hoặc người
+            có vấn đề về tâm thần.
           </p>
-          <p class="text-lg text-blue-100 opacity-90">
-            Nhanh chóng • Chính xác • Tin cậy
-          </p>
+
+          <!-- Action buttons -->
+          <div class="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+            <router-link to="/recently-missing/create"
+              class="inline-flex items-center justify-center px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-all duration-300 font-medium">
+              <i class="fas fa-plus-circle mr-2"></i>
+              Đăng hồ sơ mới
+            </router-link>
+
+            <button @click="scrollToSearch"
+              class="inline-flex items-center justify-center px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/30 text-white rounded-lg hover:bg-white/20 transition-all duration-300">
+              <i class="fas fa-search mr-2"></i>
+              Tìm kiếm hồ sơ
+            </button>
+          </div>
         </div>
-
-        <!-- Action buttons -->
-        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-16">
-          <!-- Primary CTA -->
-          <router-link to="/recently-missing/create"
-            class="inline-flex items-center px-8 py-4 bg-white text-blue-400 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 font-semibold text-lg">
-            <i class="fas fa-plus-circle mr-3 text-blue-400"></i>
-            Đăng hồ sơ mới
-          </router-link>
-
-          <!-- Secondary CTA -->
-          <button @click="scrollToSearch"
-            class="inline-flex items-center px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-lg hover:bg-white/20 transition-all duration-300 font-semibold text-lg">
-            <i class="fas fa-search mr-3"></i>
-            Tìm kiếm hồ sơ
-          </button>
-        </div>
-
       </div>
-
     </section>
 
     <!-- Container -->

@@ -76,10 +76,10 @@
                     </button>
                   </div>
                 </div>
-                <button v-if="isOwner && missingReport.image_url" @click="goToUploadImage"
+                <!-- <button v-if="isOwner && missingReport.image_url" @click="goToUploadImage"
                   class="w-full mt-4 bg-blue-400 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
                   <i class="fas fa-camera mr-2"></i> Cập nhật ảnh
-                </button>
+                </button> -->
               </div>
             </div>
             <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
@@ -101,7 +101,7 @@
                     <i class="fas fa-percentage text-blue-500"></i>
                   </div>
                 </div>
-                <button @click="viewAIMatches"
+                <button v-if="isOwner" @click="viewAIMatches"
                   class="w-full bg-gradient-to-r from-blue-400 to-blue-400 hover:from-blue-700 hover:to-blue-700 text-white px-4 py-3 rounded-lg transition-colors flex items-center justify-center shadow-md hover:shadow-lg">
                   <i class="fas fa-search-plus mr-2"></i> Tìm kiếm và phân tích độ khớp
                 </button>

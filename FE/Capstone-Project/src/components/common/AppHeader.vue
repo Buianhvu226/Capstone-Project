@@ -97,7 +97,7 @@
 
           <!-- Logout Button -->
           <button @click="logout"
-            class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 lg:px-4 lg:py-2 rounded-lg font-semibold transition text-sm lg:text-base">
+            class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 lg:px-4 lg:py-2 rounded-lg font-semibold transition text-sm lg:text-base">
             <!-- XL screens: Show text -->
             <span class="hidden xl:inline">Đăng xuất</span>
             <!-- Medium to Large screens: Show icon only -->
@@ -147,7 +147,7 @@
           </div>
 
           <button @click="logout"
-            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg font-medium transition text-sm">
+            class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1.5 rounded-lg font-medium transition text-sm">
             Đăng xuất
           </button>
         </div>
@@ -203,7 +203,7 @@
       <div class="flex items-center">
         <!-- Nút đăng xuất -->
         <button @click="logout"
-          class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition text-sm">
+          class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition text-sm">
           <i class="fa fa-sign-out-alt mr-1"></i>
           <span class="hidden sm:inline">Đăng xuất</span>
         </button>

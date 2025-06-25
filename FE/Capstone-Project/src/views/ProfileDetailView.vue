@@ -329,7 +329,7 @@
         </div>
 
         <!-- Contact Section -->
-        <div class="border-t border-gray-200 bg-gradient-to-r from-blue-50 to-blue-50 px-6 py-5">
+        <div v-if="!isOwner" class="border-t border-gray-200 bg-gradient-to-r from-blue-50 to-blue-50 px-6 py-5">
           <div class="flex flex-col md:flex-row md:items-center justify-between">
             <div class="flex items-center">
               <div class="bg-blue-100 rounded-full p-2 mr-3">
