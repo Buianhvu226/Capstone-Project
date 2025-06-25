@@ -315,7 +315,9 @@ export default {
             if (formData.value.missing_date) {
                 const missingDate = new Date(formData.value.missing_date);
                 const today = new Date();
-                today.setHours(0, 0, 0, 0); // Reset time part for accurate date comparison
+                // Đặt cả hai về 00:00:00 để chỉ so sánh ngày
+                missingDate.setHours(0, 0, 0, 0);
+                today.setHours(0, 0, 0, 0);
 
                 if (missingDate > today) {
                     dateError.value = 'Ngày không thể là ngày trong tương lai';

@@ -105,7 +105,7 @@
                 <span class="hidden sm:inline">Chia sẻ</span>
               </button>
               <!-- Delete button for admin -->
-              <button v-else @click="deleteProfile"
+              <button v-if="isAdmin || isOwner" @click="deleteProfile"
                 class="inline-flex items-center px-4 py-2 bg-red-500/80 hover:bg-red-600/80 backdrop-blur-sm text-white rounded-lg font-medium transition-all hover:scale-105">
                 <i class="fas fa-trash-alt mr-2"></i>
                 <span class="hidden sm:inline">Xóa</span>

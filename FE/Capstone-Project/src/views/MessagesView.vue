@@ -1,9 +1,9 @@
 <template>
-  <div class="messages-view h-screen flex flex-col bg-gray-50">
+  <div class="messages-view h-[50rem] flex flex-col bg-gray-50">
     <AppHeader class="flex-shrink-0" />
     
     <!-- Main content - fixed position and full width -->
-    <div class="flex-1 overflow-hidden pt-16 md:pt-20">
+    <div class="flex-1 overflow-hidden pt-15 md:pt-15">
       <div class="h-full bg-white shadow-lg border border-gray-100">
         <div class="flex flex-col sm:flex-row h-full">
           <!-- Sidebar: List of conversations -->
@@ -235,24 +235,6 @@
                     </div>
                   </div>
 
-                  <!-- Typing indicator -->
-                  <div v-if="isTyping" class="flex items-start mt-2">
-                    <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-blue-100 flex-shrink-0 
-                         flex items-center justify-center text-blue-500 mr-1 sm:mr-2">
-                      <i class="fas fa-user text-[8px] sm:text-xs"></i>
-                    </div>
-                    <div
-                      class="max-w-[75%] rounded-2xl px-3 sm:px-4 py-1.5 sm:py-2 bg-white border border-gray-100 shadow-sm">
-                      <div class="flex space-x-1">
-                        <div class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-300 animate-bounce"
-                          style="animation-delay: 0ms"></div>
-                        <div class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-300 animate-bounce"
-                          style="animation-delay: 150ms"></div>
-                        <div class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-300 animate-bounce"
-                          style="animation-delay: 300ms"></div>
-                      </div>
-                    </div>
-                  </div>
                 </template>
               </div>
 
@@ -682,6 +664,6 @@ export default {
 
 .messages-view {
     background-image: linear-gradient(to bottom, rgba(241, 245, 249, 0.8), rgba(249, 250, 251, 0.9));
-    min-height: 100vh;
+    min-height: 70vh;
 }
 </style>
