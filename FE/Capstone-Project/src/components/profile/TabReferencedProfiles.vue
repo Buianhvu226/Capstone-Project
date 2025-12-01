@@ -1,270 +1,314 @@
 <template>
     <!-- Loading State -->
-    <div v-if="loading" class="bg-white rounded-xl shadow p-12 flex justify-center">
+    <div v-if="loading" class="bg-white rounded-lg border border-slate-200 p-6 flex justify-center">
         <div class="flex flex-col items-center">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400"></div>
-            <p class="mt-4 text-gray-600">Đang tải hồ sơ tham chiếu...</p>
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            <p class="mt-3 text-xs text-slate-600">Đang tải hồ sơ tham chiếu...</p>
         </div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="error" class="bg-white rounded-xl shadow p-8 text-center">
-        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
+    <div v-else-if="error" class="bg-white rounded-lg border border-slate-200 p-6 text-center">
+        <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-3">
+            <i class="fas fa-exclamation-triangle text-red-500 text-base"></i>
         </div>
-        <h3 class="text-xl font-semibold text-gray-800 mb-2">Đã xảy ra lỗi</h3>
-        <p class="text-gray-600 mb-6">{{ error }}</p>
+        <h3 class="text-sm font-semibold text-slate-800 mb-1">Đã xảy ra lỗi</h3>
+        <p class="text-xs text-slate-600 mb-4">{{ error }}</p>
         <button @click="fetchProfiles(1)"
-            class="px-5 py-2 bg-blue-400 hover:bg-blue-700 text-white rounded-lg font-medium transition">
-            <i class="fas fa-sync-alt mr-2"></i> Thử lại
+            class="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-xs font-semibold transition flex items-center gap-1.5 mx-auto">
+            <i class="fas fa-sync-alt text-xs"></i>
+            <span>Thử lại</span>
         </button>
     </div>
 
     <!-- Empty State -->
-    <div v-else-if="profiles.length === 0" class="bg-white rounded-xl shadow p-12 text-center">
-        <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <i class="fas fa-link text-blue-500 text-2xl"></i>
+    <div v-else-if="profiles.length === 0" class="bg-white rounded-lg border border-slate-200 p-6 text-center">
+        <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-3">
+            <i class="fas fa-link text-blue-500 text-lg"></i>
         </div>
-        <h3 class="text-xl font-semibold text-gray-800 mb-2">Chưa có hồ sơ tham chiếu</h3>
-        <p class="text-gray-600 max-w-lg mx-auto mb-6">
+        <h3 class="text-sm font-semibold text-slate-800 mb-1">Chưa có hồ sơ tham chiếu</h3>
+        <p class="text-xs text-slate-600 mb-4 max-w-md mx-auto">
             Hiện chưa có hồ sơ nào tham chiếu đến hồ sơ của bạn.
             Khi hệ thống phát hiện hồ sơ khác có liên quan đến hồ sơ của bạn, thông tin sẽ hiển thị tại đây.
         </p>
         <button @click="fetchProfiles(1)"
-            class="px-6 py-3 bg-blue-400 hover:bg-blue-700 text-white rounded-lg font-medium transition flex items-center gap-2 mx-auto">
-            <i class="fas fa-sync-alt"></i>
+            class="px-3 py-1.5 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-xs font-semibold transition flex items-center gap-1.5 mx-auto">
+            <i class="fas fa-sync-alt text-xs"></i>
             <span>Làm mới</span>
         </button>
     </div>
 
     <!-- Referenced Profiles List -->
     <div v-else>
-        <div class="flex flex-col md:flex-row justify-between items-center mb-5 gap-4">
-            <h2 class="text-xl font-bold text-gray-800">Hồ sơ tham chiếu ({{ totalItems }})</h2>
-            <button @click="fetchProfiles(1)"
-                class="px-4 py-2 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg flex items-center gap-2">
-                <i class="fas fa-sync-alt"></i>
-                <span>Làm mới</span>
-            </button>
+        <div class="flex flex-col md:flex-row justify-between items-center mb-3 gap-3">
+            <h2 class="text-sm font-semibold text-slate-800">Hồ sơ tham chiếu ({{ totalItems }})</h2>
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-600">Sắp xếp:</span>
+                <select v-model="currentSort" @change="handleSortChange"
+                    class="border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400">
+                    <option v-for="option in sortOptions" :key="option.value" :value="option.value">
+                        {{ option.label }}
+                    </option>
+                </select>
+                <button @click="fetchProfiles(1)"
+                    class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-xs font-semibold flex items-center gap-1.5">
+                    <i class="fas fa-sync-alt text-xs"></i>
+                    <span>Làm mới</span>
+                </button>
+            </div>
         </div>
 
         <!-- Referenced Profiles Cards -->
-        <div class="space-y-6">
+        <div class="space-y-3 md:space-y-4">
             <div v-for="profile in profiles" :key="profile.id"
-                class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
+                class="bg-white rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg border border-gray-200/80 hover:border-blue-300/60 transition-all duration-300 overflow-hidden group cursor-pointer relative">
+                <!-- Accent line on hover -->
+                <div
+                    class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                </div>
+
                 <!-- Reference Banner -->
-                <div class="bg-indigo-50 px-5 py-4 border-b border-indigo-100 flex items-center justify-between">
-                    <div class="flex items-center">
-                        <div class="h-9 w-9 bg-indigo-100 rounded-full flex items-center justify-center mr-3">
-                            <i class="fas fa-link text-indigo-500"></i>
+                <div class="bg-indigo-50 px-3 py-2 border-b border-indigo-100 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="h-6 w-6 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-link text-indigo-500 text-xs"></i>
                         </div>
                         <div>
-                            <span class="text-sm font-medium text-gray-700 block">Tham chiếu đến hồ sơ của bạn:</span>
+                            <span class="text-xs text-gray-600 block">Tham chiếu đến:</span>
                             <router-link :to="`/profile/${profile.referenced_to_profile.id}`"
-                                class="text-blue-400 hover:text-blue-800 hover:underline font-semibold">
+                                class="text-blue-500 hover:text-blue-700 hover:underline text-xs font-semibold">
                                 {{ profile.referenced_to_profile.title }}
                             </router-link>
                         </div>
                     </div>
                     <div class="text-right">
-                        <span class="text-xs text-gray-500 block">Ngày tạo:</span>
-                        <span class="text-sm font-medium text-gray-700">
+                        <span class="text-[10px] text-gray-500 block">Ngày:</span>
+                        <span class="text-xs font-medium text-gray-700">
                             {{ formatDate(profile.suggestion_info.created_at) }}
                         </span>
                     </div>
                 </div>
 
-                <!-- Profile Content -->
-                <div class="flex flex-col lg:flex-row">
+                <div class="flex flex-col md:flex-row">
                     <!-- Profile Image -->
-                    <div class="w-full lg:w-1/4 h-64 lg:h-auto relative">
-                        <img v-if="profile.images" :src="profile.images" :alt="`Ảnh của ${profile.title}`"
-                            class="w-full h-full object-cover" @error="handleImageError" />
-                        <div v-else
-                            class="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-50 to-blue-50">
-                            <div class="text-center">
-                                <div
-                                    class="h-20 w-20 bg-white/80 rounded-full mx-auto mb-2 flex items-center justify-center">
-                                    <i class="fas fa-image text-indigo-300 text-4xl"></i>
-                                </div>
-                                <p class="text-indigo-400 text-sm mt-2">Không có hình ảnh</p>
+                    <div
+                        class="w-full md:w-[180px] lg:w-[200px] relative aspect-[4/3] md:aspect-square overflow-hidden flex-shrink-0 bg-gradient-to-br from-gray-50 to-gray-100">
+                        <div class="absolute inset-0">
+                            <img v-if="profile.images" :src="profile.images" :alt="`Ảnh của ${profile.title}`"
+                                class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                                @error="handleImageError" />
+                            <div v-else
+                                class="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50/50 via-gray-50 to-gray-100">
+                                <img :src="noImage" alt="Không có hình ảnh"
+                                    class="w-16 h-16 md:w-20 md:h-20 object-contain opacity-25" />
                             </div>
                         </div>
 
                         <!-- Status Badge -->
-                        <div class="absolute top-3 left-3">
-                            <span
-                                :class="`px-3 py-1.5 rounded-full text-sm font-medium ${getStatusClass(profile.status)}`">
+                        <div class="absolute top-2.5 left-2.5 z-10">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold shadow-md backdrop-blur-sm" :class="{
+                                'bg-blue-400 text-white': profile.status === 'active',
+                                'bg-green-500 text-white': profile.status === 'found',
+                                'bg-gray-500 text-white': profile.status === 'closed'
+                            }">
                                 {{ getStatusLabel(profile.status) }}
-                            </span>
-                        </div>
-
-                        <!-- Owner info badge -->
-                        <div
-                            class="absolute bottom-3 left-3 bg-indigo-50 border border-indigo-200 px-2.5 py-1.5 rounded-md text-sm flex items-center">
-                            <i class="fas fa-user text-indigo-600 mr-2"></i>
-                            <span class="text-indigo-700 font-medium">
-                                Hồ sơ của người khác
                             </span>
                         </div>
                     </div>
 
                     <!-- Profile Info -->
-                    <div class="p-6 flex-1 flex flex-col">
-                        <div class="flex justify-between items-start mb-3">
-                            <h3 class="text-xl font-bold text-indigo-700 line-clamp-2 mr-2">{{ profile.title }}</h3>
+                    <div class="flex-1 p-4 md:p-5 flex flex-col">
+                        <!-- Header: Title và ID -->
+                        <div class="flex items-start justify-between gap-3 mb-3">
+                            <h3
+                                class="text-base md:text-lg font-bold text-gray-900 group-hover:text-blue-400 transition-colors line-clamp-2 flex-1 leading-snug">
+                                {{ profile.title }}
+                            </h3>
                             <span
-                                class="bg-indigo-100 text-indigo-700 text-xs px-2.5 py-1.5 rounded-full whitespace-nowrap">
-                                ID: {{ profile.id }}
+                                class="bg-gradient-to-br from-blue-50 to-blue-100/50 text-blue-400 text-xs font-bold px-2.5 py-1 rounded-lg flex-shrink-0 whitespace-nowrap shadow-sm">
+                                #{{ profile.id }}
                             </span>
                         </div>
 
-                        <!-- Quick Info -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 mb-5">
-                            <div class="flex items-center">
-                                <i class="fas fa-user text-indigo-500 mr-2 w-5 text-center"></i>
-                                <span class="text-gray-700 mr-1">Họ và tên:</span>
-                                <span class="text-gray-900 font-medium">{{ profile.full_name || 'Chưa xác định'
-                                    }}</span>
+                        <!-- Thông tin chi tiết - Với icon và highlight không border -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-3">
+                            <div class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-blue-400 flex-shrink-0" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                <span class="text-xs text-gray-600 font-medium whitespace-nowrap">Họ và tên:</span>
+                                <span
+                                    class="text-sm font-semibold text-gray-900 bg-gradient-to-r from-blue-50 to-blue-50/80 px-2.5 py-1 rounded-md">
+                                    {{ profile.full_name || 'Chưa xác định' }}
+                                </span>
                             </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-birthday-cake text-indigo-500 mr-2 w-5 text-center"></i>
-                                <span class="text-gray-700 mr-1">Năm sinh:</span>
-                                <span class="text-gray-900 font-medium">{{ profile.born_year || 'Chưa xác định'
-                                    }}</span>
+                            <div class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-blue-400 flex-shrink-0" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span class="text-xs text-gray-600 font-medium whitespace-nowrap">Năm sinh:</span>
+                                <span
+                                    class="text-sm font-semibold text-gray-900 bg-gradient-to-r from-blue-50 to-blue-50/80 px-2.5 py-1 rounded-md">
+                                    {{ profile.born_year || 'Chưa xác định' }}
+                                </span>
                             </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-calendar-day text-indigo-500 mr-2 w-5 text-center"></i>
-                                <span class="text-gray-700 mr-1">Năm thất lạc:</span>
-                                <span class="text-gray-900 font-medium">{{ profile.losing_year || 'Chưa xác định'
-                                    }}</span>
+                            <div class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-blue-400 flex-shrink-0" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span class="text-xs text-gray-600 font-medium whitespace-nowrap">Năm thất lạc:</span>
+                                <span
+                                    class="text-sm font-semibold text-gray-900 bg-gradient-to-r from-blue-50 to-blue-50/80 px-2.5 py-1 rounded-md">
+                                    {{ profile.losing_year || 'Chưa xác định' }}
+                                </span>
                             </div>
-                            <div class="flex items-center" v-if="profile.name_of_father">
-                                <i class="fas fa-male text-indigo-500 mr-2 w-5 text-center"></i>
-                                <span class="text-gray-700 mr-1">Tên cha:</span>
-                                <span class="text-gray-900 font-medium">{{ profile.name_of_father }}</span>
+                            <div class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-blue-400 flex-shrink-0" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                <span class="text-xs text-gray-600 font-medium whitespace-nowrap">Tên cha:</span>
+                                <span
+                                    class="text-sm font-semibold text-gray-900 bg-gradient-to-r from-blue-50 to-blue-50/80 px-2.5 py-1 rounded-md">
+                                    {{ profile.name_of_father || 'Chưa xác định' }}
+                                </span>
                             </div>
-                            <div class="flex items-center" v-if="profile.name_of_mother">
-                                <i class="fas fa-female text-indigo-500 mr-2 w-5 text-center"></i>
-                                <span class="text-gray-700 mr-1">Tên mẹ:</span>
-                                <span class="text-gray-900 font-medium">{{ profile.name_of_mother }}</span>
+                            <div class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-blue-400 flex-shrink-0" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                <span class="text-xs text-gray-600 font-medium whitespace-nowrap">Tên mẹ:</span>
+                                <span
+                                    class="text-sm font-semibold text-gray-900 bg-gradient-to-r from-blue-50 to-blue-50/80 px-2.5 py-1 rounded-md">
+                                    {{ profile.name_of_mother || 'Chưa xác định' }}
+                                </span>
                             </div>
-                            <div class="flex items-center" v-if="profile.siblings">
-                                <i class="fas fa-users text-indigo-500 mr-2 w-5 text-center"></i>
-                                <span class="text-gray-700 mr-1">Anh chị em:</span>
-                                <span class="text-gray-900 font-medium line-clamp-1">{{ profile.siblings }}</span>
+                            <div class="flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-blue-400 flex-shrink-0" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                <span class="text-xs text-gray-600 font-medium whitespace-nowrap">Anh chị em:</span>
+                                <span
+                                    class="text-sm font-semibold text-gray-900 bg-gradient-to-r from-blue-50 to-blue-50/80 px-2.5 py-1 rounded-md line-clamp-1">
+                                    {{ profile.siblings || 'Chưa xác định' }}
+                                </span>
                             </div>
                         </div>
 
-                        <!-- Description -->
-                        <div v-if="profile.description" class="bg-gray-50 p-4 rounded-lg mb-5">
-                            <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
-                                <i class="fas fa-align-left text-gray-500 mr-2"></i>
-                                Mô tả
-                            </h4>
-                            <p class="text-gray-600 line-clamp-3">{{ profile.description }}</p>
+                        <!-- Mô tả -->
+                        <div class="mb-3 flex-1">
+                            <p class="text-xs md:text-sm text-gray-700 line-clamp-2 leading-relaxed">
+                                {{ profile.description || 'Chưa có mô tả' }}
+                            </p>
                         </div>
 
-                        <!-- Action Button -->
-                        <div class="mt-auto pt-2">
-                            <router-link :to="`/profile/${profile.id}`"
-                                class="inline-flex items-center justify-center w-full bg-gradient-to-r from-indigo-600 to-blue-400 hover:from-indigo-700 hover:to-blue-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-sm transition-all">
-                                Xem chi tiết
-                                <i class="fas fa-arrow-right ml-2"></i>
-                            </router-link>
+                        <!-- Footer: Thời gian, trạng thái và nút hành động -->
+                        <div
+                            class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-3 border-t border-gray-100/80">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <div class="flex items-center gap-1.5 text-xs text-gray-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-gray-400" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>{{ formatDate(profile.suggestion_info.created_at) }}</span>
+                                </div>
+                                <span
+                                    :class="`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-semibold ${getMatchStatusClass(profile.suggestion_info.match_status)}`">
+                                    <i :class="getMatchStatusIcon(profile.suggestion_info.match_status)" class="text-xs"></i>
+                                    <span>{{ getMatchStatusLabel(profile.suggestion_info.match_status) }}</span>
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <button
+                                    :class="`referenced-action-pending px-2.5 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1 ${profile.suggestion_info.match_status === 'pending'
+                                        ? 'bg-blue-500 text-white cursor-not-allowed'
+                                        : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+                                    } ${profile.id === profiles[0]?.id ? 'first-profile-action' : ''}`"
+                                    :disabled="profile.suggestion_info.match_status === 'pending' || updatingStatus[profile.suggestion_info.id]"
+                                    @click="updateMatchStatus(profile, 'pending')">
+                                    <i class="fas fa-clock text-xs"></i>
+                                    <span>Chờ</span>
+                                </button>
+                                <button
+                                    :class="`referenced-action-accept px-2.5 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1 ${profile.suggestion_info.match_status === 'accepted'
+                                        ? 'bg-green-500 text-white cursor-not-allowed'
+                                        : 'bg-green-100 text-green-700 hover:bg-green-200'
+                                    } ${profile.id === profiles[0]?.id ? 'first-profile-action' : ''}`"
+                                    :disabled="profile.suggestion_info.match_status === 'accepted' || updatingStatus[profile.suggestion_info.id]"
+                                    @click="updateMatchStatus(profile, 'accepted')">
+                                    <i class="fas fa-check text-xs"></i>
+                                    <span>Khớp</span>
+                                </button>
+                                <button
+                                    :class="`referenced-action-reject px-2.5 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1 ${profile.suggestion_info.match_status === 'rejected'
+                                        ? 'bg-red-500 text-white cursor-not-allowed'
+                                        : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                    } ${profile.id === profiles[0]?.id ? 'first-profile-action' : ''}`"
+                                    :disabled="profile.suggestion_info.match_status === 'rejected' || updatingStatus[profile.suggestion_info.id]"
+                                    @click="updateMatchStatus(profile, 'rejected')">
+                                    <i class="fas fa-times text-xs"></i>
+                                    <span>Không</span>
+                                </button>
+                                <router-link :to="`/profile/${profile.id}`"
+                                    :class="`referenced-action-view inline-flex items-center gap-1.5 bg-blue-400 hover:bg-blue-500 active:bg-blue-600 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-semibold shadow-sm hover:shadow-md transition-all duration-200 group/btn whitespace-nowrap ${profile.id === profiles[0]?.id ? 'first-profile-action' : ''}`">
+                                    <span>Xem chi tiết</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-3.5 w-3.5 md:h-4 md:w-4 group-hover/btn:translate-x-0.5 transition-transform" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </router-link>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Footer with Match Status and Actions -->
-                <div class="px-5 py-4 bg-gray-50 border-t border-gray-100">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <!-- Current Status Display -->
-                        <div class="flex items-center gap-3">
-                            <span class="text-gray-600 font-medium">Trạng thái tham chiếu:</span>
-                            <span
-                                :class="`px-3 py-1.5 rounded-full text-sm font-medium ${getMatchStatusClass(profile.suggestion_info.match_status)}`">
-                                <i :class="getMatchStatusIcon(profile.suggestion_info.match_status)" class="mr-1"></i>
-                                {{ getMatchStatusLabel(profile.suggestion_info.match_status) }}
-                            </span>
+                        <!-- Loading indicator when updating -->
+                        <div v-if="updatingStatus[profile.suggestion_info.id]"
+                            class="flex items-center justify-center mt-2 text-blue-600 text-xs">
+                            <div class="animate-spin rounded-full h-3 w-3 border-b-2 border-blue-600 mr-2"></div>
+                            <span>Đang cập nhật...</span>
                         </div>
-
-                        <!-- Action Buttons -->
-                        <div class="flex flex-wrap gap-2">
-                            <!-- Chờ xác nhận button -->
-                            <button :class="`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1 ${profile.suggestion_info.match_status === 'pending'
-                                ? 'bg-blue-500 text-white shadow-md cursor-not-allowed'
-                                : 'bg-blue-100 text-blue-700 hover:bg-blue-200 hover:shadow-sm'
-                                }`"
-                                :disabled="profile.suggestion_info.match_status === 'pending' || updatingStatus[profile.suggestion_info.id]"
-                                @click="updateMatchStatus(profile, 'pending')">
-                                <i class="fas fa-clock text-xs"></i>
-                                <span>Chờ xác nhận</span>
-                            </button>
-
-                            <!-- Xác nhận khớp button -->
-                            <button :class="`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1 ${profile.suggestion_info.match_status === 'accepted'
-                                ? 'bg-green-500 text-white shadow-md cursor-not-allowed'
-                                : 'bg-green-100 text-green-700 hover:bg-green-200 hover:shadow-sm'
-                                }`"
-                                :disabled="profile.suggestion_info.match_status === 'accepted' || updatingStatus[profile.suggestion_info.id]"
-                                @click="updateMatchStatus(profile, 'accepted')">
-                                <i class="fas fa-check text-xs"></i>
-                                <span>Xác nhận khớp</span>
-                            </button>
-
-                            <!-- Không khớp button -->
-                            <button :class="`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1 ${profile.suggestion_info.match_status === 'rejected'
-                                ? 'bg-red-500 text-white shadow-md cursor-not-allowed'
-                                : 'bg-red-100 text-red-700 hover:bg-red-200 hover:shadow-sm'
-                                }`"
-                                :disabled="profile.suggestion_info.match_status === 'rejected' || updatingStatus[profile.suggestion_info.id]"
-                                @click="updateMatchStatus(profile, 'rejected')">
-                                <i class="fas fa-times text-xs"></i>
-                                <span>Không khớp</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Loading indicator when updating -->
-                    <div v-if="updatingStatus[profile.suggestion_info.id]"
-                        class="flex items-center justify-center mt-3 text-blue-600">
-                        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                        <span class="text-sm">Đang cập nhật trạng thái...</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Pagination -->
-        <div v-if="profiles.length > 0" class="mt-8">
-            <div class="flex justify-between items-center flex-col sm:flex-row gap-4">
-                <p class="text-sm text-gray-600">
-                    Hiển thị {{ profiles.length }} trong tổng số {{ totalItems }} hồ sơ tham chiếu
-                </p>
+        <div v-if="totalPages > 1" class="flex justify-center mt-6 md:mt-8">
+            <div class="inline-flex rounded-lg shadow-sm border border-gray-200 overflow-hidden bg-white">
+                <button :disabled="currentPage === 1" @click="currentPage > 1 && fetchProfiles(currentPage - 1)"
+                    class="px-3 py-2 text-xs md:text-sm font-medium text-gray-600 bg-white hover:bg-gray-50 focus:z-10 focus:ring-2 focus:ring-blue-400 focus:text-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 border-r border-gray-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 md:h-4 md:w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
 
-                <div class="inline-flex rounded-md shadow-sm">
-                    <button :disabled="currentPage === 1" @click="currentPage > 1 && fetchProfiles(currentPage - 1)"
-                        :class="[
-                            'px-4 py-2 text-sm font-medium border border-gray-300 rounded-l-lg',
-                            currentPage === 1 ? 'bg-gray-100 text-gray-400' : 'bg-white text-indigo-600 hover:bg-indigo-50'
-                        ]">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
+                <span
+                    class="px-4 py-2 text-xs md:text-sm font-medium text-blue-400 bg-gradient-to-r from-blue-50 to-blue-50/80 border-x border-gray-200">
+                    Trang {{ currentPage }} / {{ totalPages }}
+                </span>
 
-                    <span
-                        class="px-4 py-2 text-sm font-medium text-indigo-700 bg-indigo-50 border-t border-b border-gray-300">
-                        Trang {{ currentPage }} / {{ totalPages }}
-                    </span>
-
-                    <button :disabled="currentPage === totalPages"
-                        @click="currentPage < totalPages && fetchProfiles(currentPage + 1)" :class="[
-                            'px-4 py-2 text-sm font-medium border border-gray-300 rounded-r-lg',
-                            currentPage === totalPages ? 'bg-gray-100 text-gray-400' : 'bg-white text-indigo-600 hover:bg-indigo-50'
-                        ]">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
+                <button :disabled="currentPage === totalPages"
+                    @click="currentPage < totalPages && fetchProfiles(currentPage + 1)"
+                    class="px-3 py-2 text-xs md:text-sm font-medium text-gray-600 bg-white hover:bg-gray-50 focus:z-10 focus:ring-2 focus:ring-blue-400 focus:text-blue-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 md:h-4 md:w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
@@ -276,6 +320,7 @@ import { format } from 'date-fns'
 import { vi } from 'date-fns/locale'
 import noImage from '@/assets/images/no_image.png'
 import profileService from '@/services/profileService'
+import cacheService from '@/services/cacheService'
 
 export default {
     name: 'TabReferencedProfiles',
@@ -290,6 +335,17 @@ export default {
         const totalPages = ref(1)
         const totalItems = ref(0)
         const updatingStatus = ref({}) // Track updating status for each suggestion
+        
+        // Cấu hình sắp xếp
+        const sortOptions = [
+            { value: '-created_at', label: 'Mới nhất' },
+            { value: 'created_at', label: 'Cũ nhất' },
+            { value: '-updated_at', label: 'Mới cập nhật' },
+            { value: 'updated_at', label: 'Cũ cập nhật' },
+            { value: '-match_count', label: 'Nhiều liên quan nhất' },
+            { value: 'match_count', label: 'Ít liên quan nhất' }
+        ]
+        const currentSort = ref('-created_at') // Mặc định: mới nhất
 
         // Fetch referenced profiles
         const fetchProfiles = async (page = 1) => {
@@ -297,7 +353,7 @@ export default {
             error.value = ''
 
             try {
-                const response = await profileService.getAllReferencedProfiles(page)
+                const response = await profileService.getAllReferencedProfiles(page, currentSort.value)
 
                 profiles.value = response.data.results || []
                 totalItems.value = response.data.count || 0
@@ -315,6 +371,13 @@ export default {
             } finally {
                 loading.value = false
             }
+        }
+        
+        // Xử lý thay đổi sắp xếp
+        const handleSortChange = () => {
+            // Xóa cache và fetch lại với ordering mới
+            cacheService.clearCacheByPattern('all_referenced_profiles')
+            fetchProfiles(1) // Reset về trang đầu tiên
         }
 
         // Format date
@@ -390,6 +453,9 @@ export default {
             try {
                 await profileService.updateSuggestionMatchStatus(suggestionId, status)
                 profile.suggestion_info.match_status = status
+                
+                // Xóa cache khi cập nhật trạng thái
+                cacheService.clearCacheByPattern('all_referenced_profiles')
             } catch (err) {
                 alert('Cập nhật trạng thái thất bại! Vui lòng thử lại.')
             } finally {
@@ -409,6 +475,9 @@ export default {
             totalPages,
             totalItems,
             updatingStatus,
+            sortOptions,
+            currentSort,
+            handleSortChange,
             getMatchStatusLabel,
             getMatchStatusClass,
             getMatchStatusIcon,
@@ -416,7 +485,8 @@ export default {
             fetchProfiles,
             formatDate,
             getStatusLabel,
-            getStatusClass
+            getStatusClass,
+            handleImageError
         }
     }
 }
@@ -431,16 +501,39 @@ export default {
 }
 
 .line-clamp-2 {
-    overflow: hidden;
     display: -webkit-box;
-    -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .line-clamp-3 {
-    overflow: hidden;
     display: -webkit-box;
-    -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Smooth transitions */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Subtle card hover effect */
+.group:hover {
+    transform: translateY(-2px);
+}
+
+/* Highlight glow effect on hover */
+.group:hover .bg-gradient-to-r.from-blue-50 {
+    background: linear-gradient(to right, rgb(239 246 255), rgb(219 234 254));
+    box-shadow: 0 1px 3px 0 rgba(59, 130, 246, 0.1);
 }
 </style>

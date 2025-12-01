@@ -1,354 +1,73 @@
 <template>
   <div>
     <AppHeader />
-    <div class="container mx-auto px-4 py-8 pt-16">
+    <div class="container mx-auto px-4 py-8 pt-16 max-w-7xl">
       <!-- Display loading state -->
       <div v-if="loading" class="flex justify-center py-12">
         <AppLoader />
       </div>
       <div v-else-if="profile" class="bg-white rounded-xl shadow-lg overflow-hidden">
-        <!-- Header Section - Màu nhẹ hơn -->
-        <div
-          class="bg-gradient-to-br from-blue-400 via-blue-400 to-blue-500 rounded-t-xl shadow-xl relative overflow-hidden">
-          <!-- Background decorative elements -->
-          <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"></div>
-          <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-32 translate-x-32"></div>
-          <div class="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full translate-y-32 -translate-x-16"></div>
+        <ProfileHeader :profile="profile" :is-owner="isOwner" :is-admin="isAdmin" :is-loading="isLoading"
+          @change-status="showStatusModal = true" @contact="startConversation" @share="shareProfile"
+          @delete="deleteProfile" @open-upload-modal="showImageUploadModal = true" />
 
-          <div class="relative px-6 py-8">
-            <!-- Top row: Status badge -->
-            <div class="flex justify-between items-start mb-6">
-              <div class="flex items-center gap-3">
-                <!-- Profile status indicator -->
-                <div class="flex items-center">
-                  <div class="relative">
-                    <div class="w-3 h-3 rounded-full animate-pulse" :class="{
-                      'bg-green-400': profile.status === 'active',
-                      'bg-blue-400': profile.status === 'found',
-                      'bg-gray-400': profile.status === 'closed'
-                    }"></div>
-                    <div class="absolute inset-0 w-3 h-3 rounded-full animate-ping" :class="{
-                      'bg-green-400': profile.status === 'active',
-                      'bg-blue-400': profile.status === 'found',
-                      'bg-gray-400': profile.status === 'closed'
-                    }"></div>
-                  </div>
-                  <span class="ml-2 text-white/90 text-sm font-medium">
-                    {{ getStatusText(profile.status) }}
+        <div v-if="suggestedProfiles.length > 0"
+          class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-6 py-3 bg-blue-50 border-y border-blue-200 relative overflow-hidden">
+          <div class="absolute inset-0 bg-blue-100/40 animate-shimmer pointer-events-none"></div>
+          <p class="text-sm text-blue-700 font-semibold relative z-10">
+            <i class="fas fa-lightbulb text-blue-400 mr-2"></i>
+            Có <strong class="text-blue-600">{{ suggestedProfiles.length }}</strong> hồ sơ gợi ý liên quan
+          </p>
+          <button @click="scrollToSuggestions"
+            class="suggestion-button relative inline-flex items-center justify-center gap-2 rounded-full bg-blue-500 px-5 py-2.5 text-sm font-bold text-white shadow-2xl hover:bg-blue-600 hover:shadow-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300/50 transform hover:scale-105 active:scale-95"
+            style="z-index: 10000; position: relative; filter: none;">
+            <!-- Animated ring -->
+            <span
+              class="absolute inset-0 rounded-full border-2 border-white/50 animate-ping-slow pointer-events-none"></span>
+            <!-- Glow effect nhẹ -->
+            <span
+              class="absolute inset-0 rounded-full bg-blue-400 opacity-50 blur-lg animate-glow pointer-events-none"></span>
+            <!-- Content -->
+            <span class="relative z-10 flex items-center gap-2">
+              <i class="fas fa-arrow-down text-sm animate-bounce-slow"></i>
+              <span class="font-bold">Xem ngay</span>
                   </span>
-                </div>
-
-                <!-- Additional metadata -->
-                <div class="hidden sm:flex items-center text-white/70 text-xs">
-                  <span>ID: {{ profile.id }}</span>
-                  <span class="mx-2">•</span>
-                  <span>{{ formatDate(profile.created_at) }}</span>
-                  <span v-if="profile.view_count" class="mx-2">•</span>
-                  <span v-if="profile.view_count">{{ profile.view_count }} lượt xem</span>
-                </div>
-              </div>
-
-              <!-- Change Status Button for Owner -->
-              <div v-if="isOwner">
-                <button @click="showStatusModal = true" :disabled="isLoading"
-                  class="inline-flex items-center px-3 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-lg text-sm font-medium transition-all hover:scale-105">
-                  <i class="fas fa-exchange-alt mr-2"></i>
-                  <span class="hidden sm:inline">Thay đổi trạng thái</span>
                 </button>
-              </div>
             </div>
 
-            <!-- Main title -->
-            <div class="mb-6">
-              <h1 class="text-3xl lg:text-4xl font-bold text-white mb-2 leading-tight">
-                {{ profile.title }}
-              </h1>
-              <div class="flex flex-wrap items-center gap-4 text-white/80">
-                <span class="flex items-center text-sm">
-                  <i class="fas fa-user-circle mr-1"></i>
-                  Đăng bởi {{ profile.username }}
-                </span>
-                <span v-if="profile.status === 'found'" class="flex items-center text-sm">
-                  <div class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                  Đã tìm thấy
-                </span>
-              </div>
-            </div>
-
-            <!-- Action buttons row -->
-            <div class="flex flex-wrap items-center gap-3">
-              <!-- Owner controls -->
-              <template v-if="isOwner">
-                <router-link :to="`/profile/edit/${profile.id}`"
-                  class="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-lg font-medium transition-all hover:scale-105">
-                  <i class="fas fa-edit mr-2"></i>
-                  <span class="hidden sm:inline">Chỉnh sửa</span>
-                </router-link>
-                <router-link :to="`/profiles/${profile.id}/upload-image`"
-                  class="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-lg font-medium transition-all hover:scale-105">
-                  <i class="fas fa-camera mr-2"></i>
-                  <span class="hidden sm:inline">{{ profile.images ? 'Cập nhật ảnh' : 'Thêm ảnh' }}</span>
-                </router-link>
-              </template>
-              <!-- Non-owner controls -->
-              <template v-else>
-                <button @click="startConversation"
-                  class="inline-flex items-center px-6 py-2 bg-white hover:bg-gray-50 text-blue-400 rounded-lg font-medium transition-all hover:scale-105 shadow-lg">
-                  <i class="fas fa-envelope mr-2"></i>
-                  <span>Liên hệ</span>
-                </button>
-              </template>
-              <!-- Share button -->
-              <button v-if="!isAdmin" @click="shareProfile"
-                class="inline-flex items-center px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-lg font-medium transition-all hover:scale-105">
-                <i class="fas fa-share-alt mr-2"></i>
-                <span class="hidden sm:inline">Chia sẻ</span>
-              </button>
-              <!-- Delete button for admin -->
-              <button v-if="isAdmin || isOwner" @click="deleteProfile"
-                class="inline-flex items-center px-4 py-2 bg-red-500/80 hover:bg-red-600/80 backdrop-blur-sm text-white rounded-lg font-medium transition-all hover:scale-105">
-                <i class="fas fa-trash-alt mr-2"></i>
-                <span class="hidden sm:inline">Xóa</span>
-              </button>
-              <!-- Loading indicator when updating status -->
-              <div v-if="isLoading" class="inline-flex items-center px-4 py-2 bg-white/20 rounded-lg">
-                <i class="fas fa-circle-notch fa-spin mr-2 text-white"></i>
-                <span class="text-white text-sm">Đang cập nhật...</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!-- Guide Tour Component -->
+        <SuggestionGuideTour v-if="showSuggestionGuide" :is-active="showSuggestionGuide"
+          :profile-count="suggestedProfiles.length" @close="closeGuideTour" />
 
         <!-- Main Content -->
-        <div class="flex flex-col lg:flex-row">
+        <div class="flex flex-col md:flex-row">
           <!-- Left Column - Images and Details -->
-          <div class="lg:w-1/3 p-6 border-b lg:border-b-0 lg:border-r border-gray-200">
-            <!-- Image Gallery -->
-            <div class="mb-6">
-              <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold text-gray-800">Hình ảnh</h3>
-                <router-link v-if="isOwner" :to="`/profiles/${profile.id}/upload-image`"
-                  class="px-3 py-1 bg-blue-400 hover:bg-blue-700 text-white text-sm rounded-md transition flex items-center">
-                  <i class="fas fa-upload mr-1"></i>
-                  {{ profile.images ? 'Cập nhật ảnh' : 'Thêm ảnh' }}
-                </router-link>
-              </div>
-              <div class="relative h-72 rounded-lg overflow-hidden bg-gray-100 shadow-inner">
-                <img v-if="profile.images" :src="profile.images" :alt="profile.title"
-                  class="w-full h-full object-contain" @error="handleImageError" />
-                <div v-else class="flex flex-col items-center justify-center h-full">
-                  <i class="fas fa-image text-4xl text-gray-400 mb-2"></i>
-                  <p class="text-gray-500 text-center">Không có hình ảnh</p>
-                  <router-link v-if="isOwner" :to="`/profiles/${profile.id}/upload-image`"
-                    class="mt-4 px-4 py-2 bg-blue-400 hover:bg-blue-700 text-white rounded-md transition">
-                    <i class="fas fa-cloud-upload-alt mr-2"></i>
-                    Tải ảnh lên
-                  </router-link>
-                </div>
-              </div>
-              <!-- Likes -->
-              <div class="flex items-center justify-between mt-3 px-1">
-                <div class="flex items-center">
-                  <button @click="toggleLike" class="flex items-center focus:outline-none group">
-                    <div
-                      :class="`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${isLiked ? 'bg-red-100' : 'bg-gray-100 group-hover:bg-red-50'}`">
-                      <i
-                        :class="`fas fa-heart transition-colors ${isLiked ? 'text-red-500' : 'text-gray-400 group-hover:text-red-400'}`"></i>
-                    </div>
-                    <span class="ml-2 text-sm font-medium" :class="isLiked ? 'text-red-500' : 'text-gray-600'">
-                      {{ likesCount }} lượt cảm xúc
-                    </span>
-                  </button>
-                </div>
-                <div class="text-sm text-gray-500">
-                  <i class="far fa-eye mr-1"></i> {{ profile.view_count || 1220 }} lượt xem
-                </div>
-              </div>
-            </div>
-            <!-- Status Badge -->
-            <div class="mb-6">
-              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" :class="{
-                'bg-green-100 text-green-800': profile.status === 'active',
-                'bg-blue-100 text-blue-800': profile.status === 'found',
-                'bg-gray-100 text-gray-800': profile.status === 'closed'
-              }">
-                <span class="w-2 h-2 rounded-full mr-2" :class="{
-                  'bg-green-500': profile.status === 'active',
-                  'bg-blue-500': profile.status === 'found',
-                  'bg-gray-500': profile.status === 'closed'
-                }"></span>
-                {{ getStatusText(profile.status) }}
-              </span>
-            </div>
-            <!-- Basic Information -->
-            <div>
-              <h3 class="text-lg font-semibold text-gray-800 mb-4">Thông tin cơ bản</h3>
-              <div class="bg-gray-50 rounded-lg p-4 space-y-3">
-                <div class="grid grid-cols-2 gap-2">
-                  <div class="text-sm text-gray-500">Họ và tên:</div>
-                  <div class="text-sm font-medium text-gray-800">{{ profile.full_name }}</div>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                  <div class="text-sm text-gray-500">Năm sinh:</div>
-                  <div class="text-sm font-medium text-gray-800">{{ profile.born_year || 'Không rõ' }}</div>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                  <div class="text-sm text-gray-500">Năm thất lạc:</div>
-                  <div class="text-sm font-medium text-gray-800">{{ profile.losing_year || 'Không rõ' }}</div>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                  <div class="text-sm text-gray-500">Tên cha:</div>
-                  <div class="text-sm font-medium text-gray-800">{{ profile.name_of_father || 'Không rõ' }}</div>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                  <div class="text-sm text-gray-500">Tên mẹ:</div>
-                  <div class="text-sm font-medium text-gray-800">{{ profile.name_of_mother || 'Không rõ' }}</div>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                  <div class="text-sm text-gray-500">Anh chị em:</div>
-                  <div class="text-sm font-medium text-gray-800">{{ profile.siblings || 'Không rõ' }}</div>
-                </div>
-              </div>
-            </div>
+          <div class="md:w-2/5 lg:w-1/3 p-4 md:p-6 border-b md:border-b-0 md:border-r border-gray-200">
+            <ProfileImageSection
+              :profile="profile"
+              :is-owner="isOwner"
+              :is-liked="isLiked"
+              :likes-count="likesCount"
+              @toggle-like="toggleLike"
+              @open-upload-modal="showImageUploadModal = true"
+              @preview-image="openProfileImagePreview"
+            />
+            <ProfileBasicInfo :profile="profile" />
           </div>
 
           <!-- Right Column - Description and Comments -->
-          <div class="md:w-2/3 p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Thông tin chi tiết</h3>
-            <div class="prose prose-blue max-w-none mb-6">
-              <p class="whitespace-pre-line" v-html="formatDescription(profile.description)"></p>
-            </div>
-            <!-- Tags -->
-            <div v-if="profile.tags && profile.tags.length > 0" class="mb-6">
-              <div class="flex flex-wrap gap-2">
-                <span v-for="tag in profile.tags" :key="tag"
-                  class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">
-                  {{ tag }}
-                </span>
-              </div>
-            </div>
-            <!-- Found Notification -->
-            <div v-if="profile.status === 'found'" class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-md mb-6">
-              <div class="flex">
-                <div class="flex-shrink-0">
-                  <i class="fas fa-check-circle text-blue-400"></i>
-                </div>
-                <div class="ml-3">
-                  <h3 class="text-sm font-medium text-blue-800">Đã tìm thấy</h3>
-                  <div class="mt-2 text-sm text-blue-700">
-                    <p>Người thân trong hồ sơ này đã được tìm thấy.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Comments Section -->
-            <div class="mt-6 border-t border-gray-200 pt-6">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4">Bình luận ({{ comments.length }})</h3>
-              <!-- Comment Form -->
-              <div class="mb-6">
-                <form @submit.prevent="submitComment" class="space-y-3">
-                  <div class="flex items-start">
-                    <div class="flex-shrink-0 mr-3">
-                      <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-500">
-                        <i class="fas fa-user"></i>
-                      </div>
-                    </div>
-                    <div class="flex-grow">
-                      <textarea v-model="newComment" placeholder="Chia sẻ suy nghĩ của bạn về hồ sơ này..."
-                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                        rows="2"></textarea>
-                      <div class="flex justify-end mt-2">
-                        <button type="submit" :disabled="!newComment.trim()"
-                          :class="`px-4 py-2 rounded-md font-medium transition ${newComment.trim() ? 'bg-blue-400 hover:bg-blue-700 text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`">
-                          Gửi bình luận
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-              <!-- Comment List -->
-              <div class="divide-y divide-gray-100">
-                <div v-if="comments.length === 0" class="py-8 text-center text-gray-500">
-                  <i class="far fa-comment-dots text-3xl mb-3 block text-gray-300"></i>
-                  <p>Chưa có bình luận nào. Hãy là người đầu tiên chia sẻ!</p>
-                </div>
-                <div v-for="comment in comments" :key="comment.id" class="py-4">
-                  <div class="flex">
-                    <div class="flex-shrink-0 mr-3">
-                      <div v-if="comment.user_avatar" class="w-10 h-10 rounded-full overflow-hidden">
-                        <img :src="comment.user_avatar" alt="Avatar" class="w-full h-full object-cover" />
-                      </div>
-                      <div v-else
-                        class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-500">
-                        <i class="fas fa-user"></i>
-                      </div>
-                    </div>
-                    <div class="flex-grow">
-                      <div class="flex items-center justify-between">
-                        <h4 class="font-medium text-gray-800">{{ comment.user_name }}</h4>
-                        <time class="text-xs text-gray-500">{{ formatDate(comment.created_at) }}</time>
-                      </div>
-                      <p class="mt-1 text-gray-700">{{ comment.content }}</p>
-                      <div class="mt-2 flex items-center space-x-4 text-sm">
-                        <button @click="likeComment(comment.id)"
-                          class="flex items-center text-gray-500 hover:text-blue-400">
-                          <i :class="`${comment.is_liked ? 'fas text-blue-400' : 'far'} fa-thumbs-up mr-1`"></i>
-                          <span>{{ comment.likes || 0 }}</span>
-                        </button>
-                        <button @click="replyToComment(comment.id)"
-                          class="flex items-center text-gray-500 hover:text-blue-400">
-                          <i class="far fa-comment mr-1"></i>
-                          <span>Trả lời</span>
-                        </button>
-                      </div>
-                      <!-- Replies -->
-                      <div v-if="comment.replies && comment.replies.length > 0" class="ml-6 mt-2 space-y-2">
-                        <div v-for="reply in comment.replies" :key="reply.id"
-                          class="border-l-2 border-gray-100 pl-3 py-1">
-                          <div class="flex items-center justify-between">
-                            <h5 class="font-medium text-gray-800 text-sm">{{ reply.user_name }}</h5>
-                            <time class="text-xs text-gray-500">{{ formatDate(reply.created_at) }}</time>
-                          </div>
-                          <p class="text-sm text-gray-700 mt-1">{{ reply.content }}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Pagination -->
-              <div v-if="comments.length > 0 && hasMoreComments" class="mt-4 text-center">
-                <button @click="loadMoreComments"
-                  class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm text-blue-400 hover:bg-blue-50">
-                  Xem thêm bình luận
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Contact Section -->
-        <div v-if="!isOwner" class="border-t border-gray-200 bg-gradient-to-r from-blue-50 to-blue-50 px-6 py-5">
-          <div class="flex flex-col md:flex-row md:items-center justify-between">
-            <div class="flex items-center">
-              <div class="bg-blue-100 rounded-full p-2 mr-3">
-                <i class="fas fa-hands-helping text-blue-400"></i>
-              </div>
-              <div>
-                <h3 class="font-medium text-gray-800">Bạn có thông tin về người thân này?</h3>
-                <p class="text-sm text-gray-600">Hãy liên hệ với người đăng tin để chia sẻ thông tin.</p>
-              </div>
-            </div>
-            <button @click="startConversation"
-              class="mt-4 md:mt-0 bg-gradient-to-r from-blue-400 to-blue-400 hover:from-blue-700 hover:to-blue-700 text-white px-6 py-2 rounded-lg font-medium shadow-sm transition">
-              <i class="fas fa-comment-alt mr-2"></i> Liên hệ ngay
-            </button>
+          <div class="md:w-3/5 lg:w-2/3 p-4 md:p-6">
+            <ProfileDescription :profile="profile" />
+            <ProfileComments :comments="comments" :new-comment="newComment" :has-more-comments="hasMoreComments"
+              @submit-comment="submitComment" @like-comment="likeComment" @reply-comment="replyToComment"
+              @load-more="loadMoreComments" @update:newComment="newComment = $event" />
           </div>
         </div>
 
         <!-- Related Profiles Section -->
-        <SuggestedProfilesSection v-if="suggestedProfiles.length > 0" :profiles="suggestedProfiles" />
+        <div v-if="suggestedProfiles.length > 0" ref="suggestionSectionRef">
+          <SuggestedProfilesSection :profiles="suggestedProfiles" />
+              </div>
       </div>
 
       <!-- Error State -->
@@ -387,67 +106,53 @@
       </div>
 
       <!-- Status Change Modal -->
-      <div v-if="showStatusModal"
-        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-md w-full max-h-screen overflow-y-auto">
-          <!-- Modal Header -->
-          <div class="px-6 py-4 border-b border-gray-200">
-            <div class="flex items-center justify-between">
-              <h3 class="text-lg font-semibold text-gray-900">Thay đổi trạng thái hồ sơ</h3>
-              <button @click="showStatusModal = false" class="text-gray-400 hover:text-gray-600 transition-colors">
-                <i class="fas fa-times text-xl"></i>
-              </button>
-            </div>
-            <p class="text-sm text-gray-600 mt-1">Chọn trạng thái phù hợp cho hồ sơ của bạn</p>
-          </div>
+      <ProfileStatusModal :show="showStatusModal" :current-status="profile?.status" :is-loading="isLoading"
+        :status-options="statusOptions" @close="showStatusModal = false" @update-status="updateProfileStatus" />
 
-          <!-- Modal Body -->
-          <div class="px-6 py-4">
-            <div class="space-y-3">
-              <button v-for="status in statusOptions" :key="status.value" @click="updateProfileStatus(status.value)"
-                :disabled="profile.status === status.value || isLoading"
-                class="w-full p-4 text-left border-2 rounded-lg transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                :class="{
-                  'border-blue-500 bg-blue-50': profile.status === status.value,
-                  'border-gray-200 hover:border-gray-300': profile.status !== status.value
-                }">
-                <div class="flex items-center">
-                  <!-- Status icon -->
-                  <div class="flex items-center justify-center w-12 h-12 rounded-full mr-4" :class="status.bgClass">
-                    <i :class="status.iconClass" class="text-lg"></i>
-                  </div>
+      <!-- Image Upload Modal -->
+      <ProfileImageUploadModal 
+        v-if="profile"
+        :show="showImageUploadModal" 
+        :profile="profile"
+        :profile-id="profileId"
+        @close="showImageUploadModal = false"
+        @upload-success="handleImageUploadSuccess" 
+      />
 
-                  <!-- Status info -->
-                  <div class="flex-1">
-                    <div class="font-medium text-gray-900"
-                      :class="{ 'text-blue-400': profile.status === status.value }">
-                      {{ status.label }}
-                    </div>
-                    <div class="text-sm text-gray-500 mt-1">{{ status.description }}</div>
-                  </div>
-
-                  <!-- Current status indicator -->
-                  <div v-if="profile.status === status.value" class="ml-3">
-                    <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                      <i class="fas fa-check text-blue-400 text-sm"></i>
-                    </div>
-                  </div>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          <!-- Modal Footer -->
-          <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
-            <div class="flex justify-end space-x-3">
-              <button @click="showStatusModal = false"
-                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
-                Hủy
-              </button>
+      <!-- Image Preview Modal -->
+      <transition enter-active-class="transition-opacity duration-200 ease-out"
+        enter-from-class="opacity-0" enter-to-class="opacity-100"
+        leave-active-class="transition-opacity duration-150 ease-in"
+        leave-from-class="opacity-100" leave-to-class="opacity-0">
+        <div v-if="showProfileImagePreview" class="fixed inset-0 z-[1200] flex items-center justify-center px-3 sm:px-4"
+          @click.self="closeProfileImagePreview">
+          <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+          <div
+            class="relative w-full max-w-5xl h-[78vh] sm:h-[85vh] bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 flex flex-col">
+            <button class="absolute top-3 right-3 p-2 rounded-full bg-white/80 text-slate-600 hover:text-slate-900"
+              @click="closeProfileImagePreview">
+              <i class="fas fa-times text-sm"></i>
+            </button>
+            <div class="w-full h-full flex items-center justify-center">
+              <img
+                :src="profilePreviewImageSrc"
+                alt="Ảnh hồ sơ"
+                class="h-full w-full object-contain rounded-xl shadow-sm"
+              />
             </div>
           </div>
         </div>
-      </div>
+      </transition>
+
+      <!-- Delete Confirm Modal -->
+      <DeleteConfirmModal
+        v-if="profile"
+        :show="showDeleteModal"
+        :profile-title="profile.title || profile.full_name || 'hồ sơ này'"
+        :is-loading="isLoading"
+        @close="showDeleteModal = false"
+        @confirm="confirmDelete"
+      />
     </div>
   </div>
 </template>
@@ -457,10 +162,18 @@ import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import profileService from '../services/profileService';
-import noImage from '@/assets/images/no_image.png';
 import AppLoader from '../components/common/AppLoader.vue';
 import AppHeader from '../components/common/AppHeader.vue';
 import SuggestedProfilesSection from '../components/profile/SuggestedProfilesSection.vue';
+import ProfileHeader from '../components/profile/ProfileHeader.vue';
+import ProfileImageSection from '../components/profile/ProfileImageSection.vue';
+import ProfileBasicInfo from '../components/profile/ProfileBasicInfo.vue';
+import ProfileDescription from '../components/profile/ProfileDescription.vue';
+import ProfileComments from '../components/profile/ProfileComments.vue';
+import ProfileStatusModal from '../components/profile/ProfileStatusModal.vue';
+import SuggestionGuideTour from '../components/profile/SuggestionGuideTour.vue';
+import ProfileImageUploadModal from '../components/profile/ProfileImageUploadModal.vue';
+import DeleteConfirmModal from '../components/profile/DeleteConfirmModal.vue';
 import messageService from '../services/messageService';
 import commentService from '../services/commentService';
 
@@ -470,6 +183,15 @@ export default {
     AppHeader,
     AppLoader,
     SuggestedProfilesSection,
+    ProfileHeader,
+    ProfileImageSection,
+    ProfileBasicInfo,
+    ProfileDescription,
+    ProfileComments,
+    ProfileStatusModal,
+    SuggestionGuideTour,
+    ProfileImageUploadModal,
+    DeleteConfirmModal,
   },
   setup() {
     const store = useStore();
@@ -505,6 +227,13 @@ export default {
     const dropdownWidth = ref(200); // Default dropdown width
     const showStatusModal = ref(false); // Modal visibility
     const isAdmin = ref(false);
+    const suggestionSectionRef = ref(null);
+    const showSuggestionGuide = ref(false);
+    const hasShownSuggestionGuide = ref(false);
+    const showImageUploadModal = ref(false);
+    const showDeleteModal = ref(false);
+    const showProfileImagePreview = ref(false);
+    const profilePreviewImageSrc = ref(null);
 
     const statusOptions = ref([
       {
@@ -529,14 +258,6 @@ export default {
         bgClass: 'bg-gray-100',
       },
     ]);
-
-    // Handle image errors
-    const handleImageError = (event) => {
-      event.target.src = noImage;
-    };
-
-    // Computed property for profile image
-    const profileImage = computed(() => profile.value?.images || noImage);
 
     // Check if current user is the profile owner
     const isOwner = computed(() => {
@@ -597,35 +318,15 @@ export default {
     const fetchSuggestedProfiles = async () => {
       try {
         const response = await profileService.getSuggestedProfiles(profileId.value);
-        suggestedProfiles.value = Array.isArray(response.data) ? response.data : (response.data.results || []);
+        const profiles = Array.isArray(response.data) ? response.data : (response.data.results || []);
+        suggestedProfiles.value = profiles;
+        // Trigger guide ngay khi có profiles, không cần đợi
+        if (profiles.length > 0) {
+          triggerSuggestionGuide();
+        }
       } catch (err) {
         console.error('Error fetching suggested profiles:', err);
       }
-    };
-
-    // Format date
-    const formatDate = (dateString) => {
-      if (!dateString) return '';
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return '';
-      return date.toLocaleDateString('vi-VN');
-    };
-
-    const formatDateWithTime = (dateString) => {
-      if (!dateString) return '';
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return '';
-      return date.toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-    };
-
-    // Get status text
-    const getStatusText = (status) => {
-      const statusMap = {
-        active: 'Đang tìm kiếm',
-        found: 'Đã tìm thấy',
-        closed: 'Đã đóng',
-      };
-      return statusMap[status] || 'Không xác định';
     };
 
     // Toggle profile status
@@ -838,10 +539,43 @@ export default {
       fetchComments(commentsPage.value + 1);
     };
 
-    // Format description
-    const formatDescription = (text) => {
-      if (!text) return '';
-      return text.replace(/(Thông tin cơ bản:)/g, '<br/><strong class="text-blue-700">$1</strong>');
+    const triggerSuggestionGuide = () => {
+      if (hasShownSuggestionGuide.value) return;
+      // Hiển thị guide ngay khi có suggested profiles
+      hasShownSuggestionGuide.value = true;
+      // Scroll lên đầu trang trước khi hiển thị guide
+      window.scrollTo(0, 0);
+      // Đợi một chút để đảm bảo scroll xong và DOM render button
+      setTimeout(() => {
+        showSuggestionGuide.value = true;
+        // Không tự động ẩn - chỉ ẩn khi người dùng tương tác
+      }, 200);
+    };
+
+    const closeGuideTour = () => {
+      showSuggestionGuide.value = false;
+    };
+
+    const openProfileImagePreview = (src) => {
+      const fallback = profile.value?.images || profile.value?.image_url;
+      const resolved = src || fallback;
+      if (!resolved) return;
+      profilePreviewImageSrc.value = resolved;
+      showProfileImagePreview.value = true;
+    };
+
+    const closeProfileImagePreview = () => {
+      showProfileImagePreview.value = false;
+    };
+
+    const scrollToSuggestions = () => {
+      closeGuideTour();
+      // Đợi một chút để guide ẩn đi trước khi scroll
+      setTimeout(() => {
+        if (suggestionSectionRef.value) {
+          suggestionSectionRef.value.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 300);
     };
 
     // Handle click outside to close dropdown
@@ -887,6 +621,8 @@ export default {
       fetchProfile();
     });
 
+    // Không cần watch nữa vì đã trigger trong fetchSuggestedProfiles
+
     if (editSuccess.value) {
       setTimeout(() => {
         editSuccess.value = false;
@@ -903,17 +639,33 @@ export default {
       }
     });
 
-    // Delete profile function for admin
-    const deleteProfile = async () => {
-      if (!confirm('Bạn có chắc chắn muốn xóa hồ sơ này không?')) return;
-      
+    // Handle image upload success
+    const handleImageUploadSuccess = ({ imageUrl }) => {
+      if (profile.value) {
+        profile.value.image_url = imageUrl;
+        profile.value.images = imageUrl; // Cập nhật cả hai thuộc tính để tương thích
+      }
+      showImageUploadModal.value = false;
+      // Refresh profile để lấy dữ liệu mới nhất
+      fetchProfile();
+    };
+
+    // Open delete confirmation modal
+    const deleteProfile = () => {
+      showDeleteModal.value = true;
+    };
+
+    // Confirm and execute delete
+    const confirmDelete = async () => {
       try {
         isLoading.value = true;
         await profileService.deleteProfile(profileId.value);
-        alert('Đã xóa hồ sơ thành công');
+        showDeleteModal.value = false;
+        // Show success message (có thể dùng toast notification sau)
         router.push('/');
       } catch (err) {
         console.error('Error deleting profile:', err);
+        // Show error message (có thể dùng toast notification sau)
         alert('Không thể xóa hồ sơ. Vui lòng thử lại sau.');
       } finally {
         isLoading.value = false;
@@ -924,18 +676,12 @@ export default {
       profile,
       loading,
       error,
-      profileImage,
       suggestedProfiles,
       isOwner,
-      formatDate,
-      formatDateWithTime,
-      getStatusText,
       toggleProfileStatus,
       startConversation,
       shareProfile,
       fetchProfile,
-      handleImageError,
-      noImage,
       editSuccess,
       oldProfileId,
       isLoading,
@@ -949,12 +695,23 @@ export default {
       likeComment,
       replyToComment,
       loadMoreComments,
-      formatDescription,
       updateProfileStatus,
       statusOptions,
       showStatusModal,
       isAdmin,
       deleteProfile,
+      scrollToSuggestions,
+      suggestionSectionRef,
+      showSuggestionGuide,
+      closeGuideTour,
+      showImageUploadModal,
+      handleImageUploadSuccess,
+      showDeleteModal,
+      confirmDelete,
+      showProfileImagePreview,
+      profilePreviewImageSrc,
+      openProfileImagePreview,
+      closeProfileImagePreview,
     };
   },
 };
@@ -966,6 +723,148 @@ export default {
   max-width: calc(100vw - 16px);
   /* Ensure dropdown fits within viewport */
   overflow-x: auto;
+}
+
+@keyframes pulse-slow {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  50% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s linear infinite;
+}
+
+/* Shimmer animation for banner background */
+@keyframes shimmer {
+  0% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 0.3;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Sparkle animation */
+@keyframes sparkle {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: scale(1.2) rotate(180deg);
+  }
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+/* Ping slow for button */
+@keyframes ping-slow {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-ping-slow {
+  animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Glow animation for button */
+@keyframes glow {
+
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Shine effect for button */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+
+  100% {
+    transform: translateX(200%) translateY(200%) rotate(45deg);
+  }
+}
+
+.animate-shine {
+  animation: shine 3s ease-in-out infinite;
+}
+
+/* Bounce slow for arrow icon */
+@keyframes bounce-slow {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 1.5s ease-in-out infinite;
+}
+
+/* Slide right animation */
+@keyframes slide-right {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(3px);
+  }
+}
+
+.animate-slide-right {
+  animation: slide-right 1.5s ease-in-out infinite;
 }
 
 @keyframes fadeIn {

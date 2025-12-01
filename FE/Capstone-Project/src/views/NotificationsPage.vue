@@ -1,122 +1,138 @@
 <template>
-  <div class="pt-20 pb-12">
-    <div class="max-w-3xl mx-auto">
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <!-- Header -->
-        <div class="px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-400 flex items-center justify-between">
-          <h1 class="text-xl font-bold text-white flex items-center">
-            <i class="fa fa-bell mr-3"></i>
-            Thông báo
-          </h1>
+  <div class="min-h-screen bg-slate-50">
+    <AppHeader />
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 pt-20 pb-8">
+      <!-- Hero Section -->
+      <section class="bg-white rounded-lg p-3 mb-3">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="h-10 w-10 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center">
+              <i class="fas fa-bell text-base"></i>
+            </div>
+            <div>
+              <h1 class="text-base font-bold text-slate-800">Thông báo</h1>
+              <p class="text-xs text-slate-500">Xem tất cả thông báo và cập nhật của bạn</p>
+            </div>
+          </div>
           <button 
             v-if="hasUnreadNotifications"
             @click="markAllAsRead" 
-            class="text-sm bg-blue-400 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg font-medium transition-colors">
-            <i class="fa fa-check-circle mr-1"></i> Đánh dấu đã đọc tất cả
+            class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-600 border border-blue-200 hover:border-blue-400 hover:bg-blue-50 transition-colors">
+            <i class="fas fa-check-circle text-xs"></i>
+            <span>Đánh dấu đã đọc tất cả</span>
           </button>
         </div>
+      </section>
 
-        <!-- Loading state with improved UI -->
-        <div v-if="loading" class="p-12 text-center">
-          <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-100 border-t-blue-500"></div>
-          <p class="mt-4 text-gray-600 text-lg">Đang tải thông báo...</p>
+      <!-- Loading State -->
+      <div v-if="loading" class="bg-white rounded-lg border border-slate-200 p-6 flex justify-center">
+        <div class="flex flex-col items-center">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <p class="mt-3 text-xs text-slate-600">Đang tải thông báo...</p>
         </div>
+      </div>
 
-        <!-- Empty state with illustration -->
-        <div v-else-if="allNotifications.length === 0" class="p-16 text-center">
-          <div class="w-20 h-20 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-5">
-            <i class="fa fa-bell-slash text-gray-400 text-2xl"></i>
+      <!-- Empty State -->
+      <div v-else-if="allNotifications.length === 0" class="bg-white rounded-lg border border-slate-200 p-6 text-center">
+        <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-3">
+          <i class="fas fa-bell-slash text-blue-500 text-lg"></i>
+        </div>
+        <h3 class="text-sm font-semibold text-slate-800 mb-1">Chưa có thông báo nào</h3>
+        <p class="text-xs text-slate-600 mb-4 max-w-md mx-auto">
+          Thông báo mới về các hồ sơ phù hợp và cập nhật sẽ xuất hiện ở đây
+        </p>
+      </div>
+
+      <!-- Notification List -->
+      <div v-else class="space-y-3">
+        <div v-for="notification in allNotifications" :key="notification.id"
+          class="bg-white rounded-lg sm:rounded-xl shadow-sm hover:shadow-lg border border-gray-200/80 hover:border-blue-300/60 transition-all duration-300 overflow-hidden group cursor-pointer relative"
+          :class="{ 'bg-blue-50/40': !notification.is_read }"
+          @click="handleNotificationClick(notification)">
+          
+          <!-- Accent line on hover -->
+          <div
+            class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           </div>
-          <p class="text-xl font-medium text-gray-700 mb-2">Chưa có thông báo nào</p>
-          <p class="text-gray-500 max-w-sm mx-auto">
-            Thông báo mới về các hồ sơ phù hợp và cập nhật sẽ xuất hiện ở đây
-          </p>
-        </div>
 
-        <!-- Notification list with improved card design -->
-        <div v-else class="divide-y divide-gray-100">
-          <div v-for="notification in allNotifications" :key="notification.id"
-            :class="{ 'bg-blue-50': !notification.is_read }"
-            class="p-5 transition-all duration-200 hover:bg-gray-50 cursor-pointer"
-            @click="handleNotificationClick(notification)">
-            
-            <div class="flex">
-              <!-- Left side - Icon based on notification type -->
-              <div class="mr-4 flex-shrink-0">
-                <div class="w-12 h-12 rounded-full flex items-center justify-center"
+          <div class="p-4 md:p-5">
+            <div class="flex gap-3">
+              <!-- Icon -->
+              <div class="flex-shrink-0">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-sm ring-2 ring-blue-50"
                   :class="getNotificationIconClass(notification.type)">
-                  <i :class="getNotificationIcon(notification.type) + ' text-lg'"></i>
+                  <i :class="`${getNotificationIcon(notification.type)} text-base sm:text-lg`"></i>
                 </div>
               </div>
 
-              <!-- Right side - Content -->
-              <div class="flex-1">
-                <!-- Status indicator and timestamp -->
-                <div class="flex justify-between items-center mb-1.5">
-                  <div class="flex items-center">
+              <!-- Content -->
+              <div class="flex-1 min-w-0">
+                <!-- Header: Tag and timestamp -->
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                  <div class="flex items-center gap-2 flex-wrap">
                     <span 
-                      :class="`px-2 py-0.5 rounded-full text-xs font-medium ${getNotificationTagClass(notification.type)}`">
+                      :class="`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-semibold ${getNotificationTagClass(notification.type)}`">
                       {{ getNotificationTagText(notification.type) }}
                     </span>
-                    <span v-if="!notification.is_read" class="ml-2 w-2 h-2 bg-blue-400 rounded-full"></span>
+                    <span v-if="!notification.is_read" 
+                      class="w-2 h-2 bg-blue-500 rounded-full ring-2 ring-white shadow-sm"></span>
                   </div>
-                  <p class="text-xs text-gray-500 flex items-center">
-                    <i class="fa fa-clock-o mr-1"></i>
-                    {{ formatDate(notification.created_at) }}
+                  <p class="text-xs text-gray-400 flex items-center gap-1.5">
+                    <i class="fas fa-clock text-[10px]"></i>
+                    <span>{{ formatDate(notification.created_at) }}</span>
                   </p>
                 </div>
                 
-                <!-- Enhanced content display -->
+                <!-- Content display -->
                 <div v-if="notification.type === 'new_match'" class="text-sm mb-3 leading-relaxed">
-                  <p class="font-medium text-gray-800">
+                  <p class="font-medium text-gray-800 mb-2">
                     Có hồ sơ mới phù hợp với hồ sơ của bạn
                   </p>
-                  <div class="mt-2 flex items-start space-x-2">
-                    <div class="w-1 h-full flex-shrink-0 bg-blue-500 rounded-full mt-1.5"></div>
-                    <div>
-                      <p class="text-gray-700">Hồ sơ mới: <span class="font-medium text-blue-400">{{ getProfileTitle(notification, 'matching_profile_title') }}</span></p>
-                      <p class="text-gray-700">Hồ sơ của bạn: <span class="font-medium text-green-600">{{ getProfileTitle(notification, 'your_profile_title') }}</span></p>
-                    </div>
+                  <div class="space-y-1.5 text-xs text-gray-600">
+                    <p>Hồ sơ mới: <span class="font-semibold text-blue-600">{{ getProfileTitle(notification, 'matching_profile_title') || 'Chưa xác định' }}</span></p>
+                    <p>Hồ sơ của bạn: <span class="font-semibold text-green-600">{{ getProfileTitle(notification, 'your_profile_title') || 'Chưa xác định' }}</span></p>
                   </div>
                 </div>
                 
                 <div v-else-if="notification.type === 'profile_created_with_matches'" class="text-sm mb-3 leading-relaxed">
-                  <p class="font-medium text-gray-800">
-                    Hồ sơ <span class="text-blue-400">"{{ getRelatedProfileTitle(notification) }}"</span> 
+                  <p class="font-medium text-gray-800 mb-2">
+                    Hồ sơ <span class="text-blue-600">"{{ getRelatedProfileTitle(notification) || 'Chưa xác định' }}"</span> 
                     đã được tạo thành công
                   </p>
                   
-                  <div class="mt-3 bg-gray-50 rounded-lg p-3 border border-gray-100">
-                    <div class="flex items-center mb-2">
-                      <i class="fa fa-check-circle text-green-500 mr-2"></i>
-                      <span class="text-gray-700 font-medium">{{ getMatchCount(notification) }} hồ sơ phù hợp</span>
+                  <div class="mt-2 bg-blue-50/50 rounded-lg p-3 border border-blue-100">
+                    <div class="flex items-center gap-2 mb-2">
+                      <i class="fas fa-check-circle text-green-500 text-xs"></i>
+                      <span class="text-xs font-semibold text-gray-700">{{ getMatchCount(notification) }} hồ sơ phù hợp</span>
                     </div>
                     
                     <div v-if="notification.additional_data && notification.additional_data.matching_profiles" 
-                         class="space-y-2">
+                         class="space-y-1.5">
                       <div v-for="(profile, idx) in notification.additional_data.matching_profiles.slice(0, 3)" :key="idx"
-                           class="pl-3 border-l-2 border-gray-200 py-1 text-gray-600 flex items-center">
-                        <i class="fa fa-user-circle-o text-gray-400 mr-2"></i>
-                        {{ profile.title }}
+                           class="pl-2 border-l-2 border-blue-200 py-1 text-xs text-gray-600 flex items-center">
+                        <i class="fas fa-user-circle text-gray-400 mr-2 text-[10px]"></i>
+                        <span class="truncate">{{ profile.title }}</span>
                       </div>
                       
                       <div v-if="notification.additional_data.matching_profiles.length > 3" 
-                           class="text-blue-500 pl-3 text-xs mt-1">
+                           class="text-blue-600 pl-2 text-[10px] mt-1 font-medium">
                         + {{ notification.additional_data.matching_profiles.length - 3 }} hồ sơ khác
                       </div>
                     </div>
                   </div>
                 </div>
                 
-                <div v-else class="text-sm text-gray-800 mb-3">
-                  {{ notification.content }}
+                <div v-else class="text-sm text-gray-800 mb-3 leading-relaxed">
+                  <p v-html="formatNotificationContent(notification)"></p>
                 </div>
                 
                 <!-- Action button -->
-                <div class="mt-3">
-                  <button class="text-xs text-blue-400 hover:text-blue-800 font-medium flex items-center">
+                <div class="mt-3 pt-3 border-t border-gray-100">
+                  <button class="text-xs text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-1.5">
                     <span>{{ getActionText(notification.type) }}</span>
-                    <i class="fa fa-chevron-right ml-1"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -132,9 +148,14 @@
 import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import AppHeader from '../components/common/AppHeader.vue'
 
 export default {
   name: 'NotificationsPage',
+  
+  components: {
+    AppHeader
+  },
   
   setup() {
     const store = useStore()
@@ -150,39 +171,62 @@ export default {
       store.dispatch('notifications/fetchNotifications')
     })
     
-    // Format date
+    // Format date - compact format
     const formatDate = (dateString) => {
       if (!dateString) return ''
 
       try {
         const date = new Date(dateString)
-
-        // Kiểm tra xem date có hợp lệ không
-        if (isNaN(date.getTime())) {
-          return ''
-        }
+        if (isNaN(date.getTime())) return ''
 
         const now = new Date()
+        const diff = now - date
+        const minutes = Math.floor(diff / 60000)
+        const hours = Math.floor(minutes / 60)
+        const days = Math.floor(hours / 24)
 
-        // Check if date is today
-        if (date.toDateString() === now.toDateString()) {
-          return `Hôm nay, ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`
-        }
+        if (minutes < 1) return 'Vừa xong'
+        if (minutes < 60) return `${minutes} phút trước`
+        if (hours < 24) return `${hours} giờ trước`
+        if (days < 7) return `${days} ngày trước`
 
-        // Check if date is yesterday
-        const yesterday = new Date(now)
-        yesterday.setDate(now.getDate() - 1)
-        if (date.toDateString() === yesterday.toDateString()) {
-          return `Hôm qua, ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`
-        }
-
-        // Otherwise return formatted date
-        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}, ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`
+        return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`
       } catch (error) {
         console.error('Lỗi khi format ngày tháng:', error)
         return dateString || ''
       }
     }
+    
+    // Format notification content
+    const formatNotificationContent = (notification) => {
+      const escapeHtml = (text) => {
+        if (!text) return '';
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      };
+
+      let formattedContent = '';
+      const ad = notification.additional_data || {};
+      const profileColor = "text-blue-600 font-medium";
+
+      if (notification.type === 'new_message' || notification.content?.includes('Tin nhắn mới từ')) {
+        let senderName = ad.sender_name || (notification.content.match(/Tin nhắn mới từ ([^\s]+)/) || [])[1] || 'Ai đó';
+        if (notification.message_count > 1) {
+          formattedContent = `<span class="font-medium">Có ${notification.message_count} tin nhắn</span> đang chờ từ <span class="${profileColor}">${escapeHtml(senderName)}</span>`;
+        } else {
+          const messagePreview = ad.message_preview || 'Đã gửi một tin nhắn mới';
+          formattedContent = `<span class="${profileColor}">${escapeHtml(senderName)}</span>: ${escapeHtml(messagePreview)}`;
+        }
+      } else {
+        formattedContent = escapeHtml(notification.content).replace(/"([^"]+)"/g, `"<strong>$1</strong>"`);
+      }
+
+      return formattedContent;
+    };
     
     // Mark all notifications as read
     const markAllAsRead = () => {
@@ -224,11 +268,14 @@ export default {
     const getNotificationIconClass = (type) => {
       switch (type) {
         case 'profile_created':
-          return 'bg-green-100 text-green-600'
         case 'profile_created_with_matches':
           return 'bg-green-100 text-green-600'
         case 'new_match':
-          return 'bg-blue-100 text-blue-400'
+        case 'match_found':
+        case 'high_face_match':
+          return 'bg-blue-100 text-blue-600'
+        case 'new_message':
+          return 'bg-purple-100 text-purple-600'
         default:
           return 'bg-gray-100 text-gray-600'
       }
@@ -238,13 +285,17 @@ export default {
     const getNotificationIcon = (type) => {
       switch (type) {
         case 'profile_created':
-          return 'fa fa-check-circle'
+          return 'fas fa-check-circle'
         case 'profile_created_with_matches':
-          return 'fa fa-user-plus'
+          return 'fas fa-user-plus'
         case 'new_match':
-          return 'fa fa-handshake-o'
+        case 'match_found':
+        case 'high_face_match':
+          return 'fas fa-handshake'
+        case 'new_message':
+          return 'fas fa-comment'
         default:
-          return 'fa fa-bell'
+          return 'fas fa-bell'
       }
     }
     
@@ -253,11 +304,15 @@ export default {
       switch (type) {
         case 'profile_created':
         case 'profile_created_with_matches':
-          return 'bg-green-100 text-green-800'
+          return 'bg-green-50 text-green-700 border border-green-200'
         case 'new_match':
-          return 'bg-blue-100 text-blue-800'
+        case 'match_found':
+        case 'high_face_match':
+          return 'bg-blue-50 text-blue-700 border border-blue-200'
+        case 'new_message':
+          return 'bg-purple-50 text-purple-700 border border-purple-200'
         default:
-          return 'bg-gray-100 text-gray-800'
+          return 'bg-gray-50 text-gray-700 border border-gray-200'
       }
     }
     
@@ -267,9 +322,13 @@ export default {
         case 'profile_created':
           return 'Hồ sơ mới'
         case 'profile_created_with_matches':
-          return 'Hồ sơ mới có khớp'
+          return 'Hồ sơ có khớp'
         case 'new_match':
+        case 'match_found':
+        case 'high_face_match':
           return 'Hồ sơ khớp'
+        case 'new_message':
+          return 'Tin nhắn'
         default:
           return 'Thông báo'
       }
@@ -331,20 +390,22 @@ export default {
       getActionText,
       getProfileTitle,
       getRelatedProfileTitle,
-      getMatchCount
+      getMatchCount,
+      formatNotificationContent
     }
   }
 }
 </script>
 
 <style scoped>
-/* Add some animations for page transitions */
-.pt-20 {
-  animation: fadeIn 0.3s ease-in-out;
+/* Smooth transitions */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Subtle card hover effect */
+.group:hover {
+  transform: translateY(-1px);
 }
 </style>

@@ -1,6 +1,5 @@
 <template>
     <div class="profile-image-upload">
-        <div class="card">
             <div v-if="loading" class="loading-container">
                 <div class="progress-bar-container">
                     <div class="progress-bar" :style="{ width: `${uploadProgress}%` }"></div>
@@ -23,10 +22,17 @@
                     <div class="file-input-container">
                         <input type="file" id="image-upload" @change="handleFileSelect" accept="image/*"
                             class="file-input" />
-                        <div class="file-input-label">
-                            <span v-if="selectedFile">{{ selectedFile.name }}</span>
-                            <span v-else>Chọn file...</span>
-                        </div>
+                        <label for="image-upload" class="file-input-label">
+                            <span v-if="selectedFile" class="file-selected">
+                                <i class="fas fa-check-circle text-green-500"></i>
+                                <span class="file-name">{{ selectedFile.name }}</span>
+                            </span>
+                            <span v-else class="file-placeholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>Nhấn để chọn ảnh hoặc kéo thả vào đây</span>
+                                <small>Hỗ trợ: JPG, PNG, GIF (tối đa 5MB)</small>
+                            </span>
+                        </label>
                     </div>
                     <div v-if="fileError" class="error-message">{{ fileError }}</div>
                 </div>
@@ -48,7 +54,6 @@
             </div>
 
             <div v-if="error" class="global-error">{{ error }}</div>
-        </div>
     </div>
 </template>
 
@@ -64,9 +69,14 @@ export default {
         profileId: {
             type: [Number, String],
             required: true
+        },
+        initialProfile: {
+            type: Object,
+            default: null
         }
     },
-    setup(props) {
+    emits: ['upload-success'],
+    setup(props, { emit }) {
         const router = useRouter()
         const selectedFile = ref(null)
         const description = ref('')
@@ -79,6 +89,11 @@ export default {
 
         // Thêm biến để lưu URL ảnh cũ
         const oldImageUrl = ref(null);
+
+        // Lấy URL ảnh cũ từ initialProfile nếu có
+        if (props.initialProfile) {
+            oldImageUrl.value = props.initialProfile.image_url || props.initialProfile.images || null;
+        }
 
         const handleFileSelect = (event) => {
             const file = event.target.files[0]
@@ -152,6 +167,12 @@ export default {
 
                 successMessage.value = result.message
 
+                // Emit event để parent component biết upload thành công
+                emit('upload-success', {
+                    imageUrl: publicUrl,
+                    message: result.message
+                })
+
             } catch (err) {
                 console.error('Upload error:', err)
 
@@ -199,32 +220,19 @@ export default {
 
 <style scoped>
 .profile-image-upload {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.title {
-    margin-bottom: 20px;
-    color: #333;
-    text-align: center;
-}
-
-.card {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 25px;
+    width: 100%;
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
 }
 
 label {
     display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #334155;
 }
 
 .file-input-container {
@@ -232,6 +240,15 @@ label {
     overflow: hidden;
     display: inline-block;
     width: 100%;
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+}
+
+.file-input-container:hover {
+    border-color: #60a5fa;
+    background: #eff6ff;
 }
 
 .file-input {
@@ -242,14 +259,48 @@ label {
     cursor: pointer;
     width: 100%;
     height: 100%;
+    z-index: 1;
 }
 
 .file-input-label {
-    display: block;
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.875rem;
+    min-height: 120px;
+    cursor: pointer;
+}
+
+.file-input-label .file-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.file-input-label .file-placeholder i {
+    font-size: 2.5rem;
+    color: #94a3b8;
+}
+
+.file-input-label .file-placeholder small {
+    color: #94a3b8;
+    font-size: 0.75rem;
+}
+
+.file-input-label .file-selected {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #10b981;
+    font-weight: 600;
+}
+
+.file-input-label .file-selected .file-name {
+    max-width: 300px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -257,110 +308,169 @@ label {
 
 .form-control {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
     resize: vertical;
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
 }
 
 .button-container {
     display: flex;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    justify-content: flex-end;
 }
 
 .btn {
-    padding: 10px 15px;
-    border-radius: 4px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.875rem;
     border: none;
-    transition: background 0.3s;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .btn-primary {
-    background: #4e73df;
+    background: #60a5fa;
     color: white;
 }
 
-.btn-primary:hover {
-    background: #3a64d8;
+.btn-primary:hover:not(:disabled) {
+    background: #3b82f6;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .btn-secondary {
-    background: #858796;
-    color: white;
+    background: #e2e8f0;
+    color: #475569;
 }
 
 .btn-secondary:hover {
-    background: #717380;
+    background: #cbd5e1;
 }
 
 .btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    transform: none;
 }
 
 .loading-container {
     text-align: center;
+    padding: 2rem 0;
 }
 
 .progress-bar-container {
-    height: 10px;
-    background: #eee;
-    border-radius: 5px;
-    margin: 20px 0;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    margin: 1.5rem 0;
     overflow: hidden;
 }
 
 .progress-bar {
     height: 100%;
-    background: #4e73df;
-    transition: width 0.3s;
+    background: linear-gradient(90deg, #60a5fa, #3b82f6);
+    transition: width 0.3s ease;
+    border-radius: 999px;
 }
 
 .progress-text {
-    margin-bottom: 20px;
+    color: #64748b;
+    font-size: 0.875rem;
+    margin-top: 0.75rem;
 }
 
 .success-container {
     text-align: center;
+    padding: 1.5rem 0;
 }
 
 .preview-image {
     max-width: 100%;
     max-height: 300px;
-    margin: 0 auto 20px;
+    margin: 0 auto 1.5rem;
     display: block;
-    border-radius: 4px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .success-message {
-    color: #28a745;
-    font-size: 18px;
-    margin: 20px 0;
+    color: #10b981;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.success-message::before {
+    content: '✓';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: #d1fae5;
+    border-radius: 50%;
+    font-weight: bold;
 }
 
 .button-group {
     display: flex;
     justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
 }
 
 .error-message {
-    color: #dc3545;
-    font-size: 14px;
-    margin-top: 5px;
+    color: #ef4444;
+    font-size: 0.8125rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error-message::before {
+    content: '⚠';
+    font-size: 1rem;
 }
 
 .global-error {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #f8d7da;
-    color: #721c24;
-    border-radius: 4px;
-    border: 1px solid #f5c6cb;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: #fef2f2;
+    color: #991b1b;
+    border-radius: 8px;
+    border: 1px solid #fecaca;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 640px) {
+    .button-container,
+    .button-group {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
 }
 </style>

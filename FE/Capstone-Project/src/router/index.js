@@ -6,7 +6,6 @@ import ProfileDetailView from "../views/ProfileDetailView.vue";
 import SearchView from "@/views/SearchView.vue";
 import ProfileEditView from "../views/ProfileEditView.vue";
 import NotificationsPage from "@/views/NotificationsPage.vue";
-import ProfileImagePage from "@/views/ProfileImagePage.vue";
 import MyProfile from "@/views/MyProfile.vue";
 import MessagesView from "@/views/MessagesView.vue";
 import AccountView from "@/views/AccountView.vue"; // ✅ Import AccountView
@@ -29,12 +28,6 @@ const routes = [
     path: "/profile/create",
     name: "profile-create",
     component: ProfileCreateView,
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/profiles/:id/upload-image",
-    name: "ProfileImageUpload",
-    component: ProfileImagePage,
     meta: { requiresAuth: true },
   },
   {

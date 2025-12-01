@@ -1,5 +1,6 @@
 import supabase from "@/utils/supabase";
 import axiosInstance from "@/utils/axios";
+import notificationsService from "@/services/notificationService";
 
 export default {
   namespaced: true,

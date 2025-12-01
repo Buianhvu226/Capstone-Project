@@ -1,135 +1,126 @@
 <template>
-    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen pt-16 pb-12">
-        <!-- Header Section -->
-        <div class="container mx-auto px-4 py-6">
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden p-6 mb-8 border border-blue-100">
-                <div class="flex flex-col md:flex-row items-start md:items-center">
-                    <div class="flex-shrink-0 bg-blue-400 rounded-full p-3 mr-5 mb-4 md:mb-0 shadow-md">
-                        <i class="fas fa-edit text-white text-2xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-3xl font-bold text-gray-800 mb-2 flex items-center">
-                            Chỉnh sửa hồ sơ
-                            <span v-if="loading" class="ml-3">
-                                <div class="animate-pulse inline-flex h-3 w-3 rounded-full bg-blue-500 ml-1"></div>
-                                <div
-                                    class="animate-pulse inline-flex h-3 w-3 rounded-full bg-blue-500 ml-1 animation-delay-200">
-                                </div>
-                                <div
-                                    class="animate-pulse inline-flex h-3 w-3 rounded-full bg-blue-500 ml-1 animation-delay-400">
-                                </div>
-                            </span>
-                        </h1>
-                        <p class="text-gray-600">Cập nhật thông tin hồ sơ tìm kiếm của bạn</p>
+    <div class="min-h-screen bg-slate-50">
+        <AppHeader />
+        <div class="max-w-7xl mx-auto px-3 sm:px-4 pt-20 pb-8">
+            <!-- Hero Section -->
+            <section class="bg-white rounded-lg p-3 mb-3">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="h-10 w-10 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center">
+                            <i class="fas fa-edit text-base"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-base font-bold text-slate-800">Chỉnh sửa hồ sơ</h1>
+                            <p class="text-xs text-slate-500">Cập nhật thông tin hồ sơ tìm kiếm của bạn</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- Loading State -->
-            <div v-if="initialLoading" class="bg-white rounded-xl shadow-lg p-12 text-center">
+            <div v-if="initialLoading" class="bg-white rounded-lg border border-slate-200 p-8 text-center">
                 <div class="inline-flex items-center justify-center">
-                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400"></div>
+                    <div class="animate-spin rounded-full h-8 w-8 border-2 border-blue-500 border-t-transparent"></div>
                 </div>
-                <p class="text-gray-600 mt-4">Đang tải thông tin hồ sơ...</p>
+                <p class="text-xs text-slate-600 mt-3">Đang tải thông tin hồ sơ...</p>
             </div>
 
             <!-- Error State -->
-            <div v-else-if="error" class="bg-white rounded-xl shadow-lg p-8 text-center mb-8">
-                <div class="inline-block p-4 bg-red-100 rounded-full mb-4">
-                    <i class="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
+            <div v-else-if="error" class="bg-white rounded-lg border border-slate-200 p-4 text-center mb-3">
+                <div class="inline-block p-3 bg-red-50 rounded-full mb-3">
+                    <i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-800 mb-2">Đã xảy ra lỗi</h3>
-                <p class="text-gray-600 mb-4">{{ error }}</p>
-                <div class="flex justify-center space-x-4">
+                <h3 class="text-sm font-semibold text-slate-800 mb-2">Đã xảy ra lỗi</h3>
+                <p class="text-xs text-slate-600 mb-3">{{ error }}</p>
+                <div class="flex justify-center gap-2">
                     <button @click="fetchProfile"
-                        class="px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-700 transition">
-                        <i class="fas fa-sync-alt mr-2"></i> Thử lại
+                        class="px-3 py-1.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-xs font-semibold">
+                        <i class="fas fa-sync-alt mr-1.5"></i> Thử lại
                     </button>
                     <router-link to="/my-profile"
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
-                        <i class="fas fa-arrow-left mr-2"></i> Quay lại
+                        class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition text-xs font-semibold">
+                        <i class="fas fa-arrow-left mr-1.5"></i> Quay lại
                     </router-link>
                 </div>
             </div>
 
             <!-- Edit Form -->
-            <div v-else class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                <!-- Confirmation before discarding changes -->
+            <div v-else class="bg-white rounded-lg border border-slate-200 p-3">
+                <!-- Info Notice -->
+                <div class="rounded-lg border border-blue-200 bg-blue-50 p-2.5 mb-3">
+                    <div class="flex items-start gap-2">
+                        <i class="fas fa-info-circle text-blue-500 text-sm mt-0.5"></i>
+                        <p class="text-xs text-blue-700">
+                            <span class="font-semibold">Lưu ý:</span> Khi lưu thay đổi, hệ thống sẽ tạo hồ sơ mới và xóa
+                            hồ sơ cũ. Các thông tin liên kết có thể bị ảnh hưởng.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Form with scroll -->
+                <div class="max-h-[calc(100vh-280px)] overflow-y-auto custom-scroll">
+                    <ProfileForm :initialData="profileData" :loading="loading" :error="formError" :isEditing="true"
+                        submitButtonText="Lưu thay đổi" @submit="handleSubmit" @cancel="handleCancel" />
+                </div>
+            </div>
+
+            <!-- Cancel Confirmation Modal -->
+            <teleport to="body">
                 <div v-if="showCancelModal"
-                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div
-                        class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 animate__animated animate__fadeInUp animate__faster">
-                        <div class="flex items-center text-red-600 mb-4">
-                            <div class="bg-red-100 p-2 rounded-full mr-3">
-                                <i class="fas fa-exclamation-triangle"></i>
+                    class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-4">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="h-10 w-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center">
+                                <i class="fas fa-exclamation-triangle text-sm"></i>
                             </div>
-                            <h3 class="text-lg font-medium text-gray-900">Xác nhận hủy thay đổi</h3>
+                            <h3 class="text-sm font-semibold text-slate-900">Xác nhận hủy thay đổi</h3>
                         </div>
-                        <p class="text-gray-600 mb-6">Bạn có chắc muốn hủy các thay đổi đã chỉnh sửa? Tất cả thông tin
-                            sẽ không được lưu.</p>
-                        <div class="flex justify-end space-x-4">
+                        <p class="text-xs text-slate-600 mb-4">Bạn có chắc muốn hủy các thay đổi đã chỉnh sửa? Tất cả
+                            thông tin sẽ không được lưu.</p>
+                        <div class="flex justify-end gap-2">
                             <button @click="showCancelModal = false"
-                                class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                                <i class="fas fa-arrow-left mr-2"></i> Tiếp tục chỉnh sửa
+                                class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors text-xs font-semibold">
+                                <i class="fas fa-arrow-left mr-1.5"></i> Tiếp tục chỉnh sửa
                             </button>
                             <button @click="confirmCancel"
-                                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
-                                <i class="fas fa-times mr-2"></i> Xác nhận hủy
+                                class="px-3 py-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-xs font-semibold">
+                                <i class="fas fa-times mr-1.5"></i> Xác nhận hủy
                             </button>
                         </div>
                     </div>
                 </div>
+            </teleport>
 
-                <!-- Confirmation before submission -->
+            <!-- Submit Confirmation Modal -->
+            <teleport to="body">
                 <div v-if="showSubmitModal"
-                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div
-                        class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 animate__animated animate__fadeInUp animate__faster">
-                        <div class="flex items-center text-blue-400 mb-4">
-                            <div class="bg-blue-100 p-2 rounded-full mr-3">
-                                <i class="fas fa-info-circle"></i>
+                    class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-4">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div
+                                class="h-10 w-10 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center">
+                                <i class="fas fa-info-circle text-sm"></i>
                             </div>
-                            <h3 class="text-lg font-medium text-gray-900">Xác nhận lưu thay đổi</h3>
+                            <h3 class="text-sm font-semibold text-slate-900">Xác nhận lưu thay đổi</h3>
                         </div>
-                        <p class="text-gray-600 mb-6">Bạn có chắc muốn lưu các thay đổi đã chỉnh sửa? Hệ thống sẽ tạo
-                            một hồ sơ mới và xóa hồ sơ cũ.</p>
-                        <div class="flex justify-end space-x-4">
+                        <p class="text-xs text-slate-600 mb-4">Bạn có chắc muốn lưu các thay đổi đã chỉnh sửa? Hệ thống
+                            sẽ tạo một hồ sơ mới và xóa hồ sơ cũ.</p>
+                        <div class="flex justify-end gap-2">
                             <button @click="showSubmitModal = false"
-                                class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                                <i class="fas fa-arrow-left mr-2"></i> Tiếp tục chỉnh sửa
+                                class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors text-xs font-semibold">
+                                <i class="fas fa-arrow-left mr-1.5"></i> Tiếp tục chỉnh sửa
                             </button>
                             <button @click="confirmSubmit" :disabled="submitting"
-                                class="px-4 py-2 bg-blue-400 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
-                                <i class="fas fa-check mr-2"></i>
-                                <span v-if="submitting">Đang lưu...</span>
-                                <span v-else>Xác nhận lưu</span>
+                                class="px-3 py-1.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+                                <i v-if="submitting" class="fas fa-spinner fa-spin mr-1.5"></i>
+                                <i v-else class="fas fa-check mr-1.5"></i>
+                                <span>{{ submitting ? 'Đang lưu...' : 'Xác nhận lưu' }}</span>
                             </button>
                         </div>
                     </div>
                 </div>
-
-                <div
-                    class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 p-4 mb-6 rounded-r-lg">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-info-circle text-blue-500 text-lg"></i>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-blue-700">
-                                <span class="font-medium">Lưu ý về quy trình chỉnh sửa:</span> Khi bạn lưu các thay đổi,
-                                hệ thống sẽ
-                                tạo một hồ sơ mới dựa trên thông tin bạn vừa chỉnh sửa và xóa hồ sơ cũ. Các thông tin
-                                liên kết có thể
-                                bị ảnh hưởng.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Form -->
-                <ProfileForm :initialData="profileData" :loading="loading" :error="formError" :isEditing="true"
-                    submitButtonText="Lưu thay đổi" @submit="handleSubmit" @cancel="handleCancel" />
-            </div>
+            </teleport>
         </div>
     </div>
 </template>
@@ -138,11 +129,13 @@
 import { ref, onMounted, watch, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 import axios from 'axios';
+import AppHeader from '@/components/common/AppHeader.vue';
 import ProfileForm from '@/components/profile/ProfileForm.vue';
 
 export default {
     name: 'ProfileEditView',
     components: {
+        AppHeader,
         ProfileForm
     },
     setup() {
@@ -332,11 +325,26 @@ export default {
 </script>
 
 <style scoped>
-.animation-delay-200 {
-    animation-delay: 0.2s;
+.custom-scroll::-webkit-scrollbar {
+    width: 6px;
 }
 
-.animation-delay-400 {
-    animation-delay: 0.4s;
+.custom-scroll::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.custom-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
 }
 </style>

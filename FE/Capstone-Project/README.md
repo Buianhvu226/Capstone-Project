@@ -27,3 +27,59 @@ npm run dev
 ```sh
 npm run build
 ```
+
+## Cấu trúc dự án (đã tái cấu trúc)
+
+```
+src/
+  assets/
+  components/
+    common/
+      AppHeader.vue
+      AppFooter.vue
+      AppLoader.vue
+      AppPagination.vue
+    auth/
+      LoginForm.vue
+      RegisterForm.vue
+    home/
+      ProfileList.vue
+      SearchFilter.vue
+      HeroCarousel.vue
+      AdvancedSearchPanel.vue
+    profile/
+      ProfileForm.vue
+      ProfileImageUpload.vue
+      SuggestedProfilesSection.vue
+      ProfileHeader.vue
+      ProfileImagesCard.vue
+      ProfileInfoCard.vue
+      CommentsSection.vue
+    recentlyMissing/
+      ContactPersonsForm.vue
+      FaceUpload.vue
+      RecentlyMissingForm.vue
+      RecentlyMissingList.vue
+    admin/
+      UsersManagement.vue
+      AdminAnalytics.vue
+    dashboard/
+      (tuỳ chọn cho widget/biểu đồ)
+  views/
+    HomeView.vue
+    AuthView.vue
+    ...
+  router/
+    index.js
+  store/
+    index.js
+    modules/
+      auth.js, profile.js, recentlyMissing.js, ...
+  services/
+  utils/
+```
+
+### Quy ước
+- Dùng PascalCase cho tên component.
+- Dùng alias `@` cho import từ `src`.
+- Tách view lớn thành các component con để mỗi file < 300 dòng.

@@ -1,11 +1,13 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gray-50 overflow-x-hidden">
     <!-- Conditionally render AppHeader only for non-admin routes -->
     <AppHeader v-if="!isAdminRoute" />
-    <main class="container mx-auto px-4 py-6">
+    <main class="w-full overflow-x-hidden max-w-full">
       <router-view />
     </main>
-    <AppFooter v-if="isAuthenticated" />
+    <AppFooter v-if="isAuthenticated && !hideFooter" />
+    <!-- Global Scroll to Top Button -->
+    <ScrollToTop />
   </div>
 </template>
 
@@ -15,11 +17,13 @@ import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import AppHeader from './components/common/AppHeader.vue';
 import AppFooter from './components/common/AppFooter.vue';
+import ScrollToTop from './components/common/ScrollToTop.vue';
 
 export default {
   components: {
     AppHeader,
     AppFooter,
+    ScrollToTop,
   },
   setup() {
     const store = useStore();
@@ -30,6 +34,12 @@ export default {
 
     // Check if the current route is an admin route
     const isAdminRoute = computed(() => route.path.startsWith('/admin'));
+
+    // Hide footer for specific routes (e.g., Recently Missing Detail)
+    const hideFooter = computed(() => {
+      // Dùng name hoặc path để chính xác hơn nếu bạn đã đặt tên route
+      return route.name === 'RecentlyMissingDetail' || route.path.startsWith('/recently-missing/') && route.params.id;
+    });
 
     onMounted(() => {
       // Check if notifications are supported
@@ -68,6 +78,7 @@ export default {
       isAuthenticated,
       isDevelopmentMode,
       isAdminRoute,
+      hideFooter,
     };
   },
 };

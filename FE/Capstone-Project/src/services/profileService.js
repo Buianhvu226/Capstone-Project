@@ -1,50 +1,111 @@
 import api from "./api";
+import cacheService from "./cacheService";
 
 const profileService = {
   // Các phương thức hiện có
-  getProfiles(params = {}) {
-    return api.get("/profiles/", { params });
+  async getProfiles(params = {}) {
+    // Kiểm tra cache trước
+    const cachedData = cacheService.getCache(params);
+    if (cachedData) {
+      return { data: cachedData };
+    }
+    
+    // Nếu không có cache, gọi API
+    const response = await api.get("/profiles/", { params });
+    
+    // Lưu vào cache
+    cacheService.setCache(params, response.data);
+    
+    return response;
   },
 
-  createProfile(profileData) {
-    return api.post("/profiles/", profileData);
+  async createProfile(profileData) {
+    const response = await api.post("/profiles/", profileData);
+    // Xóa cache khi tạo profile mới
+    cacheService.clearAllCache();
+    return response;
   },
 
   getProfileById(id) {
     return api.get(`/profiles/${id}/`);
   },
 
-  updateProfile(id, profileData) {
+  async updateProfile(id, profileData) {
     const { id: _, ...dataToSend } = profileData;
-    return api.put(`/profiles/${id}/`, dataToSend);
+    const response = await api.put(`/profiles/${id}/`, dataToSend);
+    // Xóa cache khi cập nhật profile
+    cacheService.clearAllCache();
+    return response;
   },
 
   // Thêm các phương thức mới
 
   // Lấy tất cả hồ sơ của người dùng hiện tại
-  getMyProfiles(page = 1) {
-    return api.get(`/profiles/my_all_profiles/`, {
-      params: { page },
-    });
+  async getMyProfiles(page = 1, ordering = '-created_at') {
+    const params = { page, ordering };
+    
+    // Kiểm tra cache trước
+    const cacheKey = { endpoint: 'my_all_profiles', ...params };
+    const cachedData = cacheService.getCache(cacheKey);
+    if (cachedData) {
+      return { data: cachedData };
+    }
+    
+    // Nếu không có cache, gọi API
+    const response = await api.get(`/profiles/my_all_profiles/`, { params });
+    
+    // Lưu vào cache
+    cacheService.setCache(cacheKey, response.data);
+    
+    return response;
   },
 
   // Xóa hồ sơ
-  deleteProfile(id) {
-    return api.delete(`/profiles/${id}/`);
+  async deleteProfile(id) {
+    const response = await api.delete(`/profiles/${id}/`);
+    // Xóa cache khi xóa profile
+    cacheService.clearAllCache();
+    return response;
   },
 
   // Lấy tất cả hồ sơ được gợi ý
-  getAllSuggestedProfiles(page = 1) {
-    return api.get(`/profiles/all_suggested_profiles/`, {
-      params: { page },
-    });
+  async getAllSuggestedProfiles(page = 1, ordering = '-created_at') {
+    const params = { page, ordering };
+    
+    // Kiểm tra cache trước
+    const cacheKey = { endpoint: 'all_suggested_profiles', ...params };
+    const cachedData = cacheService.getCache(cacheKey);
+    if (cachedData) {
+      return { data: cachedData };
+    }
+    
+    // Nếu không có cache, gọi API
+    const response = await api.get(`/profiles/all_suggested_profiles/`, { params });
+    
+    // Lưu vào cache
+    cacheService.setCache(cacheKey, response.data);
+    
+    return response;
   },
 
   // Lấy tất cả hồ sơ tham chiếu
-  getAllReferencedProfiles(page = 1) {
-    return api.get(`/profiles/all_referenced_profiles/`, {
-      params: { page },
-    });
+  async getAllReferencedProfiles(page = 1, ordering = '-created_at') {
+    const params = { page, ordering };
+    
+    // Kiểm tra cache trước
+    const cacheKey = { endpoint: 'all_referenced_profiles', ...params };
+    const cachedData = cacheService.getCache(cacheKey);
+    if (cachedData) {
+      return { data: cachedData };
+    }
+    
+    // Nếu không có cache, gọi API
+    const response = await api.get(`/profiles/all_referenced_profiles/`, { params });
+    
+    // Lưu vào cache
+    cacheService.setCache(cacheKey, response.data);
+    
+    return response;
   },
 
   // Lấy hồ sơ được gợi ý cho một hồ sơ cụ thể
@@ -53,8 +114,11 @@ const profileService = {
   },
 
   // Cập nhật trạng thái hồ sơ
-  updateProfileStatus(profileId, status) {
-    return api.patch(`/profiles/${profileId}/`, { status });
+  async updateProfileStatus(profileId, status) {
+    const response = await api.patch(`/profiles/${profileId}/`, { status });
+    // Xóa cache khi cập nhật trạng thái
+    cacheService.clearAllCache();
+    return response;
   },
 
   // Cập nhật trạng thái xác nhận gợi ý
