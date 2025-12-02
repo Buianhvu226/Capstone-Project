@@ -66,7 +66,7 @@
         <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
         <div
           class="relative max-w-5xl w-full max-h-[80vh] sm:max-h-[85vh] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col">
-          <div class="flex items-center justify-between px-4 sm:px-5 py-2.5 border-b border-slate-200">
+          <div id="ai-modal-header" class="flex items-center justify-between px-4 sm:px-5 py-2.5 border-b border-slate-200">
             <div class="flex items-center gap-2">
               <span
                 class="inline-flex items-center justify-center h-7 w-7 rounded-full bg-blue-50 text-blue-500 text-xs">
@@ -79,10 +79,19 @@
                 </p>
               </div>
             </div>
-            <button @click="closeMatchesModal"
-              class="p-1.5 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
-              <i class="fas fa-times text-sm"></i>
-            </button>
+            <div class="flex items-center gap-2">
+              <button
+                id="ai-modal-guide-btn"
+                @click="showAIModalGuideTour = true"
+                class="p-1.5 rounded-full text-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                title="Hướng dẫn">
+                <i class="fas fa-question-circle text-sm"></i>
+              </button>
+              <button @click="closeMatchesModal"
+                class="p-1.5 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+                <i class="fas fa-times text-sm"></i>
+              </button>
+            </div>
           </div>
           <div class="flex-1 overflow-y-auto p-3 sm:p-4">
             <RecentlyMissingDetailMatches :matches="matches" :sorted-matches="sortedMatches"
@@ -100,6 +109,7 @@
               :toggle-analysis-detail="toggleAnalysisDetail" />
           </div>
         </div>
+        <AIMatchesModalGuideTour :is-active="showAIModalGuideTour" @close="showAIModalGuideTour = false" />
       </div>
     </transition>
 
@@ -142,13 +152,14 @@ import { useStore } from 'vuex';
 import { format, formatDistance } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import AppLoader from '@/components/common/AppLoader.vue';
-import RecentlyMissingDetailSidebar from '@/components/recentlyMissing/RecentlyMissingDetailSidebar.vue';
-import RecentlyMissingDetailHeaderCard from '@/components/recentlyMissing/RecentlyMissingDetailHeaderCard.vue';
-import RecentlyMissingDetailDescriptionContacts from '@/components/recentlyMissing/RecentlyMissingDetailDescriptionContacts.vue';
-import RecentlyMissingDetailMatches from '@/components/recentlyMissing/RecentlyMissingDetailMatches.vue';
-import RecentlyMissingDetailGuideTour from '@/components/recentlyMissing/RecentlyMissingDetailGuideTour.vue';
+import RecentlyMissingDetailSidebar from '@/components/recentlyMissing/layout/RecentlyMissingDetailSidebar.vue';
+import RecentlyMissingDetailHeaderCard from '@/components/recentlyMissing/layout/RecentlyMissingDetailHeaderCard.vue';
+import RecentlyMissingDetailDescriptionContacts from '@/components/recentlyMissing/layout/RecentlyMissingDetailDescriptionContacts.vue';
+import RecentlyMissingDetailMatches from '@/components/recentlyMissing/modals/RecentlyMissingDetailMatches.vue';
+import RecentlyMissingDetailGuideTour from '@/components/recentlyMissing/guides/RecentlyMissingDetailGuideTour.vue';
+import AIMatchesModalGuideTour from '@/components/recentlyMissing/guides/AIMatchesModalGuideTour.vue';
 import noImage from '@/assets/images/no_image.png';
-import messageService from '../services/messageService';
+import messageService from '@/services/messageService';
 
 export default {
   name: 'RecentlyMissingDetailView',
@@ -159,6 +170,7 @@ export default {
     RecentlyMissingDetailDescriptionContacts,
     RecentlyMissingDetailMatches,
     RecentlyMissingDetailGuideTour,
+    AIMatchesModalGuideTour,
   },
 
   setup() {
@@ -177,6 +189,7 @@ export default {
     const isLoading = ref(false);
     const isAdmin = ref(false)
     const showGuideTour = ref(false)
+    const showAIModalGuideTour = ref(false)
 
     const formatKey = (key) => {
       // Thay thế dấu gạch dưới bằng khoảng trắng và viết hoa chữ cái đầu mỗi từ
@@ -681,6 +694,7 @@ export default {
       showGuideTour,
       openGuideTour,
       closeGuideTour,
+      showAIModalGuideTour,
     };
   }
 }

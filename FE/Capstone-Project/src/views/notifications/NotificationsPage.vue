@@ -148,7 +148,7 @@
 import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import AppHeader from '../components/common/AppHeader.vue'
+import AppHeader from '@/components/common/AppHeader.vue'
 
 export default {
   name: 'NotificationsPage',

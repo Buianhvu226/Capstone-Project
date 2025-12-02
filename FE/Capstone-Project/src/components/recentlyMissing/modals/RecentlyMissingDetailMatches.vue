@@ -30,15 +30,15 @@
 
     <!-- Reports List -->
     <div class="space-y-3 sm:space-y-3.5 px-2 sm:px-3 pb-3 sm:pb-4">
-      <div v-for="match in sortedMatches" :key="match.id">
-        <div
+      <div v-for="(match, index) in sortedMatches" :key="match.id">
+        <div :id="index === 0 ? 'ai-modal-first-card' : undefined"
           class="bg-white rounded-xl border border-slate-200/80 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
           <div class="px-3 sm:px-4 py-3 sm:py-3.5">
             <div class="space-y-3 sm:space-y-3.5">
               <!-- Top Section -->
               <div class="flex flex-col lg:flex-row gap-3.5 lg:gap-5">
                 <!-- Image & Score -->
-                <div class="flex-shrink-0">
+                <div :id="index === 0 ? 'ai-modal-match-image' : undefined" class="flex-shrink-0">
                   <div class="relative">
                     <div
                       class="w-36 sm:w-40 lg:w-40 xl:w-44 h-36 sm:h-40 lg:h-32 xl:h-40 rounded-lg overflow-hidden bg-slate-100 border border-slate-200">
@@ -125,7 +125,8 @@
                     </div>
 
                     <!-- Meta grid -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-2.5">
+                    <div :id="index === 0 ? 'ai-modal-match-meta' : undefined"
+                      class="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-2.5">
                       <div class="bg-slate-50 rounded-md px-2.5 py-2.5">
                         <div class="flex items-center gap-2">
                           <i class="fas fa-user text-slate-400 text-xs"></i>
@@ -203,7 +204,8 @@
               </div>
 
               <!-- AI analysis - full width under content & image -->
-              <div v-if="match.llm_analysis" class="mt-2.5 rounded-lg border border-blue-100 bg-blue-50 px-3 py-3">
+              <div :id="index === 0 ? 'ai-modal-analysis' : undefined" v-if="match.llm_analysis"
+                class="mt-2.5 rounded-lg border border-blue-100 bg-blue-50 px-3 py-3">
                 <div class="flex items-center justify-between mb-2">
                   <h5 class="text-xs sm:text-sm font-semibold text-slate-800 flex items-center">
                     <i class="fas fa-brain text-blue-400 mr-2"></i>
@@ -279,7 +281,8 @@
               </div>
 
               <!-- Actions (footer of card) -->
-              <div class="mt-2.5 pt-2.5 border-t border-slate-100 flex flex-col sm:flex-row gap-2 sm:gap-2.5">
+              <div :id="index === 0 ? 'ai-modal-actions' : undefined"
+                class="mt-2.5 pt-2.5 border-t border-slate-100 flex flex-col sm:flex-row gap-2 sm:gap-2.5">
                 <router-link :to="`/recently-missing/${getSuggestedReportId(match)}`" class="flex-1 inline-flex items-center justify-center px-4 py-2.5 
                        bg-blue-500 text-white 
                        rounded-lg hover:bg-blue-600 

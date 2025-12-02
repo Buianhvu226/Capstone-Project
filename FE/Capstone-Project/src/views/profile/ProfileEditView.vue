@@ -130,7 +130,7 @@ import { ref, onMounted, watch, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 import axios from 'axios';
 import AppHeader from '@/components/common/AppHeader.vue';
-import ProfileForm from '@/components/profile/ProfileForm.vue';
+import ProfileForm from '@/components/profile/forms/ProfileForm.vue';
 
 export default {
     name: 'ProfileEditView',

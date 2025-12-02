@@ -55,17 +55,17 @@
 <script>
 import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
-import searchService from '../services/searchService';
+import searchService from '@/services/searchService';
 import { useRouter, useRoute } from 'vue-router';
-import AppHeader from '../components/common/AppHeader.vue';
-import SearchGuideTour from '../components/search/SearchGuideTour.vue';
-import SearchHero from '../components/search/SearchHero.vue';
-import SearchForm from '../components/search/SearchForm.vue';
-import SearchHistory from '../components/search/SearchHistory.vue';
-import SearchSuggestions from '../components/search/SearchSuggestions.vue';
-import SearchProgressPanel from '../components/search/SearchProgressPanel.vue';
-import SearchResults from '../components/search/SearchResults.vue';
-import supabase from '../utils/supabase';
+import AppHeader from '@/components/common/AppHeader.vue';
+import SearchGuideTour from '@/components/search/SearchGuideTour.vue';
+import SearchHero from '@/components/search/SearchHero.vue';
+import SearchForm from '@/components/search/SearchForm.vue';
+import SearchHistory from '@/components/search/SearchHistory.vue';
+import SearchSuggestions from '@/components/search/SearchSuggestions.vue';
+import SearchProgressPanel from '@/components/search/SearchProgressPanel.vue';
+import SearchResults from '@/components/search/SearchResults.vue';
+import supabase from '@/utils/supabase';
 
 export default {
     name: 'SearchView',

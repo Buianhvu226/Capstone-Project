@@ -1,14 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import AuthView from "../views/AuthView.vue";
-import ProfileCreateView from "../views/ProfileCreateView.vue";
-import ProfileDetailView from "../views/ProfileDetailView.vue";
-import SearchView from "@/views/SearchView.vue";
-import ProfileEditView from "../views/ProfileEditView.vue";
-import NotificationsPage from "@/views/NotificationsPage.vue";
-import MyProfile from "@/views/MyProfile.vue";
-import MessagesView from "@/views/MessagesView.vue";
-import AccountView from "@/views/AccountView.vue"; // ✅ Import AccountView
+import HomeView from "../views/home/HomeView.vue";
+import AuthView from "../views/auth/AuthView.vue";
+import ProfileCreateView from "../views/profile/ProfileCreateView.vue";
+import ProfileDetailView from "../views/profile/ProfileDetailView.vue";
+import SearchView from "@/views/search/SearchView.vue";
+import ProfileEditView from "../views/profile/ProfileEditView.vue";
+import NotificationsPage from "@/views/notifications/NotificationsPage.vue";
+import MyProfile from "@/views/profile/MyProfile.vue";
+import MessagesView from "@/views/messages/MessagesView.vue";
+import AccountView from "@/views/account/AccountView.vue"; // ✅ Import AccountView
 
 // Cập nhật danh sách routes với các đường dẫn cho recently-missing
 const routes = [
@@ -87,7 +87,7 @@ const routes = [
   {
     path: "/recently-missing",
     name: "recently-missing-list",
-    component: () => import("../views/RecentlyMissingListView.vue"),
+    component: () => import("../views/recentlyMissing/RecentlyMissingListView.vue"),
     meta: {
       requiresAuth: false,
       title: "Người thất lạc gần đây",
@@ -96,7 +96,7 @@ const routes = [
   {
     path: "/recently-missing/create",
     name: "recently-missing-create",
-    component: () => import("../views/RecentlyMissingCreateView.vue"),
+    component: () => import("../views/recentlyMissing/RecentlyMissingCreateView.vue"),
     meta: {
       requiresAuth: true,
       title: "Đăng hồ sơ người thất lạc gần đây",
@@ -105,7 +105,7 @@ const routes = [
   {
     path: "/recently-missing/:id",
     name: "recently-missing-detail",
-    component: () => import("../views/RecentlyMissingDetailView.vue"),
+    component: () => import("../views/recentlyMissing/RecentlyMissingDetailView.vue"),
     meta: {
       requiresAuth: false,
       title: "Chi tiết người thất lạc",
@@ -114,7 +114,7 @@ const routes = [
   {
     path: "/recently-missing/edit/:id",
     name: "recently-missing-edit",
-    component: () => import("../views/RecentlyMissingEditView.vue"),
+    component: () => import("../views/recentlyMissing/RecentlyMissingEditView.vue"),
     meta: {
       requiresAuth: true,
       title: "Chỉnh sửa hồ sơ người thất lạc",
@@ -123,7 +123,7 @@ const routes = [
   {
     path: "/recently-missing/:id/upload-image",
     name: "recently-missing-upload-image",
-    component: () => import("../views/RecentlyMissingImageUpload.vue"),
+    component: () => import("../views/recentlyMissing/RecentlyMissingImageUpload.vue"),
     meta: {
       requiresAuth: true,
       title: "Tải lên ảnh khuôn mặt",
@@ -132,19 +132,19 @@ const routes = [
   {
     path: "/admin",
     name: "admin",
-    component: () => import("../views/AdminView.vue"), // Đảm bảo bạn đã tạo AdminView.vue
+    component: () => import("../views/admin/AdminView.vue"), // Đảm bảo bạn đã tạo AdminView.vue
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: "/admin/users/:id",
     name: "admin-user-detail",
-    component: () => import("../views/AdminUserDetail.vue"),
+    component: () => import("../views/admin/AdminUserDetail.vue"),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {
     path: "/admin/users/:id/edit",
     name: "admin-user-edit",
-    component: () => import("../views/AdminUserEdit.vue"),
+    component: () => import("../views/admin/AdminUserEdit.vue"),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
   {

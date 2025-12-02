@@ -161,21 +161,21 @@
 import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import profileService from '../services/profileService';
-import AppLoader from '../components/common/AppLoader.vue';
-import AppHeader from '../components/common/AppHeader.vue';
-import SuggestedProfilesSection from '../components/profile/SuggestedProfilesSection.vue';
-import ProfileHeader from '../components/profile/ProfileHeader.vue';
-import ProfileImageSection from '../components/profile/ProfileImageSection.vue';
-import ProfileBasicInfo from '../components/profile/ProfileBasicInfo.vue';
-import ProfileDescription from '../components/profile/ProfileDescription.vue';
-import ProfileComments from '../components/profile/ProfileComments.vue';
-import ProfileStatusModal from '../components/profile/ProfileStatusModal.vue';
-import SuggestionGuideTour from '../components/profile/SuggestionGuideTour.vue';
-import ProfileImageUploadModal from '../components/profile/ProfileImageUploadModal.vue';
-import DeleteConfirmModal from '../components/profile/DeleteConfirmModal.vue';
-import messageService from '../services/messageService';
-import commentService from '../services/commentService';
+import profileService from '@/services/profileService';
+import AppLoader from '@/components/common/AppLoader.vue';
+import AppHeader from '@/components/common/AppHeader.vue';
+import SuggestedProfilesSection from '@/components/profile/SuggestedProfilesSection.vue';
+import ProfileHeader from '@/components/profile/layout/ProfileHeader.vue';
+import ProfileImageSection from '@/components/profile/layout/ProfileImageSection.vue';
+import ProfileBasicInfo from '@/components/profile/layout/ProfileBasicInfo.vue';
+import ProfileDescription from '@/components/profile/layout/ProfileDescription.vue';
+import ProfileComments from '@/components/profile/layout/ProfileComments.vue';
+import ProfileStatusModal from '@/components/profile/modals/ProfileStatusModal.vue';
+import SuggestionGuideTour from '@/components/profile/guides/SuggestionGuideTour.vue';
+import ProfileImageUploadModal from '@/components/profile/modals/ProfileImageUploadModal.vue';
+import DeleteConfirmModal from '@/components/profile/modals/DeleteConfirmModal.vue';
+import messageService from '@/services/messageService';
+import commentService from '@/services/commentService';
 
 export default {
   name: 'ProfileDetailView',

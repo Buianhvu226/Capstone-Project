@@ -32,7 +32,7 @@
 
 <script>
 import { computed } from 'vue'
-import ProfileImageUpload from './ProfileImageUpload.vue'
+import ProfileImageUpload from '@/components/profile/upload/ProfileImageUpload.vue'
 
 export default {
   name: 'ProfileImageUploadModal',

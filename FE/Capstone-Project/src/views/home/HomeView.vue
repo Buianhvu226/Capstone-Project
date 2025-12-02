@@ -441,17 +441,17 @@
 
 <script>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import ProfileList from '../components/home/ProfileList.vue'
-import AppLoader from '../components/common/AppLoader.vue'
-import AppHeader from '../components/common/AppHeader.vue'
-import AppPagination from '../components/common/AppPagination.vue'
+import ProfileList from '@/components/home/ProfileList.vue'
+import AppLoader from '@/components/common/AppLoader.vue'
+import AppHeader from '@/components/common/AppHeader.vue'
+import AppPagination from '@/components/common/AppPagination.vue'
 import slide1 from '@/assets/images/slide_1.jpg'
 import slide2 from '@/assets/images/slide_2.jpg'
 import slide3 from '@/assets/images/slide_3.jpg'
 import slide4 from '@/assets/images/slide_4.jpg'
 import slide5 from '@/assets/images/slide_5.jpg'
-import profileService from '../services/profileService'
-import cacheService from '../services/cacheService'
+import profileService from '@/services/profileService'
+import cacheService from '@/services/cacheService'
 
 export default {
   name: 'HomeView',

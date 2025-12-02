@@ -35,10 +35,13 @@ export default {
     // Check if the current route is an admin route
     const isAdminRoute = computed(() => route.path.startsWith('/admin'));
 
-    // Hide footer for specific routes (e.g., Recently Missing Detail)
+    // Hide footer for specific routes (e.g., Recently Missing Detail, Messages)
     const hideFooter = computed(() => {
       // Dùng name hoặc path để chính xác hơn nếu bạn đã đặt tên route
-      return route.name === 'RecentlyMissingDetail' || route.path.startsWith('/recently-missing/') && route.params.id;
+      return route.name === 'RecentlyMissingDetail' 
+        || (route.path.startsWith('/recently-missing/') && route.params.id)
+        || route.name === 'messages'
+        || route.path === '/messages';
     });
 
     onMounted(() => {

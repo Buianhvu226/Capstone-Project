@@ -78,11 +78,11 @@
 <script>
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import AppHeader from '../components/common/AppHeader.vue'
-import TabMyProfiles from '../components/profile/TabMyProfiles.vue'
-import TabSuggestedProfiles from '../components/profile/TabSuggestedProfiles.vue'
-import TabReferencedProfiles from '../components/profile/TabReferencedProfiles.vue'
-import MyProfileGuideTour from '../components/profile/MyProfileGuideTour.vue'
+import AppHeader from '@/components/common/AppHeader.vue'
+import TabMyProfiles from '@/components/profile/tabs/TabMyProfiles.vue'
+import TabSuggestedProfiles from '@/components/profile/tabs/TabSuggestedProfiles.vue'
+import TabReferencedProfiles from '@/components/profile/tabs/TabReferencedProfiles.vue'
+import MyProfileGuideTour from '@/components/profile/guides/MyProfileGuideTour.vue'
 
 export default {
   name: 'MyProfileView',

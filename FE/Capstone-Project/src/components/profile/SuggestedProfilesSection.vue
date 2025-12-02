@@ -52,7 +52,7 @@
 
 <script>
 import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
-import SuggestedProfileCard from './SuggestedProfileCard.vue';
+import SuggestedProfileCard from '@/components/profile/cards/SuggestedProfileCard.vue';
 import noImage from '@/assets/images/no_image.png';
 
 export default {

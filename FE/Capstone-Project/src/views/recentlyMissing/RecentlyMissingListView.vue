@@ -420,8 +420,8 @@ import { useRouter, useRoute } from 'vue-router'
 import AppHeader from '@/components/common/AppHeader.vue'
 import AppLoader from '@/components/common/AppLoader.vue'
 import AppPagination from '@/components/common/AppPagination.vue'
-import RecentlyMissingList from '@/components/recentlyMissing/RecentlyMissingList.vue'
-import RecentlyMissingGuideTour from '@/components/recentlyMissing/RecentlyMissingGuideTour.vue'
+import RecentlyMissingList from '@/components/recentlyMissing/list/RecentlyMissingList.vue'
+import RecentlyMissingGuideTour from '@/components/recentlyMissing/guides/RecentlyMissingGuideTour.vue'
 
 export default {
   name: 'RecentlyMissingListView',

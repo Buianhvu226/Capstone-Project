@@ -14,7 +14,7 @@
         </p>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
           <div v-for="(feature, index) in features" :key="index"
-            class="flex flex-col items-center bg-white bg-opacity-70 rounded-xl shadow p-5 transition hover:shadow-lg">
+            class="flex flex-col items-center bg-white bg-opacity-70 rounded-xl shadow p-5 transition-all duration-300 hover:shadow-lg hover:bg-opacity-90 hover:-translate-y-1">
             <i :class="feature.icon" class="text-3xl text-blue-500 mb-3"></i>
             <h3 class="font-semibold text-base text-gray-700 mb-1">{{ feature.title }}</h3>
             <p class="text-xs text-gray-500">{{ feature.description }}</p>
@@ -46,7 +46,7 @@
           <p class="text-gray-500 text-sm">
             {{ isLogin ? 'Chưa có tài khoản?' : 'Đã có tài khoản?' }}
             <button @click="isLogin = !isLogin"
-              class="ml-2 px-4 py-1 bg-gradient-to-r from-blue-400 to-blue-400 text-white rounded-full transition hover:shadow-lg">
+              class="ml-2 px-4 py-1.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full transition-all duration-300 hover:shadow-lg hover:from-blue-600 hover:to-blue-700 font-medium text-sm">
               {{ isLogin ? 'Đăng ký ngay' : 'Đăng nhập' }}
             </button>
           </p>
@@ -58,9 +58,8 @@
 
 <script>
 import { ref } from 'vue'
-import LoginForm from '../components/auth/LoginForm.vue'
-import RegisterForm from '../components/auth/RegisterForm.vue'
-import 'animate.css'
+import LoginForm from '@/components/auth/LoginForm.vue'
+import RegisterForm from '@/components/auth/RegisterForm.vue'
 
 export default {
   name: 'AuthView',
@@ -98,12 +97,22 @@ export default {
 <style scoped>
 .fade-slide-enter-active,
 .fade-slide-leave-active {
-  transition: all 0.4s cubic-bezier(.4, 0, .2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.fade-slide-enter-from,
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+}
+
 .fade-slide-leave-to {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(-20px) scale(0.95);
+}
+
+.fade-slide-enter-to,
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 </style>
