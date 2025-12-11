@@ -78,9 +78,22 @@
               <label for="auto-description" class="block text-xs font-semibold text-slate-700 mb-1">
                 Nội dung mô tả <span class="text-red-500">*</span>
               </label>
-              <textarea id="auto-description" v-model="autoProfileData.description" rows="5"
-                class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                placeholder="Ví dụ: Nguyễn Văn A, sinh năm 1985 tại Huế..." required></textarea>
+              <div class="relative">
+                <textarea 
+                  id="auto-description" 
+                  :value="autoProfileData.description"
+                  @input="handleDescriptionInput"
+                  @keydown="handleDescriptionKeydown"
+                  @paste="handleDescriptionPaste"
+                  rows="7"
+                  maxlength="2000"
+                  class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 resize-none"
+                  placeholder="Ví dụ: Nguyễn Văn A, sinh năm 1985 tại Huế..." 
+                  required></textarea>
+                <div class="absolute bottom-2 right-2 text-xs text-slate-400 bg-white px-1 rounded">
+                  {{ autoProfileData.description.length }}/2000
+                </div>
+              </div>
               <p class="text-[11px] text-slate-500 mt-1">
                 <i class="fas fa-info-circle mr-1"></i>
                 Tối thiểu 50 ký tự để AI hiểu rõ nhu cầu.
@@ -184,7 +197,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import AppHeader from '@/components/common/AppHeader.vue'
@@ -607,6 +620,61 @@ export default {
       clearProgressLogs()
     })
 
+    // Xử lý input cho description - tự động loại bỏ xuống dòng
+    const handleDescriptionInput = (event) => {
+      let value = event.target.value;
+      // Thay thế tất cả ký tự xuống dòng (\n, \r\n) bằng khoảng trắng
+      value = value.replace(/\r?\n/g, ' ');
+      // Loại bỏ nhiều khoảng trắng liên tiếp thành 1 khoảng trắng
+      value = value.replace(/\s+/g, ' ').trim();
+      
+      // Giới hạn độ dài
+      if (value.length > 2000) {
+        value = value.substring(0, 2000);
+      }
+      
+      autoProfileData.value.description = value;
+    };
+
+    // Ngăn chặn phím Enter tạo xuống dòng
+    const handleDescriptionKeydown = (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+      }
+    };
+
+    // Xử lý paste - loại bỏ xuống dòng từ clipboard
+    const handleDescriptionPaste = (event) => {
+      event.preventDefault();
+      const paste = (event.clipboardData || window.clipboardData).getData('text');
+      // Thay thế xuống dòng bằng khoảng trắng
+      let cleanText = paste.replace(/\r?\n/g, ' ');
+      // Loại bỏ nhiều khoảng trắng liên tiếp
+      cleanText = cleanText.replace(/\s+/g, ' ').trim();
+      
+      // Lấy vị trí cursor hiện tại
+      const textarea = event.target;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const currentValue = autoProfileData.value.description;
+      
+      // Chèn text đã clean vào vị trí cursor
+      const newValue = currentValue.substring(0, start) + cleanText + currentValue.substring(end);
+      
+      // Giới hạn độ dài
+      const finalValue = newValue.length > 2000 
+        ? newValue.substring(0, 2000) 
+        : newValue;
+      
+      autoProfileData.value.description = finalValue;
+      
+      // Đặt lại vị trí cursor sau khi paste
+      nextTick(() => {
+        const newCursorPos = start + cleanText.length;
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      });
+    };
+
     return {
       loading,
       error,
@@ -638,7 +706,10 @@ export default {
       showGuideTour,
       startGuideTour,
       closeGuideTour,
-      clearProgressLogs
+      clearProgressLogs,
+      handleDescriptionInput,
+      handleDescriptionKeydown,
+      handleDescriptionPaste
     }
   }
 }

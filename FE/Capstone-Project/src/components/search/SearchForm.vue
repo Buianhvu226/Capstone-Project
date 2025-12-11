@@ -10,8 +10,10 @@
           <textarea
             id="query"
             :value="searchQuery"
-            @input="$emit('update:searchQuery', $event.target.value)"
-            rows="5"
+            @input="handleInput"
+            @keydown="handleKeydown"
+            @paste="handlePaste"
+            rows="7"
             :maxlength="maxLength"
             class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm resize-none"
             placeholder="Ví dụ: Tìm người tên Nguyễn Văn A, sinh năm 1975, thất lạc ở Huế..."
@@ -71,10 +73,68 @@ export default {
     },
     maxLength: {
       type: Number,
-      default: 500,
+      default: 2000,
     },
   },
   emits: ['update:searchQuery', 'submit', 'clear'],
+  methods: {
+    // Xử lý input - tự động loại bỏ ký tự xuống dòng
+    handleInput(event) {
+      let value = event.target.value;
+      // Thay thế tất cả ký tự xuống dòng (\n, \r\n) bằng khoảng trắng
+      value = value.replace(/\r?\n/g, ' ');
+      // Loại bỏ nhiều khoảng trắng liên tiếp thành 1 khoảng trắng
+      value = value.replace(/\s+/g, ' ').trim();
+      
+      // Giới hạn độ dài
+      if (value.length > this.maxLength) {
+        value = value.substring(0, this.maxLength);
+      }
+      
+      this.$emit('update:searchQuery', value);
+    },
+    
+    // Ngăn chặn phím Enter tạo xuống dòng
+    handleKeydown(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        // Có thể submit form nếu muốn, hoặc chỉ ngăn xuống dòng
+        // this.$emit('submit');
+      }
+    },
+    
+    // Xử lý paste - loại bỏ xuống dòng từ clipboard
+    handlePaste(event) {
+      event.preventDefault();
+      const paste = (event.clipboardData || window.clipboardData).getData('text');
+      // Thay thế xuống dòng bằng khoảng trắng
+      let cleanText = paste.replace(/\r?\n/g, ' ');
+      // Loại bỏ nhiều khoảng trắng liên tiếp
+      cleanText = cleanText.replace(/\s+/g, ' ').trim();
+      
+      // Lấy vị trí cursor hiện tại
+      const textarea = event.target;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const currentValue = this.searchQuery;
+      
+      // Chèn text đã clean vào vị trí cursor
+      const newValue = currentValue.substring(0, start) + cleanText + currentValue.substring(end);
+      
+      // Giới hạn độ dài
+      const finalValue = newValue.length > this.maxLength 
+        ? newValue.substring(0, this.maxLength) 
+        : newValue;
+      
+      this.$emit('update:searchQuery', finalValue);
+      
+      // Đặt lại vị trí cursor sau khi paste
+      this.$nextTick(() => {
+        const newCursorPos = start + cleanText.length;
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      });
+    },
+  },
 };
 </script>
 

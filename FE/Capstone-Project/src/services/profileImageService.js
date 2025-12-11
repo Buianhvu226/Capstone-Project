@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Cấu hình API baseURL
-const apiBaseUrl = import.meta.env.VITE_APP_API_URL;  
+const apiBaseUrl = import.meta.env.VITE_APP_API_URL;
 
 /**
  * ProfileImageService - Service xử lý các thao tác liên quan đến hình ảnh hồ sơ
@@ -68,7 +68,6 @@ class ProfileImageService {
    * @param {number|string} profileId - ID của hồ sơ
    * @returns {Promise} Promise chứa thông tin hình ảnh
    */
-
 
   /**
    * Xóa ảnh cũ từ Supabase khi thay thế bằng ảnh mới

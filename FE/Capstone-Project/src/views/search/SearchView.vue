@@ -10,7 +10,7 @@
             <!-- Main Content Grid - Compact Layout -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 mb-3">
                 <SearchForm class="lg:col-span-8" :search-query="searchQuery" :loading="loading"
-                    :has-searched="hasSearched" :max-length="500" @update:search-query="(val) => (searchQuery = val)"
+                    :has-searched="hasSearched" :max-length="2000" @update:search-query="(val) => (searchQuery = val)"
                     @submit="searchProfiles" @clear="clearSearch" />
                 <SearchHistory class="lg:col-span-4" :history="searchHistory" @clear="clearAllHistory"
                     @view-results="loadHistoryResults" @search-again="useHistoryQuery" @remove="removeHistoryItem" />
@@ -303,10 +303,10 @@ export default {
         const searchProfiles = async () => {
             if (!searchQuery.value.trim()) return;
 
-            // Giới hạn độ dài
-            if (searchQuery.value.length > 500) {
-                searchQuery.value = searchQuery.value.substring(0, 500);
-            }
+            // Không cắt bớt nội dung - giữ nguyên toàn bộ context
+            // Chỉ trim khoảng trắng đầu cuối
+            const trimmedQuery = searchQuery.value.trim();
+            if (!trimmedQuery) return;
 
             loading.value = true;
             error.value = null;
@@ -341,7 +341,7 @@ export default {
                 currentProgressMessage.value = 'Đang thu thập dữ liệu...';
                 progressStep.value = 3;
 
-                const response = await searchService.searchProfiles(searchQuery.value);
+                const response = await searchService.searchProfiles(trimmedQuery);
                 console.log('Search API Response:', response);
 
                 addProgressLog('✅ Hoàn tất tìm kiếm và nhận kết quả!', true);

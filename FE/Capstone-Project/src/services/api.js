@@ -1,7 +1,7 @@
 import axios from "axios";
 // .env VITE_APP_API_URL=http://127.0.0.1:8000
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_APP_API_URL}/api`
+  baseURL: `${import.meta.env.VITE_APP_API_URL}/api`,
 });
 
 // Request interceptor
@@ -24,6 +24,5 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
 
 export default api;

@@ -60,7 +60,7 @@
 <script>
 import { supabase } from '@/utils/supabase.js'
 import { useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import profileImageService from '@/services/profileImageService'
 
 export default {
@@ -68,7 +68,7 @@ export default {
     props: {
         profileId: {
             type: [Number, String],
-            required: true
+            default: null
         },
         initialProfile: {
             type: Object,
@@ -86,6 +86,17 @@ export default {
         const error = ref(null)
         const fileError = ref(null)
         const successMessage = ref('')
+
+        // Computed để lấy profileId từ prop hoặc từ initialProfile.id
+        const actualProfileId = computed(() => {
+            if (props.profileId) {
+                return props.profileId;
+            }
+            if (props.initialProfile?.id) {
+                return props.initialProfile.id;
+            }
+            return null;
+        });
 
         // Thêm biến để lưu URL ảnh cũ
         const oldImageUrl = ref(null);
@@ -125,10 +136,15 @@ export default {
             uploadProgress.value = 0
 
             try {
+                // Kiểm tra profileId trước khi upload
+                if (!actualProfileId.value) {
+                    throw new Error('Không tìm thấy ID hồ sơ. Vui lòng làm mới trang và thử lại.');
+                }
+
                 // Tạo tên file duy nhất với timestamp
                 const timestamp = Date.now();
                 const fileExt = selectedFile.value.name.split('.').pop();
-                const fileName = `profile_${props.profileId}_${timestamp}.${fileExt}`;
+                const fileName = `profile_${actualProfileId.value}_${timestamp}.${fileExt}`;
                 const filePath = `profile_image/${fileName}`;
 
                 // Upload ảnh mới lên Supabase
@@ -153,7 +169,7 @@ export default {
 
                 // Lưu URL vào database
                 const result = await profileImageService.saveImageUrl(
-                  props.profileId,
+                  actualProfileId.value,
                   publicUrl,
                   description.value
                 );
@@ -197,7 +213,9 @@ export default {
         }
 
         const goToProfile = () => {
-            router.push(`/profile/${props.profileId}`)
+            if (actualProfileId.value) {
+                router.push(`/profile/${actualProfileId.value}`)
+            }
         }
 
         return {

@@ -19,8 +19,8 @@
 
         <div class="modal-body">
           <ProfileImageUpload 
-            v-if="profile" 
-            :profileId="profileId" 
+            v-if="profile && actualProfileId" 
+            :profileId="actualProfileId" 
             :initialProfile="profile"
             @upload-success="handleUploadSuccess" 
           />
@@ -50,11 +50,22 @@ export default {
     },
     profileId: {
       type: [Number, String],
-      required: true
+      default: null
     }
   },
   emits: ['close', 'upload-success'],
   setup(props, { emit }) {
+    // Computed để lấy profileId từ prop hoặc từ profile.id
+    const actualProfileId = computed(() => {
+      if (props.profileId) {
+        return props.profileId;
+      }
+      if (props.profile?.id) {
+        return props.profile.id;
+      }
+      return null;
+    });
+
     const handleClose = () => {
       emit('close')
     }
@@ -68,6 +79,7 @@ export default {
     }
 
     return {
+      actualProfileId,
       handleClose,
       handleUploadSuccess
     }
